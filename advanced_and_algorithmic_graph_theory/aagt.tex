@@ -1,0 +1,407 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{amsthm}
+\usepackage{stmaryrd}
+%\usepackage{algpseudocode}
+%\usepackage{algorithm}
+%\usepackage{MnSymbol}
+%\usepackage{xcolor}
+\usepackage[nameinlink]{cleveref}
+\usepackage{mathtools}
+\usepackage{subfiles}
+\usepackage{accents}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{titlesec}
+
+\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize]{todonotes}
+
+
+\hypersetup{
+  pdfborder={0 0 0},
+  colorlinks=true,
+  linkcolor=darkgray,
+  anchorcolor=darkgray
+}
+
+\newcommand{\lecture}{\vspace{5mm}\textcolor{blue}}
+\newcommand{\interior}[1]{\accentset{\smash{\raisebox{-0.12ex}{$\scriptstyle\circ$}}}{#1}\rule{0pt}{2.3ex}}
+\newcommand{\sectionbreak}{\clearpage}
+
+\newcounter{cnt} \numberwithin{cnt}{section}
+
+\newtheorem{defi}[cnt]{Definition}
+\newtheorem*{defi*}{Definition}
+\newtheorem*{rem}{Remark}
+\newtheorem*{rem*}{Remark}
+\newtheorem{lemma}[cnt]{Lemma}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem*{ex}{Example}
+\newtheorem*{exs}{Examples}
+\newtheorem{theorem}[cnt]{Theorem}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{prop}[cnt]{Proposition}
+\newtheorem*{prop*}{Proposition}
+\newtheorem{cor}[cnt]{Corollary}
+\newtheorem*{cor*}{Corollary}
+\newtheorem{nota}{Notation}
+\newtheorem*{nota*}{Notation}
+%\newtheorem*{app}{Application}
+%\newtheorem*{app*}{Application}
+%\newtheorem{conj}[cnt]{Conjecture}
+%\newtheorem{op}[cnt]{Open Problem}
+
+
+\crefname{rem}{Remark}{remarks}
+
+\DeclareMathOperator{\de}{d}
+\DeclareMathOperator{\girth}{g}
+\DeclareMathOperator{\circum}{c}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\diam}{diam}
+
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+\newcommand{\inv}[1]{{#1}^{-1}}
+\newcommand{\card}[1]{\left\vert{#1}\right\vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+
+\newcommand{\ubar}[1]{\underaccent{\bar}{#1}}
+
+% use \abs{} for absolute values
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+%\renewcommand{\algorithmicrequire}{\textbf{Given:}}
+%\renewcommand{\algorithmicensure}{\textbf{Find:}}
+
+\author{Martina Tscheckl}
+\title{Advanced and algorithmic graph theory}
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+\begin{document}
+\maketitle
+Please send feedback to \url{martina@tscheckl.eu}.
+\tableofcontents
+
+
+%---Chapter 1------------------------------------
+
+\section{Introduction and notations}
+\lecture{29.02.2016}
+
+Let $G = (V,E)$ be a graph. Then $V$ is the \emph{vertex set} of $G$ and $E$ is the \emph{edge set} of $G$.
+If
+\[ E \subseteq V \times V \]
+then $G$ is called a \emph{directed graph}. 
+And if
+\[ E \subseteq \{ \{a,b\} : a \neq b, a,b \in V\} \]
+then $G$ is called an \emph{undirected graph}.\\
+A \emph{trivial graph} is the empty graph $G = (\emptyset,\emptyset)$.\\
+\\
+We will always consider the case of undirected graphs if not specified otherwise.
+
+\begin{defi*}[Order of $G$]
+  The \emph{order of $G$} is denoted by $\abs{G} \coloneqq \abs{V}$. We assume that $V$ is finite if not otherwise specified.
+  And we denote by $\norm{G} \coloneqq \abs{E}$.
+\end{defi*}
+
+\begin{nota*}[Edges]
+  Edges are denoted by $\{i,j\}$, $(i,j)$, or $ij$.
+  If $e = \{i,j\} \in E$, then 
+  \begin{enumerate}[label=(\alph*)]
+    \item $i$ and $j$ are \emph{adjacent},
+    \item $i$ is \emph{incident} to $e$ (or $i$ and $e$ are incident),
+    \item $i$ and $j$ are \emph{neighbours}.
+  \end{enumerate}
+\end{nota*}
+
+\begin{defi*}[Complete graph]
+  A graph $G = (V,E)$ is called a \emph{complete graph} if and only if 
+  \[ E = \{ \{a,b\}: a \neq b, a,b \in V \} \text{.} \]
+  It is called $K_n$ if $\abs{V} = n$.
+\end{defi*}
+
+\begin{defi*}[Independet or stable set]
+  A \emph{set of vertices} $A \subseteq V$ is called \emph{independent} or \emph{stable} if and only if 
+  \[ \forall a,b \in A : \{a,b\} \notin E \]
+\end{defi*}
+
+\begin{defi*}[Isomorphic]
+  Two graphs $G= (V,E)$ and $G^\prime = (V^\prime,E^\prime)$ are \emph{isomorphic} if and only if there exists a bijective map $\varphi: V \to V^\prime$ such that for all $a,b \in V$ 
+  \[ \{a,b\} \in E \iff \{ \varphi(a),\varphi(b)\} \in E^\prime \text{.} \]
+  Then $\varphi$ is called an \emph{isomorphism} and we write $G \equiv G^\prime$.
+\end{defi*}
+
+\begin{defi*}[Graph property]
+  A class of graphs that is closed under isomorphisms is called a \emph{graph property}.
+\end{defi*}
+
+\begin{ex}[Triangle]
+  Let $G = K_3$. Then $G^\prime \equiv G$ implies that $G^\prime$ is a triangle.\\
+  \todo{add pic}
+  Another example would be $K_4$.
+\end{ex}
+
+\begin{defi*}[Graph invariant]
+  A mapping taking graphs as arguments is called a graph invariant if and only if it assigns equal images (values) to isomorphic graphs.
+\end{defi*}
+
+\begin{exs}
+  \begin{enumerate}
+    \item Number of vertices,
+    \item Number of edges,
+    \item Longest number (cardinality of longest clique) of pairwise adjacent vertices.
+  \end{enumerate}
+\end{exs}
+
+\begin{defi*}[Clique]
+  A subset $A \subseteq V$ is called a \emph{clique} if and only if 
+  \[ \forall a,b \in A, \: a \neq b \implies \{a,b\} \in E \text{.} \]
+\end{defi*}
+
+\begin{defi*}[Union and intersection of graphs]
+  Let $G$ and $G^\prime$ be two graphs. Then we define
+  \begin{enumerate}
+    \item the \emph{union} of two graphs as
+    \[ G \cup G^\prime \coloneqq (V \cup V^\prime, E \cup E^\prime) \]
+    \item the \emph{intersectoin} of two graphs as
+    \[ G \cap G^\prime \coloneqq (V \cap V^\prime, E \cap E^\prime) \]
+  \end{enumerate}
+  If $G \cap G^\prime = (\emptyset,\emptyset)$, we say $G$ and $G^\prime$ are \emph{disjoint}.
+\end{defi*}
+
+\begin{defi*}[Subgraphs]
+  \begin{enumerate}
+    \item If $V \subseteq V^\prime$ and $E \subseteq E^\prime$, we say $G$ is \emph{subgraph} of $G^\prime$ and write $G \leq G^\prime$.
+    \item If $G \leq G^\prime$ and $G \neq G^\prime$, we say $G$ is a \emph{proper subgraph} of $G^\prime$.
+    \item If $G \subseteq G^\prime$ such that 
+    \[ \forall a,b \in V(G) : \{a,b\} \in E^\prime \implies \{a,b\} \in E \text{,} \]
+    then $G$ is an \emph{induced subgraph}.
+    We say $V \coloneqq V(G)$ \emph{induces or spans} $G$ in $G^\prime$ and denote it by $G^\prime[V]$.
+    \todo{add pic}
+  \end{enumerate}
+\end{defi*}
+
+\begin{defi*}[Adding/removing vertices or edges in/from graphs]
+  Let $G = (V,E)$ and $G^\prime = (V^\prime,E^\prime)$ be graphs.
+  \begin{enumerate}[label=(\alph*)]
+    \item If $U \subseteq V(G)$, we write 
+    \[G - U \coloneqq G[V\setminus U] \text{.} \]
+    If $U = \{v\}$, we write $G - v$ instead of $G - \{v\}$.
+    \todo{add pic}
+    \item If $G^\prime \subseteq G$, we write $G - G^\prime \coloneqq G - V(G^\prime)$
+    \todo{add pic}
+    \item If $F \subseteq E$, we write 
+    \[ G + F \coloneqq (V, E \cup F) \]
+    and
+    \[ G - F \coloneqq (V, E \setminus F) \text{.} \]
+    If $F = \{e\}$, we write $G + e$ instead of $G + \{e\}$ and $G - e$ instead of $G - \{e\}$.
+  \end{enumerate}
+\end{defi*}
+
+\begin{defi*}[Edge maximal with respect to a given graph property]
+A graph G is called \emph{edge maximal with respect to a given graph property} if and only if $G$ itself has the property, but no graph 
+\[ G + \{x,y\} \]
+has the property for some $x,y \in V(G)$, $x \neq y$ with $\{x,y\} \notin E(G)$.
+\end{defi*}
+
+\begin{ex}
+  Let $G$ be a graph with property P, where P = \enquote{triangle free}.
+  \begin{enumerate}[label=(\alph*)]
+    \item \todo{add pic}
+    \item \todo{add same pic}
+  \end{enumerate}
+  Both graphs are maximal with respect to P.
+\end{ex}
+
+\begin{rem}
+  If we call a graph \emph{minimal or maximal with respect to some property} without any other specification of the order, then  it is meant to be according to the subgraph relation.
+\end{rem}
+
+\begin{defi*}[Product of graphs]
+  If $G$ and $G^\prime$ are disjoint, define $G \ast G^\prime$ as a graph obtained from
+  \[ G \cup G^\prime = (V(G) \cup V(G^\prime), E(G) \cup E(G^\prime)) \]
+  by adding all edges $\{x,y\}$ with $x \in V(G)$ and $y \in V(G^\prime)$.
+  \todo{add pic}
+\end{defi*}
+
+\begin{defi*}[Complement graph]
+  The \emph{complement} of $G$ is denoted by $G^C$ or $\overbar{G}$ and is defined as
+  \[ \overbar{G} \coloneqq (V(G),\{\{a,b\} : a \neq b, \: a,b\in V(G)\} \setminus E(G) ) \]
+\end{defi*}
+
+\begin{defi*}[Line graph]
+  The line graph of $G$ is denoted by 
+  \[ L(G) = (E(G), \{\{e,f\}: e,f \in E, e \neq f, e \cap f \neq \emptyset\}) \]
+  \todo{add pic 7}
+\end{defi*}
+
+\begin{defi*}[Degree of $G$]
+  Denote the set of neighbours of a vertex $v \in V$ by $N_G(v)$. 
+  Then we define $\deg_G(v) \equiv d_G(v) \coloneqq \abs{N_G(v)}$ as the \emph{degree} of $v$ in $G$.
+  If $d_G(v) = 0$ we say that $v$ is \emph{isolated in $G$}.\\
+  We define
+  \begin{enumerate}
+    \item the \emph{minimum degree of} $G$ as
+    \[ \delta(G) = \min_{v \in V(G)} d_G(v) \]
+    \item the \emph{maximum degree of} $G$ as
+    \[ \Delta(G) = \max_{v \in V(G)} d_G(v) \]
+    \item the \emph{average degree of} $G$ as
+     \[ d(G) =  \frac{1}{\abs{V(G)}} \sum d_G(v) \]
+  \end{enumerate}
+\end{defi*}
+
+\begin{defi*}[$k$-regular graph]
+  A graph $G$ is $k$-regular if and only if 
+  \[ \deg_G(v) = k \]
+  for all $v \in V$ and for some $k \in \N_\ast$.\\
+  If $k = 3$, we call $G$ cubic.\\
+  We define
+  \[ \varepsilon(G) \coloneqq \frac{\abs{E}}{\abs{V}} \text{.} \]
+\end{defi*}
+
+\begin{defi*}[Path]
+  A path is a nonempty graph $P = (V,E)$ of the form 
+  \[V = \{x_0,x_1,\dots,x_k\}\]
+  and
+  \[ E = \{x_0 x_1, x_1 x_2, \dots, x_{k-1} x_k \} \]
+  where all edges are all pairwise distinct.
+  The vertices $x_0$ and $x_k$ are the \emph{end vertices} of $P$.
+  And the vertices $x_i$ for $1 \leq i \leq k-1$ are the inner vertices of $P$.
+\end{defi*}
+
+\begin{defi*}[Length of path]
+  Let $P = (V,E)$ be a path. The \emph{length of the path} is defined as the number of edges $\abs{E}$.
+  A path of length $k$ is denoted by $P^k$. (Notice that $k = 0$ is possible \todo{add pic})
+\end{defi*}
+
+\begin{rem}
+  We often refer to a path $P^k$ as $x_0 x_1 \dots x_k = P^k$.
+\end{rem}
+
+\begin{nota*}
+  Let $P = x_0 x_1 \dots x_k$.
+  We write 
+  \begin{align*}
+    P x_i &\coloneqq x_0 \dots x_i \\
+    x_i P &\coloneqq x_i \dots x_k \\
+    x_i P x_j &\coloneqq x_i \dots x_j
+  \end{align*}
+  Let $\interior{P} \coloneqq x_1 x_2 \dots x_{k-1}$. Then we write
+  \begin{align*}
+    \interior{P} x_i &\coloneqq x_0 \dots x_{i-1} \\
+    x_i \interior{P} &\coloneqq x_{i+1} \dots x_k \\
+    x_i \interior{P} x_j &\coloneqq x_{i+1} \dots x_{j-1} \equiv x_{i+1} P x_{j-1} \text{ for } i+1 \leq j
+  \end{align*}
+  \todo{add pic}
+\end{nota*}
+
+\begin{defi*}[$A$-$B$-path]
+  Let $A,B \subseteq V(G)$. A path $P = x_0 x_1 \dots x_k$ is callled an \emph{$A$-$B$-path} if 
+  \[ V(P) \cap A = \{x_0\} \]
+  and
+  \[ V(P) \cap B = \{x_k\} \text{.} \]
+  \todo{add pic}
+  If $A = \{a\}$ and $B = \{b\}$ write \emph{$a$-$b$-path} instead of $\{a\}$-$\{b\}$-path.\\
+\end{defi*}
+
+\begin{defi*}[Independent path]
+  Two or more paths are \emph{independent} if and only if none of them contains as inner vertex an inner vertex of some other path.
+\end{defi*}
+
+\begin{ex}
+\todo{add pic}
+  The paths $P_1 = x_0 x_1 x_2 x_3$ and $P_2 = y_0 y_1 y_2 y_3$ are independent. If the path $P_3 = x_0 x_2 y_2$ is added, they are not an independent set of paths anymore.
+\end{ex}
+
+\begin{defi*}[$H$-path]
+  Let $H$ be a given graph. We call a path $P$ an \emph{$H$-path} if $P$ is non-trivial and
+  \[ V(P) \cap V(H) = \{x_0,x_k\} \]
+  where $x_0$ and $x_k$ are the end vertices of $P$.
+\end{defi*}
+
+\begin{defi*}[Cycle]
+  If $P = (x_0,x_1,\dots,x_{k-1})$ is a path and $k \geq 3$, then $C = P + \{x_{k-1},x_{0} \}$ is called a cycle.
+  Its length is $k$ and we denoted it by $C^k$.
+\end{defi*}
+
+\begin{defi*}[Girth and circumference]
+  Let $G$ be a graph.
+  \begin{enumerate}[label=(\alph*)]
+    \item The minimal length of a cycle in $G$ is the \emph{girth} (german: Taillenweite) $\girth(G)$ of $G$.
+    \item The maximal length of a cycle in $G$ is the \emph{circumference} $\circum(G)$  of $G$.
+  \end{enumerate}
+  If $G$ has no cycle at all then $\girth(G) = \infty$ and $\circum(G) = 0$.\\
+\end{defi*}
+
+\begin{defi*}[Chord]
+  Let $C^k = x_0 x_1 \dots x_{k-1}$ be a cycle in a graph $G$.
+  An edge $\{x_i,x_j\}$ with $1 \leq i \neq j \leq k-1$ joining two vertices of $C^k$ such that $\{x_i,x_j\} \notin E(C^k)$ is called a \emph{chord}.
+  \todo{add pic}
+  An induced cycle in $G$ is a cycle without chords.
+\end{defi*}
+
+\begin{prop}
+  Every graph contains a path of length $\delta(G)$ and a cycle of length $\delta(G) +1$, provided that $\delta(G) \geq 2$.
+\end{prop}
+
+\begin{proof}
+  Homework: Consider longest path\
+  \todo{add pic}
+\end{proof}
+
+\begin{defi*}[Distance and diameter]
+  Let $G$ be a graph.
+  \begin{enumerate}[label=(\alph*)]
+    \item The \emph{distance of two vertices} $x,y \in V(G)$ is the length of the shortest $x$-$y$-path denoted by $\dist_G(x,y)$.
+    Set $\dist_G(x,y) = \infty$ if there is no $x$-$y$-path in $G$.
+    \item The diameter of $G$ is defined as
+    \[ \diam(G) \coloneqq \max_{x,y \in V(G)} \dist_G(x,y) \text{.} \]
+  \end{enumerate}
+\end{defi*}
+
+\begin{prop}
+  Every graph containing a cycle satisfies 
+  \[ \girth(G) \leq 2 \diam(G) + 1 \text{.} \]
+\end{prop}
+
+\begin{proof}
+  Let $C$ be a shortest cycle in $G$.
+  \todo{add pic}
+  If 
+  \[ \girth(G) \geq 2 \diam(G) + 2 \text{,} \]
+  then there exist $x,y \in V(C)$ such that
+  \[ \dist_C(x,y) \geq \diam(G) + 1 \text{.} \]
+  In $G$ the condition $\dist_G(x,y) \leq \diam(G)$ holds, so any shortest path $P$ between $x,y$ is not a subgraph of $C$.
+  Thus $P$ contains a $C$-path $x^\prime P y^\prime$.
+  Use $x^\prime P y^\prime$ and the shortest $x^\prime$-$y^\prime$-path in $C$ to construct a cycle $C^\prime$ strictly shorter than $C$ $\lightning$.
+\end{proof}
+
+
+\lecture{04.02.2016}
+
+
+
+\end{document}
