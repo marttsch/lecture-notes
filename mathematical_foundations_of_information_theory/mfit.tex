@@ -1,0 +1,210 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{amsthm}
+\usepackage{stmaryrd}
+\usepackage[nameinlink]{cleveref}
+\usepackage{mathtools}
+\usepackage{subfiles}
+\usepackage{accents}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{titlesec}
+\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize]{todonotes}
+
+\hypersetup{
+  pdfborder={0 0 0},
+  colorlinks=true,
+  linkcolor=darkgray,
+  anchorcolor=darkgray
+}
+
+\newcommand{\lecture}{\vspace{5mm}\textcolor{blue}}
+\newcommand{\interior}[1]{\accentset{\smash{\raisebox{-0.12ex}{$\scriptstyle\circ$}}}{#1}\rule{0pt}{2.3ex}}
+\newcommand{\sectionbreak}{\clearpage}
+
+\newcounter{cnt} \numberwithin{cnt}{section}
+
+\newtheorem{defi}[cnt]{Definition}
+\newtheorem*{defi*}{Definition}
+\newtheorem*{rem}{Remark}
+\newtheorem*{rem*}{Remark}
+\newtheorem*{rems*}{Remarks}
+\newtheorem{lemma}[cnt]{Lemma}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem*{ex}{Example}
+\newtheorem*{exs}{Examples}
+\newtheorem{theorem}[cnt]{Theorem}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{prop}[cnt]{Proposition}
+\newtheorem*{prop*}{Proposition}
+\newtheorem{cor}[cnt]{Corollary}
+\newtheorem*{cor*}{Corollary}
+\newtheorem{nota}{Notation}
+\newtheorem*{nota*}{Notation}
+
+\crefname{rem}{Remark}{remarks}
+
+\DeclareMathOperator{\de}{d}
+\DeclareMathOperator{\girth}{g}
+\DeclareMathOperator{\circum}{c}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\diam}{diam}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+\newcommand{\inv}[1]{{#1}^{-1}}
+\newcommand{\card}[1]{\left\vert{#1}\right\vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+
+\newcommand{\ubar}[1]{\underaccent{\bar}{#1}}
+
+% use \abs{} for absolute values
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+
+\author{Martina Tscheckl}
+\title{Mathematical foundation of information theory}
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+\begin{document}
+\maketitle
+Please send feedback to \url{martina@tscheckl.eu}.
+\tableofcontents
+
+%---Chapter 1------------------------------------
+
+\section{Introduction: Probability Theory}
+\lecture{01.03.2016}
+
+\subsection{Definitions and Axioms}
+
+\begin{defi*}[Probability space]
+  A \emph{probability space} is a triple $(\Omega,\mathcal{A},\PP)$ where 
+  \begin{enumerate}
+    \item $\Omega \neq \emptyset$ is a \emph{set},
+    \item $\mathcal{A}$ is a \emph{$\sigma$-algebra} of subsets of $\Omega$,
+    \item $\PP$ is a \emph{probability measure} on $\mathcal{A}$.
+  \end{enumerate}
+\end{defi*}
+
+\begin{rems*}
+  \begin{enumerate}[label=(\alph*)]
+    \item The set $\Omega$ is called the \enquote{sample space} and contains \enquote{all possible aspects/cases related to an experiment}.
+    \item By definition, $\mathcal{A} \subset \mathcal{P}(\Omega)$ where $\mathcal{P}(\Omega)$ is the collection of all subsets of $\Omega$. The set $\mathcal{P}(\Omega)$ is called the power set of $\Omega$.
+    \item The elements $A \in \mathcal{A}$ are called \enquote{events}. 
+    Events are observable (distinguishable) outcomes of an experiment.
+  \end{enumerate}
+\end{rems*}
+
+\begin{exs}
+  \begin{enumerate}[label=(\alph*)]
+    \item one coin toss: $\Omega = \{ 0,1 \}$
+    \item $500$ coin tosses: $\Omega = \{0,1 \}^{500}$
+    \item one coin toss + final position of coin (+ number of spins):
+    \[ \Omega = \{ 0,1 \} \times \R^2 ( \times \N_0 ) \]
+  \end{enumerate}
+\end{exs}
+
+\begin{defi*}[Axioms]
+  Let $(\Omega,\mathcal{A},\PP)$ be a probability space with $\PP:\mathcal{A}~\to~[0,1]$. 
+  Then we define the following axioms:
+  \begin{enumerate}
+    \item $\emptyset \in \mathcal{A}$
+    \item $A \in \mathcal{A} \implies A^C \in \mathcal{A}$
+    \item If $(A_n)_{n \in \N}$ is a sequence in $\mathcal{A}$, then 
+    \[ \bigcup_{i=1}^\infty A_n \in \mathcal{A} \text{.} \]
+    \item $\PP(\Omega) = 1$
+    \item $\sigma$-additivity: If $(A_n)$ is a sequence in $\mathcal{A}$ such that
+    $A_k \cap A_l = \emptyset \: \forall k \neq l$ then
+    \[ \PP(\biguplus_{n=1}^\infty A_n) = \sum_{n=1}^\infty \PP(A_n) \]
+  \end{enumerate}
+\end{defi*}
+
+\begin{exs}
+  Let's consider the examples (b) and (c) from above.
+  \begin{enumerate}[label=(\alph*)]
+    \item[(b)] $500$ coin tosses:
+    \begin{align*}
+      A &= [ \text{even number of $1$s} ] \\
+      &= \{ \omega = (\omega_1,\dots,\omega_{500}) \in \Omega: \omega_1 + \dots + \omega_{500} \text{ is even} \} \text{.}
+    \end{align*}
+    \item[(c)] one coin toss + final position of coin + number of spins:
+    \begin{align*}
+      A &= [ \text{coin toss: } 1 \text{, positon from origin: distance } < 2m \text{, spins: } 13 ] \\
+      &= \{ 1 \} \times \mathcal{B}((0,0),2) \times \{13\}
+    \end{align*}
+    where $\mathcal{B}((0,0),2) = \{(x,y) \in \R^2: \sqrt{x^2 + y^2} < 2 \}$.
+  \end{enumerate}
+\end{exs}
+
+\begin{rem}  \todo{fix this remark}
+  \begin{enumerate}
+    \item If $\Omega$ is at most countable: usually $\mathcal{A} = \mathcal{P}(\Omega)$
+    \item If $\Omega$ is uncountable, it is not good.
+  \end{enumerate}
+\end{rem}
+
+\begin{ex}
+  Let $\Omega = \R$. Then $\mathcal{A} = \mathcal{B}_{\R}$, where $\mathcal{B}_{\R}$ is the collection of all Borel sets on $\R$.
+  So $\mathcal{A}$ is the smallest $\sigma$-algebra over $\R$ which contains all intervals.
+\end{ex}
+
+\begin{prop*}[Consequences of the axioms]
+  Let $(\Omega,\mathcal{A},\PP)$ be a probability space with $\PP:\mathcal{A}~\to~[0,1]$.
+  Then we can deduce from the axioms the following statements:
+  \begin{enumerate}[label=(\alph*)]
+    \item If $A_1,\dots,A_N \in \mathcal{A}$, then $\bigcup_{n=1}^N A_n \in \mathcal{A}$ and since $\PP(\emptyset) = 0$,
+    \[ \PP(\biguplus_{n=1}^N A_n) = \sum_{n=1}^N \PP(A_n) \text{.} \]
+    \item If $(A_n)_{n \in \N}$ is a finite or countable sequence in $\mathcal{A}$, then
+    \[ \bigcap_{n=1}^\infty A_n \in \mathcal{A} \text{.} \]
+    \item Let $A,B \in \mathcal{A}$. Then
+    \[ \PP(A \cup B) = \PP(A) + \PP(B) - \PP(A \cap B) \text{.} \]
+    \item Let $A,B \in \mathcal{A}$. If $A \subset B$, then 
+    \[ \PP(A) \leq \PP(B) \text{.} \]
+    \item \enquote{Continuity}: If $(A_n)_{n \in \N}$ is a sequence in $\mathcal{A}$ such that $\forall n$ $A_n \subset A_{n+1}$, then
+    \[ \PP( \bigcup_{n=1}^\infty A_n ) = \lim_{n \to \infty} \PP(A_n) \text{.} \]
+  \end{enumerate}
+\end{prop*}
+
+\begin{proof} \todo{fix/complete proof}
+  \begin{enumerate}
+    \item[(c)] Use $A \cup B = A \uplus (B \cap A^C)$.
+    \todo{add pic}
+    \item[(e)] \todo{add pic}
+    \begin{align*}
+      A_N &= A_1 \cup (A_2 \setminus A_1) \cup \dots \cup (A_N \setminus A_{N-1}) \\
+      &= A_1 \cup \bigcup_{n=2}^N (A_n \setminus A_{n-1}) \\
+      A &= A_1 \uplus \biguplus_{n=2}^\infty \underbrace{(A_n \setminus A_{n-1})}_{\in \mathcal{A}}
+    \end{align*}
+    \begin{align*}
+      \PP(A) &= \PP(A_1) + \sum_{n=2}^\infty \PP (An \setminus A_{n-1}) \\
+      &= \lim_{N \to \infty} (\PP(A_1) + \sum_{n=2}^N \PP(A_n \setminus \PP(A_{n-1})) \\
+      &= \lim_{N \to \infty} \PP(A_N)
+    \end{align*}
+  \end{enumerate}
+\end{proof}
+
+\lecture{02.03.2016}
+
+\end{document}
