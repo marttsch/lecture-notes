@@ -1,0 +1,151 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\begin{defi*}[Prefix Codes]
+  $C: \mathcal{X} \to \Sigma^+ = \{ \text{non-empty words over alphabet } \Sigma \}$ for all $x \neq y$:
+  $C(x)$ is not a prefix of $C(y)$.
+\end{defi*}
+
+\begin{theorem}[Kraft inequality]
+  Let $\abs{\Sigma} = D \geq 2$ and $C: \mathcal{X} \to \Sigma^+$ prefix free.
+  Then
+  \[ \sum_{x \in \mathcal{X}} D^{-\ell(C(x))} \leq 1 \]
+  Conversely, if $\ell_x \in \N$ ($x \in \mathcal{X}$) such that
+  \[ \sum_{x \in \mathcal{X}} D^{-\ell_x} \leq 1 \]
+  then there is a prefix code $C$ such that $\ell_x = \ell(C(x))$.
+\end{theorem}
+
+\begin{proof}
+  $\Sigma^\ast \equiv D$-ary tree, root $\equiv$ empty word $\varepsilon$.
+  $\ell_\max \coloneqq \max \{ \ell(C(x)): x \in \mathcal{X} \}$
+  for any codeword $v = C(x)$, let 
+  \[ W_v = \{ w \in \Sigma^{\ell_\max}: w \text{ descendent of } v \} \]
+  Then the sets $W_v$, $v \in C(\mathcal{X})$, are \underline{pairwise disjoint} (prefix free)
+  \[ \biguplus_{v \in C(\mathcal{X})} W_v \subseteq \Sigma^{\ell_\max} \]
+  \begin{align*}
+    \sum_{v \in C(\mathcal{X})} \abs{W_v} \leq \abs{\Sigma^{\ell_\max}} \\
+    \sum_{v \in C(\mathcal{X})} D^{\ell_\max - \ell(v)} \leq D^{\ell_\matx}
+  \end{align*}
+  Divide both sides by $D^{\ell_\max}$ and we are done.
+  
+  \underline{Converse:}
+  $\mathcal{X} = \{x_1,\dots,x_n\}$, $\ell_i = \ell_{x_i}$ where wlog $\ell_1 \leq \ell_2 \leq \dots \leq \ell_n$,
+  $\Sigma = \{0,\dots,D-1\}$.
+  Let $w \in \Sigma^\ast$. $w = a_1 \dots a_l$ where $l \in \N_0$ and $a_i \in \Sigma$
+  \[ \nu(w) \coloneqq a_1 D^{-1} + a_2 D^{-2} + \dots + a_l D^{-l} = \frac{r}{D^\ell} \]
+  $r = a_1 D^{l-1} + a_2 D^{l-2} + \dots + a_l$
+  $D$-adic rational $\in [0,1)$
+  \[ Q_l = \{ \frac{r}{D^l}: l \geq 0, 0 \leq r < D^l, r \in \N_0 \} \]
+  \[ \nu: \Sigma^l \to Q_l \]
+  bijective (not bijective on $\Sigma^\ast$)
+  \begin{enumerate}
+    \item $a,b \in Q_l$ and $a + b < 1$ $\implies a+b \in Q_l$
+    \item $Q_l \subset Q_{l+1}$
+  \end{enumerate}
+  Define
+  \begin{align*}
+    C(x_1) = \underbrace{0 \dots 0}_{\ell_1}
+  \end{align*}
+  Codeword of $x_m$ where $m > 1$
+  \begin{align*}
+    D^{-\ell_1} + D^{- \ell_2} + \dots + D^{-\ell_{m-1}} < 1
+  \end{align*}
+  Apply Kraft inequality, then $\in Q_{\ell_{m-1}} \subset Q_{\ell_m}$
+  \[ \exists! w_m \in \Sigma^{\ell_m}: \nu(w_m) = D^{-\ell_1} + \dots + D^{-\ell_{m-1}} \]
+  Set $C(x_m) = w_m$
+  Why prefix free? Let $k < m$.
+  \[ \nu(w_m) = \underbrace{\nu(w_k)}_{0 \text{ if } k = 0} + 1 \cdot D^{-\ell_k} + \dots + 1 D^{\ell_{m-1}} \]
+  differs from $\nu(w_k)$ in the $k$-th digit or before (if there are carries)
+\end{proof}
+
+\begin{ex}
+  $\Sigma = \{0,1\}$
+  \todo{add pic}
+  $C(x) \to$ vertex of the tree
+  \todo{add pic 2}
+  prefix free $\equiv$ no descendent of $C(x)$ is a codeword
+  \todo{add pic 3}
+  $\ell_\max \coloneqq \max \{ \ell(C(x)): x \in \mathcal{X} \}$
+\end{ex}
+
+\begin{ex}
+  $\Sigma = \{0,\dots,9\}$, $w = 10364 \equiv 0.10364$
+\end{ex}
+
+Now: probabilities $p(x), x \in \mathcal{X}$, expected code length
+\[ L_C = \expect(\ell(C(X))) = \sum_{x} \underbrace{\ell(C(x))}_{\ell_x} p(x) \]
+
+\begin{ex}
+  $D = 2$, $\Sigma = \{0,1\}$, $\ell_1 = \ell_2 = \ell_3 = 2$, $\ell_4 = \ell_5 = 3$
+  \[ 3 \cdot 2^{-2} + 2 \cdot 2^{-3} = 1 \]
+  \begin{align*}
+    w_1 &= 00 \\
+    w_2 &\leftrightarrow 2^{-\ell_1} = \frac{1}{4} = 0 \frac{1}{2} + 1 \frac{1}{4} \\
+    w_2 &= 01 \\
+    w_3 &\leftrightarrow 2^{-\ell_1} + 2^{-\ell_2} = \frac{1}{2} = 1 \frac{1}{2} + 0 \frac{1}{4}\\
+    w_3 &= 10\\
+    w_4 &\leftrightarrow \frac{3}{4} = 1 \frac{1}{2} + 1 \frac{1}{4} + 0 \frac{1}{8} \\
+    w_4 &= 110
+    w_5 &\leftrightarrow \text{ self exercise}\\
+    w_5 &= 111
+  \end{align*}
+\end{ex}
+
+We get an \emph{Integer optimization problem}.
+Look for $\ell_x \in \N$, where $x \in \mathcal{X}$ such that $\sum_{x \in \mathcal{X}} \ell_x p(x)$ is minimized under the constraint $\sum_{x \in \mathcal{X} D^{-\ell_x} \leq 1$.
+\todo{add pic}
+
+\begin{rem}
+  $H_D$ is the entropy to basis $D$. Until now we only had (ordinary) entropy to base $2$.
+\end{rem}
+
+\begin{theorem}
+  For every prefix code $C: \mathcal{X} \to \Sigma$ with $\abs{\Sigma} = D$, the expected code lenght satisfies
+  \[ L_C \geq H_D(X) = - \sum_{x \in \mathcal{X}} p(x) \log_D(p(x)) = \frac{1}{\log_2(D)} H(X) \]
+  This equality holds if and only if $p(x) = D^{-\ell(C(x))}$ for all $x \in \mathcal{X}$
+\end{theorem}
+
+\begin{proof}
+  $\frac{1}{C} = \sum_{x} D^{-\ell(C(x))} \leq 1$ with $C \geq 1$.
+  \[ r(x)  = C D^{-\ell(C(x))} \]
+  is a probability on $\mathcal{X}$.
+  \begin{align*}
+    L_C - H_D (X) &= \sum_x p(x) \ell(C(x)) + \sum_x p(x) \log_D (p(x)) \\
+    &= - \sum_x p(x) \log_D \left( \underbrace{\frac{C}{C} D^{-\ell(C(x))}}_{\frac{r(x)}{C}} \right) + \sum_x p(x) \log_D (p(x)) \\
+    &= \log_D(C) + \sum_x p(x) \log_D \left( \frac{p(x)}{r(x)} \right)\\
+    &= \log_D(C) + \frac{1}{\log_2(D)} \underbrace{\KLdiv(p||r)}_{\geq 0}\\
+    &\geq \log_D (C) \geq 0
+  \end{align*}  
+  Suppose $L_C = H_D(X)$. Then $\log_D(C) = 0$, $C = 1$, $r(x) = D^{-\ell(C(x))}$.
+  \[ \KLdiv(p||r) = 0 \overset{\text{inform. inequ.}{\implies} p(x) = r(x) \;\; \forall x \]
+  Note that
+  \[ p(x) = D^{-\ell(C(x))} \iff \ell(C(x)) = - \log_D(p(x)) \]
+  
+  What to do if $-\log_D(p(x)) \notin \N$?
+  Take $\ell_x = \lceil - \log_D(p(x)) \rceil$.
+  Then $\sum_x D^{- \ell_x} \leq \sum_x D^{\log_D(p(x))} = 1$.
+  This inequality satisfies the Kraft inequality.
+  Thus, there exists a prefix code $C$ such that $\ell(C(x)) = \ell_x = \lceil - \log_D(p(x)) \rceil$.
+  \begin{align*}
+    H_D(X) \leq L_C < H_D(X)+1 
+  \end{align*}
+\end{proof}
+
+Suppose $(X_n)$ is a statinoary stochastic process where
+\[ \prob[X_n = x] = p(x) \]
+Fix $n$ and look at $(X_1,\dots,X_n)$ (which is a big random vector) with $p_{X_1,\dots,X_n}$ joint distribution.
+\[ (x_1,\dots,x_n) \in \mathcal{X}^n \mapsto C_n(x_1,\dots,x_n) \]
+$L_{C_n} = L_{C,n}$ expected code length.
+Optimal one (with $\ast$) satisfies 
+\[ H_D(X_1,\dots,X_n) \leq L_{C_n}^\ast < H_D(X_1,\dots,X_n) + 1 \]
+Divide all three things by $n$.
+\begin{align*}
+  \frac{1}{n} H_D(X_1,\dots,X_n) \leq \frac{1}{n} L_{C_n}^\ast < \frac{1}{n} H_D(X_1,\dots,X_n) + \frac{1}{n} 
+\end{align*}
+where $\frac{1}{n} L_{C_n}^\ast$ is (optimal) expected code length per symbol
+
+\begin{cor}
+  $\frac{1}{n} L_{C_n}^\ast \to h$
+\end{cor]
+
+\end{document}

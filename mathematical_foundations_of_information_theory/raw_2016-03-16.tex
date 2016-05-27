@@ -1,0 +1,164 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\begin{defi}
+  Let $X$ be a random variable, values in set $\mathcal{X}$ (finite)
+  \[ p_X(x) = \prob[X=x] \]
+  for $x \in \mathcal{X}$.
+  \[ H(X) = - \sum_{x \in \mathcal{X}} p(x) \log_2 p(x)  = \expect(-\log_2 p(X)) \]
+  where $p = (p_1,\dots,p_n)$ is a probability vector ($p_i \geq 0, p_1 + \dots + p_n = 1$).
+  Then 
+  \[ H(p_1,\dots,p_n) = - \sum_{i=1}^n p_i \log_2 p_i \]
+  This is the entropy of the random variable or its distribution (which are equivalent).
+\end{defi}
+
+Uniform distribution:
+\begin{align*}
+  H(U_N) = H(\underbrace{\frac{1}{N},\dots,\frac{1}{N}}_{n \text{ vectors}}) = \log_2 N
+\end{align*}
+is the entropy of uniform distribution on $N$ elements.
+
+\begin{prop}[Properties]
+  \begin{enumerate}
+    \item $H(X)$ depends only on the probabilities and not on any specific interpretation, i.e.
+    if $\mathcal{X}^\prime$ another set and $f: \mathcal{X} \to \mathcal{X}^\prime$ bijective and $X^\prime = f(X)$
+    then $H(X) = H(H^\prime$ and $p_{X^\prime}(f(x)) = p_X(x)$.
+    \item For fixed $n$, $(p_1,\dots,p_n) \mapsto H(p_1,\dots,p_n)$ is continuous.
+    In particular, $p_1 \mapsto H(p_1, 1-p_1)$ is continuous on $[0,1]$,
+    maximum for $p_1 = 1 - p_1 = \frac{1}{2}$ is $H(\frac{1}{2},\frac{1}{2}) = 1$,
+    \todo{add pic}
+    Back to original case: also here the maximum for $p_1 = \dots = p_n = \frac{1}{n}$ 
+  \end{enumerate}
+\end{prop}
+
+If $(X,Y)$ is a pair of random variables, $X$ values in $\mathcal{X}$ and $Y$ are values in $\mathcal{Y}$, both finite.
+Let $Z = (X,Y)$ with values in $\mathcal{Z} = \mathcal{X} \times \mathcal{Y}$.
+We write the joint entropy $H(X,Y) = H(Z)$ as above.
+\[ H(X,Y) = - \sum_{x,y} p_{X,Y} (x,y) \log_2 p_{X,Y}(x,y) \]
+
+\subsection{Conditional entropy}
+
+\begin{rem}[Recall]
+  \begin{enumerate}[label=(\alph*)]
+    \item Marginal distribution of $X$ and $Y$.
+    \begin{align*}
+      p_X(x) = \sum_{y \in \mathcal{Y}} p_{X,Y} (x,y) \\
+      p_Y(y) = \sum_{x \in \mathcal{X}} p_{X,Y} (x,y)
+    \end{align*}
+    \item Conditional distribution of $Y$, given $X=x$
+    \begin{align*}
+      p(y|x) = p_{(Y|X=x)} (y) = \prob[Y = y | X = x] = \frac{p_{X,Y}(x,y)}{p_X(x)}
+    \end{align*}
+    where $p_X(x) > 0$ else if $p_X(x) = 0$ we have $p(x|y) = 0$.
+    Note that
+    \begin{align*}
+      \sum_y p(y|x) = 1
+    \end{align*}
+  \end{enumerate}
+\end{rem}
+
+The entropy of conditional distribution:
+\begin{align*}
+  - \sum_{y \in \mathcal{Y}} p(y|x) \log_2 p(y|x) = H(Y|X=x)
+\end{align*}
+
+\begin{defi}[and Lemma: Conditional entropy]
+  \begin{align*}
+    H(Y|X) &\coloneqq \sum_{x \in \mathcal{X}} p_X(x) H(Y|X=x) \\
+    &= - \sum_{x \in \mathcal{X}, y \in \mathcal{Y}} p(x,y) \log_2 p(y|x) \\
+    &= - \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x,y) (\log_2 p(x,y) - \log_2 p_X(x)) \\
+    &= H(X,Y) - (-\sum_x (\underbrace{\sum_y p(x,y)}_{= p_X(x)}) \log_2 p_X(x) \\
+    &= H(X,Y) - H(X)
+  \end{align*}
+  This equivalent to
+  \[ H(X,Y) = H(X) + H(Y|X) \]
+\end{defi}
+
+\begin{ex}
+  Let $\Omega = \{1,\dots,N\} = \mathcal{X}$. And the probability $p(k) = \prob(\{k\})$ is given.
+  \begin{align*}
+    Z = \sum_{k=1}^N k \mathbb{1}_{\{k\}} \\
+    Z(k) = k \\
+    \prob[Z=k] = p_k \\
+    X = \sum_{k=1}^{N-2} k \mathbb{1}_{\{k\}} + (N-1) \mathbb{1}_{\{N-1,N\}} \\
+    X(k) = k, \text{ for } k \leq N-2 \\
+    X(N-1) = X(N) = N-1
+  \end{align*}
+  Define $Y = \mathbb{1}_{\{N\}}$.
+  Then 
+  \begin{align*}
+    Y(k) &= 0, \text{ for } k \leq N-1 \\
+    Y(N) &= 1
+  \end{align*}
+  Now compute
+  \begin{align*}
+    \prob[X=k] &= p_k \text{ for } k \leq N-2 \\
+    \prob[X=N-1] &= p_{N-1} + p_N \\
+    \prob[Y=1] &= p_N \\
+    \prob[Y=0] &= 1 - p_N
+  \end{align*}
+  Consider the pair $(X,Y)$: \\
+  values in $\{(1,0),\dots,(N-2,0),(N-1,0),(N-1,1)\} = \mathcal{Z}$ \\
+  probabilities $p_1,\dots,p_{N-2},p_{N-1},p_N$
+  \begin{align*}
+    f: \mathcal{Z} &\to \mathcal{X} \\
+    (k,l) &\mapsto k+l
+  \end{align*}
+  is a bijection.
+  Other approach: $Z = X + Y$, then we get the same bijection.
+  computation:
+  \begin{align*}
+    H(Z) &= - \sum_{k=1}^N p_k \log_2 p_k = H(X,Y) \\
+    H(X) &= - \sum_{k=1}^{N-2} p_k \log_2 p_k - (p_{N-1}+p_{N}) \log_2(p_{N-1}+p_{N}) \\
+    H(Y|X) &= \sum_{k=1}^{N-2} p_k H(Y|X=k) + (p_{N-1} + p_N) H(Y|X=N-1) \\
+    \prob[Y=0|X=N-1] &= \frac{\prob[Y=0,X=N-1]}{\prob[X=N-1]} = \frac{p_{N-1}}{p_{N-1} + p_N} \\
+    \prob[Y=1|X=N-1] &= \frac{p_N}{p_{N-1} p_N}
+  \end{align*}
+  $H(Y|X=k) = 0$ for $k \leq N-2$ since in this case $p(Y) = 0$ and the entropy of constant values is $0$.\\
+  We want to conclude a formula:
+  \begin{align*}
+    H(Y|X) = (p_{N-1} + p_N) H(\frac{p_{N-1}}{p_{N-1} + p_N}, \frac{p_N}{p_{N-1} + p_N})
+  \end{align*}
+  \begin{align} \label{entropy}
+    H(p_1,\dots,p_N) = H(p_1,\dots,p_{N-2}, p_{N-1} +p_N) + (p_{N-1} + p_N) H \left( \frac{p_{N-1}}{p_{N-1} + p_N},\frac{p_N}{p_{N-1} + p_N} \right)
+  \end{align}
+\end{ex}
+
+\begin{theorem}[Axiomatic definition of entropy]
+  Let $p = \{(p_1,\dots,p_N): N \in \N, p_k \geq 0, \sum_{k=1}^N p_k = 1 \}$.
+  Assume that $H: p \to \R$ is a function with
+  \begin{enumerate}%Roman letters
+    \item $H$ is permutation (transposition) invariant:
+    \begin{align*}
+      H(p_1,\dots,p_i,\dots,p_j,\dots,p_N) = H(p_1,\dots,p_j,\dots,p_i,\dots,p_N)
+    \end{align*}
+    \item $p_0 \mapsto H(p_0,1-p_0)$ is continuous on $[0,1]$
+    \item $H(\frac{1}{2},\frac{1}{2}) = 1$
+    \item Equation (\ref{entropy}) holds whenever $p_{N-1} + p_N > 0$.
+    Then
+    \begin{align*}
+      H(p_1,\dots,p_N) = - \sum_{k=1}^N p_k \log_2 p_k
+    \end{align*}
+    is an entropy.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  for Math students next time
+\end{proof}
+
+\begin{theorem}[Chain rule]
+  Let $X_1,\dots,X_n$ be discrete random variables with values in $\mathcal{X}$.
+  Then
+  \begin{align*}
+    H(X_1,\dots,X_n) = \sum_{k=1}^n \underbrace{H(X_k| X_{k-1},\dots,X_1)}_{= H(X_1) \text{ for } k=1}
+  \end{align*}
+\end{theorem}
+
+\begin{proof}
+  Exercise:\\
+  Induction on n.\\
+  $H(X_1,\dots,X_n) = H((X_1,\dots,X_{N-1}),X_n)$ 
+\end{proof}
+
+\end{document}

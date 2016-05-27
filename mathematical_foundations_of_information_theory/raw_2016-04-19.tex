@@ -1,0 +1,198 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\begin{ex}
+\begin{align*}
+  p &= \left(\frac{1}{2},\frac{1}{2}\right) \\
+  q &= \left(\frac{1}{4},\frac{3}{4}\right) \\
+  D(p||q) &= 0,207\dots \\
+  D(q||p) &= 0,1887\dots
+\end{align*}
+\end{ex}
+
+\begin{defi*}
+  Let $X,Y$ be two RVs, values in $\mathcal{X}, \mathcal{Y}$.
+  The \emph{mutual information} of $X$ and $Y$ is 
+  \[ I(X;Y) = D(p_{X,Y} || p_X \otimes p_Y) \]
+  Recall $p_{X,Y}(x,y) = \prob[X=x,Y=y]$.
+  \begin{align*}
+    p_X(x) = \prob[X=x] = \sum_y p(x,y) \\
+    p_X \otimes p_Y (x,y) = p_X(x) p_Y(y)
+  \end{align*}
+\end{defi*}
+
+Note: If $X,Y$ are independent, then $I(X;Y) = 0$.
+We will see later that the converse is also true ($I(X;Y) = 0 \implies X,Y$ are independent).
+
+\begin{align*}
+  I(X;Y) &= \sum_{x,y} p(x,y) \log_2 \frac{p(x,y)}{p_X(x) p_Y(y)} \\
+  &= \sum_{x,y} p(x,y) \log_2 p(x,y) - \sum_x \underbrace{\sum_y p(x,y)}_{= p_X(x)} \log_2 p_X(x) - \sum_y \underbrace{\sum_x p(x,y)}_{= p_Y(y)} \log_2 p_Y(y) \\
+  &= H(X) + H(Y) - H(X,Y)
+ \end{align*}
+
+\begin{lemma}
+  \begin{align*}
+    I(X;Y) &= H(X) + H(Y) - H(X,Y) \\
+    &= H(X) - H(X|Y) \\
+    &= H(Y) - H(Y|X)
+  \end{align*}
+\end{lemma}
+
+\begin{align*}
+  I(X;X) &= H(X) + H(X) - H(X,X) \\
+  &= H(X)
+\end{align*}
+since there is no new information from the second $X$:
+\[ p_{X,X} (x,x^\prime) = \prob[X=x,X=x^\prime] = \begin{cases} p_X(x) &, x = x^\prime \\ 0 &, x \neq x^\prime \end{cases} \]
+
+\begin{defi*}[Conditional mutual information]
+  \begin{align*}
+    I(X;Y|Z) &= \sum_{z \in \mathcal{Z}} I(X;Y|Z=z) p_Z(z) \\
+    \dots &= H(X|Z) - H(X|Y,Z) \\
+    &= H(Y|Z) - H(Y|X,Z)
+  \end{align*}
+\end{defi*}
+
+\begin{rem}
+  \begin{align*}
+    p_{X,Y,Z} (x,y,z) = \prob[X=x,Y=y,Z=z]
+  \end{align*}
+  \begin{align*}
+    p_{X;Y|Z=z} (x,y) = \prob[X=x,Y=y|Z=z] = \frac{p_{X,Y,Z}(x,y,z)}{p_Z(z)}
+  \end{align*}
+\end{rem}
+
+Recall chain rule:
+\begin{align*}
+  H(X_1,\dots,H_n) = \sum_{k=1}^n H(X_k | X_{k-1},\dots,X_1)
+\end{align*}
+
+\begin{lemma}[Version of Chain rule]
+  \begin{align*}
+    I(X_1,\dots,X_n;Y) = \sum_{k=1}^n I(X_k;Y|X_{k-1},\dots,X_1)
+  \end{align*}
+\end{lemma}
+
+\begin{rem}[Recall from Analysis 1]
+  Let $I$ be an interval. A function $f: I \to \R$ is convex if
+  \[ f(px + (1-p) y) \leq p f(x) + (1-p) f(y) \]
+  for all $x,y \in I$ and all $p \in (0,1)$.
+  \todo{add pic}
+  
+  A function $f$ is called strictly convex if
+  \[ f(px + (1-p) y) < p f(x) + (1-p) f(y) \]
+  for all $x,y \in I$ and all $p \in (0,1)$.  
+\end{rem}
+
+\begin{rem}[Theorem from Analysis 1]
+  Let $f$ be convex on an open interval $I$. Then
+  \begin{enumerate}
+    \item $f$ continuous on $I$
+    \item for all $a \in I$ there exists $f^\prime(a-),f^\prime(a+)$, where $a-,a+$ are differential ..., and $f^\prime(a-) \leq f^\prime(a+)$
+    \todo{add pic}
+    \item Let $\alpha \in [f^\prime(a-),f^\prime(a+)]$. Then
+    \[ f(x) \geq f(a) + \alpha (x-a) \]
+    for all $x \in I$ and in the strictly convex case
+    \[ f(x) > f(a) + \alpha (x-a) \]
+    for all $x \in I$ and $x \neq a$.
+  \end{enumerate}
+\end{rem}
+
+\begin{theorem}[Jensens's inequality]
+  Let $f$ be convex on an open interval $I \subset \R$. And let $X$ be an $I$-valued random variable such that 
+  $\underbrace{\expect(X)}_{\in I}$ and $\expect(f(X))$ exist and are finite.
+  Then
+  \[ \expect(f(X)) \geq f(\expect(X)) \text{.} \]
+  If $f$ is strictly convex and $X$ is not a.s. constant, then $\expect(f(X)) > f(\expect(X))$.
+\end{theorem}
+
+\begin{proof}
+  Set $a = \expect(X)$, $\alpha \in [f^\prime(a-),f^\prime(a+)]$.
+  Then
+  \begin{align*}
+    f(X) \geq f(a) + \alpha (X - a)  \\
+    \implies \expect(f(X)) \geq \expect(f(a) + \alpha (X-a)) = f(a) + \alpha \underbrace{(\expect(X)-a)}_{=0} = f(\expect(X))
+  \end{align*}
+  
+  Let $f$ be strictly convex and $X$ not a.s. constant.
+  Then 
+  \[ \prob[X \neq a] = \prob[\{\omega \in \Omega: X(\omega) = a\} \in \mathcal{A}] > 0 \]
+  on $A = \{\omega \in \Omega: X(\omega) = a\}$,
+  \[ f(X) > f(a) + \alpha (X-a) \]
+  Thus,
+  \[ \expect(f(X)) > f(a) \text{.} \]
+\end{proof}
+
+\begin{rem}
+  \begin{align*}
+    Z = f(X) - (f(a)+\alpha (X-a)) \\
+    Z \geq 0
+  \end{align*}
+  If $\expect(Z) = 0$, then $Z = 0$ a.s.
+\end{rem}
+
+\begin{ex}
+  $A_n = [ Z \geq \frac{1}{n}]$:
+  \begin{align*}
+    \expect(Z) &\geq \expect(Z \cdot \mathbb{1}_{A_n}) \\
+    &\geq \expect(\frac{1}{n} \mathbb{1}_{A_n}) = \frac{1}{n} \prob(A_n)
+  \end{align*}
+  $\prob(A_n) = 0$ and $A_n$ is monotone increasing
+  \begin{align*}
+    \bigcup_{n=1}^\infty A_n = [Z > 0]
+  \end{align*}
+  Thus, $p[Z > 0] = 0$.
+\end{ex}
+
+In our case: $\expect(f(X)) = \sum_{k=1}^n f(x_k) p_k$ and $\expect(X) = \sum_{k=1}^n x_k p_k$.
+$X$: values $x_k \in I$, $\prob[X = x_k] = p_k$ for $k=1,\dots,n$
+\[ \sum_{k=1}^n p_k f(x_k) \geq f(\sum_{k=1}^n p_k x_k) \]
+
+\begin{ex}
+  Prove the statement above
+  \[ \sum_{k=1}^n p_k f(x_k) \geq f(\sum_{k=1}^n p_k x_k) \]
+  by induction.
+\end{ex}
+
+\begin{theorem}[Information inequality]
+  Let $p(\cdot)$ and $q(\cdot)$ be two probability distributions on $\mathcal{X}$ (finite).
+  Then $D(p||q) \geq 0$ and $D(p||q) = 0 \iff p(\cdot) = q(\cdot)$.
+\end{theorem}
+
+\begin{proof}
+  $- \log_2: (0,\infty) \to \R$ is strictly convex.
+  \begin{align*}
+    D(p||q) &= \expect( - \log_2 \frac{q(X)}{p(X)}) 
+  \end{align*}
+  The denominator $p(X)$ is always positive a.s.
+  \begin{align} \label{0419_square}
+    \expect( - \log_2 \frac{q(X)}{p(X)})  &\geq - \log_2 \expect(\frac{q(X)}{p(X)})
+  \end{align}
+  Consider
+  \begin{align*}
+    \expect(\frac{q(X)}{p(X)}) &= \sum_{x: p(x) > 0} p(x) \cdot \frac{q(x)}{p(x)} \\
+    &= \sum_{x: p(x) > 0} q(x) \leq 1
+  \end{align*}
+  Since $- \log$ is monotone decreasing,
+  \begin{align*}\label{0419_circ}
+    - \log_2 \expect(\frac{q(X)}{p(X)}) \geq - \log_2(1) = 0
+  \end{align*}
+  If $D(p||q) = 0$, then we have equality in \ref{0419_square} and \ref{0419_circ}.
+  By \ref{0419_circ}, 
+  \begin{align*}
+    \sum_{x: p(x) > 0} q(x) = 1
+  \end{align*}
+  If $p(x) = 0$, then $q(x) = 0$.
+  
+  $\frac{q(X)}{p(X)} = C$ is constant, $- \log_2 C = 0$
+  Then $C = 1$ and $p(x) = q(x)$ for all $x$.
+\end{proof}
+
+\begin{cor}
+  $I(X;Y) \geq 0$
+  \[ I(X;Y) = 0 \iff X,Y \text{ are independent } \]
+  and $H(X) \geq H(X|Y)$
+  \[ H(X) = H(X|Y) \iff X,Y \text{ are independent} \]
+\end{cor}
+
+\end{document}

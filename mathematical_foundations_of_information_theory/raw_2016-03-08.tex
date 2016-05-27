@@ -1,0 +1,137 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\lecture{08.03.2016}
+
+\begin{defi*}[Random variable (RV)]
+  $X: (\Omega,\mathcal{A},\prob) \to (\R,\mathcal{B}_\R)$ where $\mathcal{B}_\R$ are Borel sets (think of intervals).
+  \[ \inv{X}(I) \in \mathcal{A} \]
+  for all interval $I$ (Borel set $I$).
+\end{defi*}
+
+\begin{defi*}[Distribution of $X$]
+  $P_X$ on $(\R,\mathcal{B})$:
+  \[ P_X(I) = \prob[X \in I] = \prob(\inv{X}(I)) \]
+\end{defi*}
+
+\begin{defi*}[Discrete/continuous RVs (and more!)]
+  \begin{enumerate}
+    \item discrete density:
+    \[ p_X(x) = \prob[X = x] > 0 \]
+    only in the (finite or countable) value set of $X$.
+    \[ \prob[X \in I] = \sum_{x \in I} p_X(x) \]
+    \item density:\\
+    $f_X: \R \to [0,\infty)$ such that 
+    \[ \prob[ X \in I] = \int_I f_X(x) dx \]
+    \todo{add pic}
+  \end{enumerate}
+\end{defi*}
+
+\begin{defi*}
+  The expected value of a RV $X$ is 
+  \[ \expect(X) = \int_\Omega X d\prob \]
+  if the integral exists.
+  In particular, if $X$ is \emph{discrete}, then 
+  \[ \expect(X) = \sum_{x \in \R} x p_X(x) \]
+  If $X$ is \emph{continuous}, then
+  \[ \expect(X) = \int_\R x f_X(x) dx \]
+  We are interested in the situation where
+  \[ \expect(\abs{X}) < \infty \text{,} \]
+  that is:
+  \[ \sum \abs{x} p_X(x) < \infty \text{ (discrete case)} \]
+  \[ \int_\R f_X(x) dx < \infty \text{ (continuous case)} \]
+\end{defi*}
+
+\begin{rem} [for Math]
+  $X = X^+ - X^-$: at least one of $\int X^\pm$ is finite
+\end{rem}
+
+\begin{ex}
+  Let $p(n) = \frac{6}{\pi^2} \frac{1}{n^2}$ for $n \in \N$.
+  \[ \sum n p(n) = \frac{6}{\pi^2} \sum \frac{1}{n} = \infty \]
+\end{ex}
+
+\subsection{Convergence of sequences of RVs}
+
+\begin{defi*}
+  Let $(X_n)$ be a sequence of random variables and $X$ another random variable. Then
+  \begin{enumerate}
+    \item $X_n \to X$ ($X_n$ converges to $X$) almost surely
+    \begin{align*}
+      \prob[ \lim_{n \to \infty} X_n = X ] &= \prob( \{ \omega \in \Omega: (X_n(\omega))_{n \in \N} \text{ converges and the limit is } X(\omega) \} ) \\
+      &= 1 
+    \end{align*}
+    \item $X_n \to X$ in probability\\
+    $\forall \varepsilon > 0$
+    \[ \prob[ \abs{X_n - X} \geq \varepsilon] = \prob( \{ \omega: \abs{X_n(\omega) -X(\omega)} \geq \varepsilon \} ) \to 0 \]
+  \end{enumerate}
+\end{defi*}
+
+Question: Is the statement $\expect(X_n) \overset{\text{?}}{\to} \expect(X)$ true?
+
+\begin{theorem}[Monotone convergence]\label{theorem1}
+  If $0 \leq X_n \leq X_{n+1}$ and $X = \lim_{n \to \infty} X_n$ almost surely, then
+  \[ \expect(X) = \lim_{n \to \infty} \expect(X_n) \]
+\end{theorem}
+
+\begin{theorem}[Lemma of Fatou] \label{theorem2}
+  If $X_n \geq 0$ for all $n$, then
+  \[ \expect( \lim \inf X_n) \leq \lim \inf \expect(X_n) \]
+\end{theorem}
+
+\begin{theorem}\label{theorem3}
+  If $X_n \to X$ almost surely and there is a random variable $Y$ such that $\abs{X_n} \leq Y$ a.s. for all $n$ and $\expect(Y) < \infty$, then
+  \[ \lim \expect(X_n) = \expect(X) \text{.} \]
+\end{theorem}
+
+\begin{ex}
+  A counter example for the case \enquote{If $X_n \to X$ a.s., then $\lim \expect(X_n) = \expect(X).$}:\\
+  $\Omega = [0,1]$, $\mathcal{A} = \mathcal{B}_{[0,1]}$, $\prob = $ lebesgue measure.
+  \todo{add pic}
+  Choose the curve such that the triangle has a small base and a high height. Then $\expect(X_n) = 1$, $\lim X_n(\omega) = 0 = X(\omega)$, $\expect(X) = 0$.
+\end{ex}
+
+\begin{rem}
+  Let f map from $X_n \to X$ a.s. on $X_n \to X$ in probability, then
+  \[ \prob[X \neq X^\prime] = 0: \: X = X^\prime \text{a.s.} \]
+  \begin{proof}
+    \begin{align*}
+      \abs{X - X^\prime} \leq \abs{X - X_n} + \abs{X_n - X^\prime} \\
+      \implies [ \abs{X - X^\prime} \geq \varepsilon] \subseteq [ \abs{X - X_n} \geq \frac{\varepsilon}{2}] \cup [\abs{X_n - X^\prime} \geq \frac{\varepsilon}{2}] \\
+      \prob[\abs{X - X^\prime} \geq \varepsilon] \leq \prob[ \abs{X_n - X} \geq \frac{\varepsilon}{2}] + \prob[ \abs{X_n - X^\prime} \geq \frac{\varepsilon}{2}] \\
+      \overset{(n \to \infty)}{\to} 0\\
+      \text{so } \prob[\abs{X -X^\prime} \geq \frac{1}{r}] = 0 \text{ for all } r \in \N \\
+      \implies \prob( \bigcup_{r=1}^\infty [ \abs{X - X^\prime} \geq \frac{1}{r}] ) = \prob[ \abs{X - X^\prime} > 0] = 0
+    \end{align*}
+  \end{proof}
+\end{rem}
+
+\begin{theorem}
+  $X_n \to X$ a.s. if and only if $U_k \to 0$ in probability where
+  \[ U_k = \sup_{n \geq k} \abs{X_n -X} \]
+  In particular, $X_n \to X$ in prob. (because $U_k \geq \abs{X_k - X}$)
+\end{theorem}
+
+\begin{proof}
+  Let $\varepsilon = \frac{1}{r}$.
+  \begin{align*}
+    \prob[\forall r \exists k \forall n \geq k: \abs{X_n - X} < \frac{1}{r} ] 
+    &= 1 \\
+    &= \prob(\bigcap_r \underbrace{\bigcup_k \bigcap_{n \geq k} [ \abs{X_n - X} < \frac{1}{r}}_{A_{r+1} \subset A_r \in \mathcal{A}} ] ) \\
+  \implies \prob(A_r) = 1 \: \forall r \in \N  \\
+  \end{align*}
+  Since $A_r$ are decreasing and $\prob(A_r) = 1 \: \forall r \in \N$, the other direction holds as well.\\
+  $\bigcap_{n \geq k} [\abs{X_n -X} < \frac{1}{r}] \subset [ U_k \leq \frac{1}{r}]$\\
+  Conversely, $[U_k \leq \frac{1}{r}] \subset \bigcap_{n \geq k} [ \abs{X_n - X} < \frac{1}{r-1}]$\\
+  $A_r \subset \bigcup_k [U_k \leq \frac{1}{r}] $\\
+  So, $1 = \prob(A_r) \leq \prob(\bigcup_k [U_k \leq \frac{1}{r}]) \leq 1$\\
+  Since $U_k \geq U_{k+1}$, the events $U_k \leq \frac{1}{r}$ are increasing in $k$.
+  \begin{align*}
+    \iff \forall r \: \lim_{k \to \infty} \prob[U_k \leq \frac{1}{r}] = 1\\
+    \iff \forall r \: \lim \prob[ U_k > \frac{1}{r}] = 0
+  \end{align*}
+  This means, $U_k \to 0$ in prob.
+  This concludes the entire proof.
+\end{proof}
+
+\end{document}

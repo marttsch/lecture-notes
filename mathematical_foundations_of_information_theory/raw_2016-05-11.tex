@@ -1,0 +1,150 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+AEP: $(X_n)$ stochastic process, state space $\mathcal{X}$ Then
+\[ - \frac{1}{n} \log_2 p_n(X_1,\dots,X_n) \to h \text{ almost surely} \]
+$h$ as entropy
+
+$p_n$ joint distribution of $X_1,\dots,X_n$
+
+\begin{theorem}[Ergodic theorem for finite Markov chains]
+  $(\mathcal{X},P)$ where $P$ is a transition matrix $P = (p(y|x))_{x,y \in \mathcal{X}}$ irreducible
+  $\nu$ unique stationary (invariant) probability distribution: $\nu = (\nu(x))_{x \in \mathcal{X}}$ row vector; $\nu P = \nu$.
+  Then for any initial distribution $\mu = (\mu(x))_{x \in \mathcal{X}}$
+  a Markov chain $(X_n)_{n \geq 0}$ for every function $f: \mathcal{X} \to \R$,
+  \[ \frac{f(X_0) + f(X_1) + \dots + f(X_{n-1})}{n} \overset{\text{a.s.}}{\to} \int_\mathcal{X} f d\nu (= \sum_{x \in \mathcal{X}} f(x) \nu(x) ) \]
+\end{theorem}
+
+\begin{theorem}
+  Under the above assumptions $(X_n)_{n\geq 0}$ has the AEP.
+\end{theorem}
+
+\begin{proof}
+  $p_n(x_0,x_1,\dots,x_n) = \prob[X_0 = x_0,X_1=x_1,\dots,X_n=x_n]$
+  $= \mu(x_0) p(x_1|x_0) p(x_2|x_1) \dots p(x_n|x_{n-1}) (= \mu_{x_0} p_{x_0,x_1} p_{x_1,x_2} \dots p_{x_{n-1},x_n}$
+  We want to study
+  \begin{align*}
+    - \frac{1}{n+1} \log_2 [ \mu(X_0) p(X_1|X_0) \dots p(X_n|X_{n-1}) ] \\
+    = \frac{1}{n+1} [ -\log_2(\mu(X_0)) + (-\log_2 p(X_1|X_0)) + \dots + (- \log_2(p(X_n|X_{n-1}))
+  \end{align*}
+  \begin{rem}
+    we can replace $\frac{1}{n+1}$ by $\frac{n}{n+1} \frac{1}{n}$ since $\frac{n}{n+1}$ tends to $1$.
+  \end{rem}
+  with $f(x,y) = - \log_2 p(y|x)$, then this above
+  \begin{align*}
+    \sim \frac{1}{n} (f(X_0,X_1) + f(X_1,X_2) + \dots + f(X_{n-1},X_n) )
+  \end{align*}
+  Look at new Markov chain: $(X_n,X_{n+1})_{n \geq 0}$
+  \begin{align*}
+    \prob[(X_n,X_{n-1}) = (x_2,y_2) | (X_{n-1},X_n) = (x_1,y_1)] = q(x_2,y_2|x_1,y_1) =  \begin{cases} p(y_2|y_1) & x_2 = y_1 \\ 0 & x_2 \neq y_1 \end{cases}
+  \end{align*}
+  
+  State space: $\mathcal{S} = \{(x,y) \in \mathcal{X}^2: p(y|x) > 0 \} = $ oriented edges of the graph of $(\mathcal{X},P)$.
+  \todo{add pic}
+  $(\mathcal{S},Q)$ is irreducible
+  ? stationary distribution $\hat{\nu}$
+  Try
+  \[ \prob[(X_0,X_1) = (x,y)] = \nu(x) p(y|x) \]
+  if $X_0$ has distribution $\nu$.
+  
+  ?: $\hat{\nu} Q \overset{?}{=} \hat{\nu}$, $(x,y) \in \mathcal{S}$
+  \begin{align*}
+    \sum_{(u,v) \in \mathcal{S}} \hat{\nu}(u,v) \underbrace{((x,y)|(u,v))}_{ p(y|x) \text{ if } v = x, 0 \text{else}}
+    &= \sum_{u: (u,x) \in \mathcal{S}} \hat{\nu (u,x) p(y|x)} \\
+    &= \sum_{u} \nu(u) p(x|u) p(y|x)\\
+    &= \nu(x) p(y|x) \checkmark
+  \end{align*}
+  Check whether $p(y|x)$ is a probability distribution.
+  \begin{align*}
+    \sum_{x,y} \nu(x) p(y|x) = \sum_y \overbrace{\sum_x \nu(x) p(y|x)}^{=\nu(y)} =\sum_y \nu(y) = 1
+  \end{align*}
+  Thus,
+  \begin{align*}
+    \frac{1}{n} (f(X_0,X_1) + f(X_1,X_2) + \dots + f(X_{n-1},X_n) ) \to \sum_{(x,y) \in \mathcal{S}} f(x,y) \hat{\nu}(x,y) \\
+    = - \sum_{x,y} \nu(x) p(y|x) \log_2 p(y|x) = \sum_x \nu(x) H(p(\cdot|x)) = h
+  \end{align*}
+\end{proof}
+
+\section{Codes}
+
+Data in $\mathcal{X}$ have to be encoded efficiently (and transmitted and decoded).
+Data comes in with certain probabilities. $p(x) = \prob[X=x]$, $X$ random variable, random input.
+to be encoded by words (strings) over some finite \enquote{alphabet} (set) $\Sigma$ (typically $\Sigma = \{0,1\}$).
+
+\begin{defi*}
+  \emph{Source code}: $C: \mathcal{X} \to \Sigma^+$ where $\Sigma^+ = \{a_1 \dots a_n | n \in \N, a_i \in \Sigma\}$ denotes the set of all non-empty words.
+  $C(x)$ is the codeword of $x \in \mathcal{X}$.
+  $w \in \Sigma^\ast$: $l(w)$ length (number of letters)
+  
+  \emph{Expected code length}: \[ L_C = \sum_{x \in \mathcal{X}} l(C(x)) p(x) = \expect(l(C(x))) \]
+\end{defi*}
+
+\begin{ex}
+  a)\\
+  $\mathcal{X} = \{1,2,3,4\}$, and $\Sigma = \{0,1\}$.
+  \begin{align*}
+    p(1) &= \frac{1}{2} \\
+    p(2) &= \frac{1}{4} \\
+    p(3) &= p(4) = \frac{1}{8}
+  \end{align*}
+  Then 
+  \begin{align*}
+    C(1) &= 0 \\
+    C(2) &= 10 \\
+    C(3) &= 110 \\
+    C(4) &= 111
+  \end{align*}
+  $L_C = \frac{1}{2} + \frac{1}{2} + \frac{3}{4} = \frac{7}{4}$ $(= H(X) = H(p))$
+  \\
+  \\
+  b)\\
+  $\mathcal{X} = \{1,2,3\}$
+  $p(\cdot) = \frac{1}{3}$
+  \begin{align*}
+    C(1) &= 0 \\
+    C(2) &= 10 \\
+    C(3) &= 11
+  \end{align*}
+  $L(C) = \frac{5}{3} = 1,66 > 1,58 \approx H(X) = \log_2(3)$
+\end{ex}
+
+\begin{defi*}
+  \emph{Extension of $C$ to $\mathcal{X}^+$}: $\mathcal{X}^+ \to \Sigma^+$ by
+  \[ C(x_1 \dots x_n) = C(x_1)C(x_2)\dots C(x_n) \]
+  (\enquote{concatenation})
+  (remark for me: Semigroup homomorphism, free groups, $\Rightarrow$ unique extension; with $C(\epsilon_\mathcal{X} = \epsilon_\Sigma$ we have a monoid-homomorphism)
+\end{defi*}
+
+\begin{defi*}[Properties of codes]
+  \begin{enumerate}
+    \item $C: \mathcal{X} \to \Sigma^+$ is called \emph{non-singular} if it is injective
+    \item \emph{uniquely decodable} if the extension $C: \mathcal{X}^+ \to \Sigma^+$ is injective
+    \item \emph{instantaneous (prefix free; prefix code)} if no codeword $C(x)$, $x \in \mathcal{X}$ is a prefix of another codeword [$\forall x,y \in \mathcal{X}: C(x) \text{ is not prefix of } C(y)$]
+  \end{enumerate}
+\end{defi*}
+
+\begin{ex}
+  $\mathcal{X} = \{a,b,c,d\}$ and $\Sigma = \{0,1\}$.
+  \begin{enumerate}
+    \item \begin{align*}
+      C(a) &= 0 \\
+      C(b) &= 010 \\
+      C(c) &= 01 \\
+      C(d) &= 10
+    \end{align*}
+    is non-singular, but $C(ad) = C(b)$ and thus not uniquely decodable
+    \item \begin{align*}
+      C(a) &= 10 \\
+      C(b) &= 00 \\
+      C(c) &= 11 \\
+      C(d) &= 110
+    \end{align*}
+    not instantaneous, but uniquely decodable. Why?
+    \begin{align*}
+      C(cbda) = 110011010
+    \end{align*}
+    Think about it (exercise)
+  \end{enumerate}
+\end{ex}
+
+\end{document}

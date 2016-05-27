@@ -1,0 +1,207 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+Let $(X_n)_{n \in \N}$ be $\mathcal{X}$-valued random variables
+
+as entropy: $h = \lim_{n\to \infty} \frac{1}{n} H(X_1,\dots,H_n)$, if the limit exists.
+\begin{itemize}
+  \item If $X_n$ are iid, then $h = H(X_1)$.
+  \item If $(X_n)$ is stationary [$p_{X_1,\dots,X_n} = p_{X_{k+1},\dots,X_{k+n}}$],
+  then the sequence $H(X_n|X_{n-1},\dots,X_1)$ is decreasing and has a limit [$h^\prime$], and (chain rule): $h = h^\prime$
+  \item (time-homogeneous) Markov chains:
+  transition matrix $P = (p(y|x))_{x,y\in \mathcal{X}}$
+  \[ \prob[X_{n+1} = y | X_n = x, \text{ past}] = p_(y|x) \]
+\end{itemize}
+
+initial distribution $\mu_x = \mu(x) = \prob[X_0 = x]$
+
+\begin{align*}
+  \prob_\mu[X_n = y] = \sum_{x \in \mathcal{X}} \mu(x) p^{(n)}(y|x)
+\end{align*}
+where $P^n = (p^{(n)}(y|x))_{x,y\in \mathcal{X}}$
+
+Distribution of $X_n$ is $\mu P^n$.
+
+When stationary? necessary: $\mu P = \mu$,
+so also $\mu P^l = \mu$ for all $l$.
+
+sufficient? 
+\begin{align*}
+  \prob_\mu [X_{l+1}=x_1,\dots,X_{l+n}=x_n] &= \prob_\mu[X_{l+1}=x_1] p(x_2|x_1) \cdots p(x_n|x_{n-1}) \\
+  &= \mu(x_1) p(x_2|x_1) \cdots p(x_n|x_{n-1})
+\end{align*}
+does not depend on $l$!
+
+Notation change: $\nu$ will be stationary distribution, $\nu = (\nu(x))_{x \in \mathcal{X}}$ probability vector
+with $\nu P = \nu$
+
+\begin{lemma}
+  If $\mathcal{X}$ is finite, then stationary (invariant) distribution(s) exist.
+\end{lemma}
+
+\begin{proof}
+  Take any initial distribution $\mu$.
+  Then
+  \begin{align*}
+    \mu_n = \frac{1}{n} (\mu + \mu P + \mu P^2 + \dots + \mu P^{n-1})
+  \end{align*}
+  is a probability vector.
+  There is a subsequence $(\mu_{n_k})$ which converges to a vector $\nu$.
+  \begin{align*}
+    \mu_{n_k}(y) &\to \nu(y) \;\; \forall y \in \mathcal{X} \\
+    \mu_{n_k} &\to \nu \\
+    \mu_k P &\to \nu P
+  \end{align*}
+  \begin{align*}
+    \mu_n P - \mu_n &= \frac{1}{n} ((\mu P + \mu P^2 + \dots + \mu P^n) - (\mu + \mu P + \dots + \mu P^{n-1})) \\
+    &= \frac{1}{n} (\mu P^n - \mu) \to 0 = (0,\dots,0)
+  \end{align*}
+  $\mu_{n_k} P - \mu_{n_k}$ converges to $0$ and it converges to $\nu P - \nu$. Thus, $\nu P = \nu$.
+\end{proof}
+
+\begin{cor}
+  If the Markov chain $(X_n)_{n \geq 0}$ starts with $\nu$ like above $h = h^\prime = \lim_{n \to \infty} H(X_n|X_{n-1},\dots,X_0)$ exists.
+\end{cor}
+
+Think about $H(X_n|X_{n-1},\dots,X_0)$ as $X_n$ is the future, $X_{n-1}$ is the present and $X_{n-2},\dots,X_0$ is the past.
+
+\begin{align*}
+  H(X_n|X_{n-1},\dots,X_0) &= H(X_n|X_{n-1}) = H(X_1|X_0) \\
+  &= \sum_x \prob[X_0 = x] H(X_1|X_0 = x) \\
+  &= \sum_x \nu(x) H(p(\cdot|x))
+\end{align*}
+
+Then 
+\[ h = \sum_x \nu(x) H(p(\cdot|x)) \]
+
+
+\begin{align*}
+  H(X_n|X_{n-1},\dots,X_0) = \frac{1}{n} \sum_{k=0}^n H(X_k|X_{k-1},\dots,X_0) -
+\end{align*}
+
+Suppose MC starts with any $\mu$
+
+\begin{align*}
+  -\frac{1}{n} \sum_{k=0}^{n-1} H(X_k|X_{k-1}) &= \frac{1}{n} \sum_{k=0}^{n-1} \sum_x \mu P^{k-1}(x) H(p(x)) \\
+  &= \sum_x \overbrace{(\frac{1}{n} \underbrace{\sum_{k=0}^{n-1} \mu P^{k}(x)}_{\to \nu(x)})}^{\mu_n(x)} H(p(\cdot|x))
+\end{align*}
+
+\begin{align*}
+  H(X_k|X_{k-1}) &= \sum_x \prob[X_{k-1} = x] H(p(\cdot|x)) \\
+  &= \sum_x \mu P^{k-1}(x) H(p(\cdot|x))
+\end{align*}
+
+\begin{rem}
+  Suppose $\mu_n$ converges not $\nu$, then $(\mu_n)$ has some other accumulation point $\mu_{n_l} \to \tilde{\nu} \implies \tilde{\nu} = \nu \lightning$.
+\end{rem}
+
+\begin{theorem}
+  Suppose there is a \emph{unique} stationary probability distribution $\nu$,
+  then $\mu_n \to \nu$, and 
+  \begin{align*}
+    \frac{1}{n} H(X_0,\dots,X_n) \to h = \sum_x \nu(x) H(p(\cdot|x))
+  \end{align*}
+  for any initial $\mu$.
+\end{theorem}
+
+\begin{defi*}
+  $(\mathcal{X},P)$ is called irreducible if the associated directed graph is strongly connected.
+  Vertex set $\mathcal{X}$, edges are between all $x,y$ with $p(y|x) > 0$.
+  
+  Equivalently: For all $x,y$ there exists an $n = n_{x,y}$ such that $p^{(n)}(y|x) > 0$.
+\end{defi*}
+
+\begin{theorem}
+  If $P$ is irreducible, then it has a \emph{unique} stationary probability distribution [$\nu P = \nu$]
+\end{theorem}
+
+Proof blabla:
+$(\mathcal{X}_1,P_1), (\mathcal{X}_2,P_2), \mathcal{X} = \mathcal{X}_1 \uplus \mathcal{X}_2$
+Then 
+\begin{align*}
+  P = \bordermatrix{
+  ~ & \mathcal{X}_1 & \mathcal{X}_2 \cr
+  \mathcal{X}_1 & P_1 & 0 \cr
+  \mathcal{X}_2 & 0 & P_2 \cr
+  }
+\end{align*}
+
+\begin{ex}
+  Simple random walk on a finite, connected graph.
+  Let $(\mathcal{X},E)$ be a non-directed graph with no multiple edges and no loops. Let $x \sim y$ denote neighbours if there exists an edge between $x$ and $y$.
+  Then
+  \begin{align*}
+    \deg(x) = \abs{\{y: y \sim x\}}
+  \end{align*}
+  \todo{add pic}
+  \begin{align*}
+    p(y|x) = \begin{cases}
+      \frac{1}{\deg(x)} & \text{ if } y \sim x \\
+      0 & \text{ if } y \nsim x
+    \end{cases}
+  \end{align*}
+  \begin{align*}
+    \deg(x) p(y|x) &= \begin{cases} 1 & y \sim x\\ 0 & y \nsim x \end{cases} \\
+    &= \deg(y) p(x|y)
+  \end{align*}
+  \begin{align*}
+    \deg(x) = \sum_y \deg(y)
+  \end{align*}
+  Consider the row vector $\deg$:
+  \[ \deg = \deg \cdot P \]
+  \begin{align*}
+    \nu(x) = \frac{\deg(x)}{\sum_w \deg(x)} = \frac{\deg(x)}{2 \abs{E}}
+  \end{align*}
+  \begin{align*}
+    h = \sum_x \frac{\deg(x)}{2 \abs{E}} \log_2 \deg(x)
+  \end{align*}
+\end{ex}
+
+\begin{proof}
+  First, look at solutions of $P f = f$ where $f: \mathcal{X} \to \R$ seen as column vectors.
+  \begin{align*}
+    P f (x) = \sum_y p_{x,y} f(y)
+  \end{align*}
+  Step 1: $P \mathbb{1} = \mathbb{1}$, and if $P f = f$ then $f \equiv \text{ constant } \equiv c \mathbb{1}$
+  Because: Let $x_0$ be such that $f(x_0) = M = \max f$
+  \begin{align*}
+    P^n f = f: \\
+    \sum_y p^{(n)}_{x_0,y} f(x_0) f(x_0) = \sum_y p^{(n)}_{x_0,y}(x) f(y) \\
+    \sum_y \underbrace{p_{x_0,y}^{(n)}}_{\geq 0} \underbrace{(f(x_0)-f(y))}_{\geq 0} = 0
+  \end{align*}
+  So for all $n,y$: 
+  \begin{align*}
+    p_{x_0,y}^{(n)} (f(x_0)-f(y)) = 0
+  \end{align*}
+  Let $y \in \mathcal{X}$. Then by irreducibility, there exists an $n$ such that
+  \[ p_{x_0,y}^{(n)} > 0 \implies f(y) = f(x_0) \]
+  
+  Step 2: Let $\nu P = \nu$, where $\nu$ is a probability vector.
+  $\nu P^n = \nu$,
+  \[ \nu(y) = \sum_x \nu(x) p_{x,y}^{(n)} \geq \nu(x_0) p_{x_0,y}^{(n)} > 0 \]
+  Then there exists a $x_0$ such that $\nu(x_0) > 0$.
+  By irreducibility, there exists an $n$ such that
+  \[ p_{x_0,y}^{(n)} > 0 \]
+  So $\nu(y) > 0$ for all $y$.
+  \begin{align*}
+    \nu(y) = \sum_x \nu(x) p_{x,y} \\
+    \sum_x \underbrace{\frac{\nu(x) p_{x,y}}{\nu(y)}}_{\hat{p}_{y,x} = \frac{\nu(x) p_{x,<}}{\nu(y)}} = 1
+  \end{align*}
+  \begin{align*}
+    \hat{p}_{x,y} = \frac{\nu(y)p_{y,x}}{\nu(x)} \to \hat{p}
+  \end{align*}
+  stochastic irreducible
+  
+  Step 3: Suppose $\mu P = \mu$. Then define $f(x) \coloneqq \frac{\mu(x)}{\nu(x)}$.
+  \begin{align*}
+    \hat{P} f(x) &= \sum_y \hat{p}_{x,y} f(y) = \sum_y \frac{\nu(x)p_{y,x}}{\nu(x)} \frac{\mu(y)}{\nu(y)} \\
+    &= \frac{1}{\nu(x)} \underbrace{\sum_y \mu(y) p_{y,x}}_{\mu P(x) = \mu(x)} \\
+    &= \frac{\mu(x)}{\nu(x)} = f(x)
+  \end{align*}
+  Then by Step 1 follows that $f(x) = c$ for all $x$.
+  \begin{align*}
+    \sum_x \mu(x) = c \cdot \nu(x) \;\; \forall x \implies c = 1, \mu = \nu
+  \end{align*}
+\end{proof}
+
+\end{document}

@@ -1,0 +1,147 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\subsection{Law of large numbers}
+
+$(X_n)_{n\in \N}$ sequence of iid random variables.
+Look at the sample average / sample mean
+\[ \overbar{X_n} = \frac{1}{n} (X_1 + \dots + X_n) \]
+It is random!
+Suppose $mu = \expect(X_k)$.
+
+Weak LLN:
+Suppose also that $\sigma^2 = \vari(X_k)$ is finite.
+Then $\overbar{X_n} \to \mu$ in probability:
+\[ \prob[ \abs{\overbar{X_n} - \mu} \geq a] \leq \frac{\sigma^2}{na^2} \]
+Strong LLN:
+$\overbar{X_n} \to \mu$ almost surely
+
+\section{Entropy}
+
+\subsection{Introduction: measuring information formulas of Hartley, Shannon}
+
+\enquote{The amount of information contained in a message should be measured by the shortest way to formulate its contents.}
+
+We use bits ($0$s and $1$s)
+(E.g.: 26 letters + symbols, Ä,Ö,Ü, \textvisiblespace, , , . .)
+
+32 symbols $\equiv$ binary sequences of length 5: $00000,00001,\dots,11111$)
+
+Unit of information: 1 bit\\
+Amount of information contained in the answer to a yes-no-question disregarding its specific contents.
+
+\begin{ex}
+  Guess a number in $\{0,\dots,2^n-1\}$.\\
+  How many questions?\\
+  encode these numbers by binary sequences of length $n$.\\
+  Ask for the digits. This results in needing only $n$ questions.
+  \[ n = \log_2 (2^n) \]
+\end{ex}
+
+\begin{defi}
+  Set $U_N$ of $N$ different objects \enquote{of equal value}.
+  Hartley formula: amount of information to identify one of them is 
+  \[ H(U_N) = \log_2 N \]
+\end{defi}
+
+Got this chapter from RENYI.\\
+\\
+Justification in terms of \enquote{natural} axioms
+\begin{enumerate}[label=(\Alph*)]
+  \item $H(U_2) = 1$ (normalisation)
+  \item $H(U_N) \leq H(U_{N+1})$
+  \item $H(U_{N\cdot M} = H(U_N) + H(U_M) $
+\end{enumerate}
+
+Motivation for $(C)$: Take $M \cdot N$ elements proceed in 2 steps:\\
+group the $M \cdot N$ elements into $N$ groups of $M$ elements each
+\[ U_{NM} = U_M^{(1)} \uplus U_M^{(2)} \uplus \dots \uplus U_M^{(N)} \]
+\begin{enumerate}
+  \item which group? $H(U_N)$
+  \item which element of the group found in step 1? $H(U_M)$
+\end{enumerate}
+
+\begin{lemma}
+  $N \mapsto H(U_N) = \log_2(N)$ is the only function on $\N$ which satisfies $(A)$ - $(C)$.
+\end{lemma}
+
+\begin{proof}
+  Let $N \geq 2$ (fixed).
+  \[ 2^{s(k)} \leq N^k \leq 2^{s(k) +1} \]
+  where $s(k) =  \lfloor \log_2 (N^k) \rfloor = \lfloor k \log_2 N \rfloor$ and $k \in \N$.
+  \begin{align*}
+    \frac{s(k)}{k} &\leq \log_2 (N) < \frac{s(k)+1}{k}
+  \end{align*}
+  so that $\lim_{k\to \infty} \frac{s(k)}{k} = \log_2 (N)$.
+  \begin{align*}
+    (B) &\implies H(U_{2^{s(k)}}) \leq H(U_{N^k}) \leq H(U_{2^{s(k)+1}}) \\
+    (C) &\implies s(k) H(U_2) \leq k H(U_N) \leq (s(k)+1)H(U_2) \\
+    (A) &\implies \frac{s(k)}{k} \leq H(U_N) \leq \frac{s(k)+1}{k}\\
+    k \to \infty: & \frac{s(k)}{k} \to \log_2(N) \;\;\; \frac{s(k)+1}{k} \to \log_2(N)
+  \end{align*}
+\end{proof}
+
+Variant: one can replace $(B)$ by 
+\begin{enumerate}
+  \item[($B^\ast$)] $H(U_{N+1}) - H(U_N) \to 0$ as $N \to \infty$.
+\end{enumerate}
+
+Group into not necessarily equal parts:
+\[ U_N = U_{N_1} \uplus U_{N_2} \uplus \dots \uplus U_{N_n} \]
+\begin{enumerate}
+  \item[step 1] which group $H_1 = ?$
+  \item[step 2] which element of the group found in step 1?
+\end{enumerate}
+\underline{If} we know that it is group $k$, then we need $\log_2(N_k)$ \enquote{questions}.
+The \underline{average} number of questions needed depends on the sizes of the groups.
+\[ H_2 = \sum_{k=1}^n \frac{N_k}{N} \log_2 (N_k) \]
+we should have
+\[ H(U_N) = \underbrace{H_1}_{=?} + H_2 \]
+\begin{align*}
+  H_1 &= \log_2(N) - \sum_{k=1}^n \frac{N_k}{N} \log_2(N_k) \\
+  &= - \sum_{k=1}^n \frac{N_k}{N} ( \log_2(N_k - \log_2(N)) \\
+  &= - \sum_{k=1}^n \frac{N_k}{N} \log_2(\frac{N_k}{N}) \\
+  &= - \sum_{k=1}^n p_k ßlog_2 p_k
+\end{align*}
+where $p_k = \frac{N_k}{N}$ is the probability of $k$-th group
+
+\subsection{Entropy}
+
+information associated with / of discrete probability distributions.
+respectively random variables
+
+\begin{defi}
+  Let $X$ be a (discrete) RV taking values in a finite set $\mathcal{X}$.
+  \[ X: (\Omega,\mathcal{A},\prob) \to \mathcal{X} \]
+  Distribution of $X$:
+  \[ p_X(x) = \prob[X = x] \]
+  where $x \in \mathcal{X}$.
+  The entropy of $X$, respectively of the prob. dist $p$ on $\mathcal{X}$ is
+  \[ H(X) = H(p(x)) = - \sum_{x \in \mathcal{X}} p(X) \log_2(p(x)) \]
+\end{defi}
+
+Convention: $0 \log_2 0 = 0$ $f(p) = - p \log p$.
+\todo{add pic}
+
+
+If we enumerate $\mathcal{X} = \{x_1,\dots,x_k\}$, such that $p_k = p(x_k)$,
+ then $(p_1,\dots,p_n)$ is a prob vector
+ \[ H(p_1,\dots,p_k) = - \sum_{k=1}^n p_k \log_2(p_k) \]
+ \[ H(X) = \expect(- \log_2(p_X(X)) \]
+ 
+Recall:
+\begin{align*}
+  g: \mathcal{X} \to \R \\
+  g(X) = g \circ X: \Omega \to \R \\
+  g(X)(\omega) = g(X(\omega)) \\
+  \expect(g(X)) = \sum_{x \in \mathcal{X}} g(x) p(x)
+\end{align*}
+
+\begin{ex}
+  $\mathcal{X} = \{0,1\}$ and $p(0) = 1 - \theta$, $p(1) = \theta$
+  \[ p(X) = \begin{cases} 1- \theta & \text{if } X=0\\ \theta & \text{if } X=1 \end{cases} \]
+  \[ H(X) = - \theta \log_2(\theta) - (1-\theta) \log_2(1-\theta) \]
+\end{ex}
+
+
+\end{document}

@@ -1,0 +1,207 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\subsection{Huffman Codes}
+
+Let $\Sigma = \{0,1\}$, $\mathcal{X}$, $p(\cdot)$.
+
+Huffman algorithm:
+\todo{add pic}
+Number of leaves equalts $\abs{\mathcal{X}} = N$.
+leaves have prefix free labels
+
+Build tree from bottom up.
+
+\begin{enumerate}
+  \item label $\mathcal{X}$: $x_1,\dots,x_n$ such that
+  \[ p(x_1) \geq p(x_2) \geq \dots \geq p(x_N) \]
+  \item (If $N = 1$ stop.) Otherwise build
+  \begin{align*}
+    x_1^{\text{new}} = x_1^{\text{old}},& \dots,& x_{N-2}^{\text{new}} = x_{N-2}^{\text{old}},& x_{N-1}^{\text{new}} = \{x_{N-1}^{\text{old}},x_N^{\text{old}} \} \\ 
+    p(x_1) & & p(x_{N-2}) & p(x_{N-1}^{\text{new}}) = p(x_{N-1}^{\text{old}}) + p(x_N^{\text{old}})
+  \end{align*}
+  wit noew collection continue at 1 ($N \leftrightarrow N-1$)
+\end{enumerate}
+
+\begin{ex}
+  $N = 10$
+  
+  \todo{draw the tree step by step}
+  
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline 
+  $i$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+  \hline 
+  $p(x_i)$ & 0.2 & 0.2 & 0.15 & 0.15 & 0.1 & 0.05 & 0.05 & 0.04 & 0.03 & 0.03 \\
+  \hline 
+  \end{tabular} 
+  
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+  \hline 
+  $i$ & 1 & 2 & 3 & 4 & 5 & (9,10) & 6 & 7 & 8 \\ 
+  \hline 
+  $p(x_i)$ & 0.2 & 0.2 & 0.15 & 0.15 & 0.1 & 0.06 & 0.05 & 0.05 & 0.04 \\ 
+  \hline 
+  \end{tabular} 
+  
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+  \hline 
+  $i$ & 1 & 2 & 3 & 4 & 5 & (7,8) & (9,10) & 6 \\
+  \hline
+  $p(x_i)$ & 0.2 & 0.2 & 0.15 & 0.15 & 0.1 & 0.09 & 0.06 & 0.05 \\
+  \hline 
+  \end{tabular} 
+  
+  \begin{tabular}{|c|c|c|c|c|c|c|c|}
+  \hline 
+  $i$ & 1 & 2 & 3 & 4 & (6,9,10) & 5 & (7,8) \\ 
+  \hline 
+  $p(x_i)$ & 0.2 & 0.2 & 0.15 & 0.15 & 0.11 & 0.1 & 0.09 \\ 
+  \hline 
+  \end{tabular} 
+
+  \begin{tabular}{|c|c|c|c|c|c|c|}
+  \hline 
+  $i$ & 1 & 2 & (5,7,8) & 3 & 4 & (6,9,10) \\ 
+  \hline 
+  $p(x_i)$ & 0.2 & 0.2 & 0.19 & 0.15 & 0.15 & 0.11 \\ 
+  \hline 
+  \end{tabular} 
+
+  \begin{tabular}{|c|c|c|c|c|c|}
+  \hline 
+  $i$ & (4,6,9,10) & 1 & 2 & (5,7,8) & 3 \\ 
+  \hline 
+  $p(x_i)$ & 0.26 & 0.2 & 0.2 & 0.19 & 0.15 \\ 
+  \hline 
+  \end{tabular} 
+  
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline 
+  $i$ & (3,5,7,8) & (4,6,9,10) & 1 & 2 \\ 
+  \hline 
+  $p(x_i)$ & 0.34 & 0.26 & 0.2 & 0.2 \\ 
+  \hline 
+  \end{tabular} 
+
+  \begin{tabular}{|c|c|c|c|}
+  \hline 
+  $i$ & (1,2) & (3,5,7,8) & (4,6,9,10) \\ 
+  \hline 
+  $p(x_i)$ & 0.4 & 0.34 & 0.26 \\ 
+  \hline 
+  \end{tabular} 
+
+  \begin{tabular}{|c|c|c|}
+  \hline 
+  $i$ & (3,4,5,6,7,8,9,10) & (1,2) \\ 
+  \hline 
+  $p(x_i)$ & 0.6 & 0.4 \\ 
+  \hline 
+  \end{tabular} 
+
+  \begin{tabular}{|c|c|}
+  \hline 
+  $i$ & (1,2,3,4,5,6,7,8,9,10) \\ 
+  \hline 
+  $p(x_i)$ & 1 \\ 
+  \hline 
+  \end{tabular} 
+\end{ex}
+
+\begin{lemma}
+  Let $C: \mathcal{X} \to \{0,1\}^+$ be an optimal prefix code. 
+  $W = \{ w \in C(\mathcal{X}): \ell(w) = \ell_{\max} \}$.
+  Then
+  \begin{enumerate}
+    \item If $p(x) > p(y)$, then $\ell(C(x)) \leq \ell(C(y))$.
+    \item If $v,w \in C(\mathcal{X})$ are longest codewords that is $\ell(w^\prime) \leq \ell(v) \leq \ell(w)$ for all $w^\prime \in C(\mathcal{X}) \setminus \{v,w\}$, then $\ell(v) = \ell(w)$. $\abs{W} \geq 2$.
+    \item $C$ can be modiefied into another optimal prefix code $\tilde{C}$ which has the additonal property that among the codewords of maximal length [there are at least 2 by (2)] [$\equiv$ the elements of $W$]
+    there are two which are siblings (differ only in the last bit) and corresopnd to two least likely symbols (elements of $\mathcal{X}$).
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+  \begin{enumerate}
+    \item $\ell_x = \ell(C(x))$ exchange codewords new
+    \begin{align*}
+      C^\prime(z) &= C(z),\; z \neq x,y \\
+      C^\prime(x) &= C(y) \\
+      C^\prime(y) &= C(x)
+    \end{align*}
+    \[ L_{C^\prime} \geq L_C \]
+    \begin{align*}
+      0 \leq L_{C^\prime} - L_C &= p(x) \ell_y - p(x) \ell_x + p(y) \ell_x - p(y) \ell_y \\
+      &= (p(x) - p(y)) (\ell_y - \ell_x) \implies \ell_y - \ell_x \geq 0
+    \end{align*}
+    \item Suppose $\ell(v) < \ell(w)$. Reduce $w$ to the length of $v$: (tape prefix of $w$ with length $\ell(v)$).
+    Get new prefix code with $<$ expected length $\lightning$
+    \item Claim: If $w \in W$ and $\tilde{w}$ its sibling [siblings: $v0,v1$], then $\tilde{w} \in W$.\\
+    
+    Proof: Assume there exists a $w \in W$ such that $\tilde{w} \notin W$.
+    Let $v$ be their parent. Replace $w$ by $v$: new collection of codewords.
+    [If $C(x) = w$ then $C^\prime(x) = v$, $C^\prime(z) = C(z)$ for all $z \in \mathcal{X} \setminus \{x\}$.]
+    again prefix code, $L_{C^\prime} < L_C$ $\lightning$
+    \\
+    
+    By (1), there exist $x,y \in \mathcal{X}$ least likely with $C(x),C(y) \in W$.
+    Let $C(x) = v$, $C(y) = w$, $v,w \in W$.
+    $\tilde{v},\tilde{w}$ their siblings in $W$.
+    If $\tilde{v} = w$ OK, otherwise
+    there exists $\tilde{x} \in \mathcal{x}$: $C(\tilde{x}) = \tilde{v}$ $\tilde{x} \neq v,w$
+    \begin{align*}
+      \tilde{C}(y) &= \tilde{v} \\
+      \tilde{C}(\tilde{x}) &= w \\
+      \tilde{C}(z) = C(z)
+    \end{align*}
+    for all $z \in \mathcal{X} \setminus \{y,\tilde{x} \}$.
+    Now prefix code, $L_{\tilde{C}} = L_C$
+  \end{enumerate}
+\end{proof}
+
+\begin{defi*}
+  Codes which are optimal and have properties (1),(2),(3) [siblings at the bottom] are canonical.
+\end{defi*}
+
+\begin{theorem}
+  If $C^\ast : \mathcal{X} \to \{0,1\}^+$ is a Huffman-code for $\mathcal{X}$, $p$, then it is optimal
+\end{theorem}
+
+\begin{proof}
+  $\abs{\mathcal{X}} = N$, induction on $N$
+  
+  Algorithm: If $C_N^\ast$ is a Huffman code for $\mathcal{X}^N = \{x_1,\dots,x_N\}$, then it is abtained from a Huffman-code for $\{ x_1^\prime,\dots,x_{N-2}^\prime,x_{N-1}^\prime \}$ where 
+  \[ p(x_1) \geq p(x_2) \geq \dots \geq p(x_N) \]
+  and 
+  $x_k^\prime = x_k$ for $k=1,\dots,N-2$ and $x_{N-1}^\prime = \{x_{N-1},x_N\}$ with probabilites
+  $p(x_k^\prime) = p(x_k)$ and $p(x_{N-1}^\prime) = p(x_{N-1}) + p(x_N)$ respectively.
+  $C_N^\ast(x_k) = C_{N-1}^\ast(x_k^\prime)$ and $C_N^\ast(x_{N-1}) = C_{N-1}^\ast(x_{N-1}^\prime) 0$ and $C_N^\ast(x_N) = C_{N-1}^\ast(x_{N-1}^\prime) 1$
+  
+  Induction on $N \geq 2$:
+  $N = 2$: \todo{add pic}
+  $C_2^\ast(x_1) = 0$, $C_2^\ast(x_2) = 1$
+  
+  $N-1 \to N$: Let $p^{(N)} = (p_1,\dots,p_N)$ ordered $\geq$. (Note: $p_i = p(x_i)$)
+  Let $p^{(N)^\prime} = (p_1,\dots,p_{N-2},p_{N-1}+p_N)$.
+  $C_{N-1}^\ast$ Huffman code for $p^{(N)^\prime}$
+  optimal by assumption construct $C_N^\ast$ from $C_{N-1}^\ast$.
+  \[ L_{C_N^\ast} = L_{C_{N-1}^\ast} + p_{N-1} + p_N \]
+  
+  Now let $\bar{C_N}$ be a canonical code for $p^{(N)}$
+  $L_{\bar{C}_N} \leq L_{C_N^\ast}$
+  \begin{align*}
+    \bar{C}_{N-1}(x_k^\prime) &= \bar{C}_N(x_k), \; k=1,\dots,N-2 \\
+    \bar{C}_{N-1}(x_{N-1}^\prime) &= \text{ parent of the siblings } \bar{C}_N(x_{N-1}), \bar{C}_N(x_N)
+  \end{align*}
+  $\bar{C}_{N-1}$ is a prefix code for $p^{(N)^\prime}$
+  \[ L_{\bar{C}_{N-1}} = L_{\bar{C}_N} - p_{N-1} + p_N \]
+  \begin{align*}
+    L_{\bar{C}_{N-1}} \geq L_{C_{N-1}^\ast \\
+  \end{align*}
+  Add $+p_{N-1}+p_N$ on both sides and get
+  \begin{align*}
+    L_{\bar{C}_N} \geq L_{C_N^\ast} \implies L_{\bar{C}_N} = L_{C_N^\ast \text{ optimal}
+  \end{align*}
+\end{proof}
+
+\end{document}

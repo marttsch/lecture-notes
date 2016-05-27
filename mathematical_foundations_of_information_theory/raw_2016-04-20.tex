@@ -1,0 +1,163 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+Consequences of Information-inequality-theorem:
+
+$I(X;Y) \geq 0$, $H(X|Y) \leq H(X)$ and
+\[ H(X_1,\dots,X_n) \leq \sum_{k=1}^n H(X_k) \]
+and 
+\[ H(X_1,\dots,X_n) = \sum_{k=1}^n H(X_k) \iff X_1,\dots,X_n \text{ are independent} \]
+since $H(X_1,\dots,X_n) = \sum_{k=1}^n H(X_k | X_{k-1}, \dots, X_1)$.
+
+\begin{lemma}[Log-Sum-inequality]
+  Let $a_1,\dots,a_n,b_1,\dots,b_n \geq 0$. Then
+  \[ \sum_{k=1}^n \left( a_k \log_2 \frac{a_i}{b_i} \right) \geq \left( \sum_{k=1}^n a_k \right) \log_2 \frac{\sum_{k=1}^n a_k}{\sum_{k=1}^n b_k} \]
+  Equality holds if and only if there exists a $c$ such that $\frac{a_k}{b_k} = c$ for all $1 \leq k \leq n$.
+\end{lemma}
+
+\begin{proof}
+  We may assume $a_k > 0$ and $b_k > 0$ for all $k$. Otherwise $a_k$ would not contribute to the left and right side.
+  Let $A = \sum_{k=1}^n a_k$, $B = \sum_{k=1}^n b_k$, $p_k = \frac{b_k}{B}$ and $t_k = \frac{a_k}{b_k}$ and $f(t) = t \log_2(t)$.
+  \todo{add pic}
+  And consider Jensen's inequality
+  \begin{align*}
+    \sum_{k=1}^n p_k f(t_k) \geq f(\sum_{k=1}^n p_k t_k \text{.}
+  \end{align*}
+  Then
+  \begin{align*}
+    \sum_{k=1}^n \frac{b_k}{B} \frac{a_k}{b_k} \log_2 \frac{a_k}{b_k} \geq \underbrace{\left( \sum_{k=1}^n \frac{b_k}{B} \frac{a_k}{b_k} \right)}_{\frac{A}{B}} \log_2 \frac{A}{B}
+  \end{align*}
+  Thus,
+  \begin{align*}
+    \sum_k a_k \log_2 \frac{a_k}{b_k} \geq A \log_2 \frac{A}{B}
+  \end{align*}
+\end{proof}
+
+\begin{cor}
+  Let $p^{(1)},p^{(2)},q^{(1)},q^{(2)}$ be probabilities on $\mathcal{X}$ and $0 < \lambda < 1$.
+  \[ D(\lambda p^{(1)} + (1-\lambda) p^{(2)} || \lambda q^{(1)} + (1-\lambda) q^{(2)}) \leq \lambda D(p^{(1)}||q^{(1)}) + 1-\lambda) D(p^{(2)}||q^{(2)}) \]
+\end{cor}
+
+\begin{proof}
+  Let $x \in \mathcal{X}$, $a_1 = \lambda p^{(1)}(x)$, $a_2 = (1-\lambda) p^{(2)}(x)$, $b_1 = \lambda q^{(1)}(x)$, $b_2 = (1-\lambda) q^{(2)}j(x)$.
+  \begin{align*}
+    \lambda p^{(1)}(x) &\log_2 \frac{p^{(1)}(x)}{q^{(1)}(x)} + (1-\lambda) p^{(2)}(x) \log_2 \frac{p^{(2)}(x)}{q^{(2)}(x)} \\
+    &\geq \left( \lambda p^{(1)}(x) + (1-\lambda) p^{(2)}(x) \right) \log_2 \frac{\lambda p^{(1)}(x) + (1-\lambda) p^{(2)}(x)}{\lambda q^{(1)}(x) + (1-\lambda) q^{(2)}(x)}
+  \end{align*}
+  Sum over $x$ and we get statement from corollary.
+  We have equality if $\frac{p^{(1)}(x)}{q^{(1)}(x)} = \frac{p^{(2)}(x)}{q^{(2)}(x)}$ for all $x$.
+\end{proof}
+
+\begin{cor}
+  $H(\lambda p^{(1)} + (1-\lambda) p^{(2)}) \geq \lambda H(p^{(1)}) + (1-\lambda) H(p^{(2)})$
+\end{cor}
+
+\begin{proof}
+  We use uniform distribution.
+  \begin{align*}
+    0 \leq D(p||U_\mathcal{X}) &= \sum_x p(x) \log_2 \frac{p(x)}{\frac{1}{\abs{\mathcal{X}}}} \\
+    &= \sum_x p(x) (\log_2 p(x) + \log_2 \abs{\mathcal{X}}) \\
+    &= -H(p) + \log_2 \abs{\mathcal{X}}
+  \end{align*}
+  Equality holds if and only if $p = U_\mathcal{X}$.
+  \begin{align*}
+    -H(\lambda p^{(1)} + (1-\lambda) p^{(2)}) + \log_2 \abs{\mathcal{X}} 
+    &= D(\lambda p^{(1)} + (1-\lambda) p^{(2)} || \lambda U_\mathcal{X} + (1-\lambda) U_\mathcal{X}) \\
+    &\leq \lambda D(p^{(1)} || U_\mathcal{X}) + (1-\lambda) D(p^{(2)}||U_\mathcal{X}) \\
+    &= \lambda ( -H(p^{(1)}) + \log_2 \abs{\mathcal{X}}) + (1-\lambda)(-H(p^{(2)}) + \log_2 \abs{\mathcal{X}})
+  \end{align*}
+\end{proof}
+
+\begin{defi*}
+  Let $X,Y,Z$ be random variable with values in $\mathcal{X}$.
+  They form a \emph{Markov triple}, written as $X \to Y \to Z$,
+  if 
+  \[ \prob[Z = z | Y=y,X=x] = \prob[Z=z | Y=x] \]
+  for all $x,y,z$ such that $\prob[Y=y,X=x] > 0$.
+\end{defi*}
+
+Note: This is equivalent to $X,Z$ are independent conditionally upon $Y$:
+\[ \prob[X=x,Z=z | Y=y] = \prob[X=x | Y=y] \prob[Z=z | Y=y] \]
+for all $y$.
+
+$p(x,y,z)$ is the joint distribution of $X,Y,Z$.
+
+\begin{align*}
+  \prob[Z=z | Y=y,X=x] = \frac{p(x,y,z)}{\sum_{\tilde{z}} p(x,y,\tilde{z})}
+\end{align*}
+\begin{align*}
+  \prob[Z=z | Y=y] = \frac{\sum_{\tilde{x}} p(\tilde{x},y,z)}{\sum_{\tilde{x}\tilde{z}} p(\tilde{x},y,\tilde{z})}
+\end{align*}
+
+\begin{theorem}[Data processing inequality]
+  If $X \to Y \to Z$ is a Markov triple, then 
+  \[ I(X;Y) \geq I(X;Z) \]
+\end{theorem}
+
+\begin{proof}
+  \begin{align*}
+    I((X_1,X_2);X) = I(X_1;X) + I(X_2;X | X_1) \\
+    I(Y,Z;X) = I(Y;X) + I(Z;X |Y) \\
+    I(Z,Y;X) = I(Z;X) + I(Y;X|Z)
+  \end{align*}
+  and $I(Y,Z;X) = I(Z,Y;X)$.
+  Recall that $\sum_y \prob[Y=y] I(Z;X|Y=y) = 0$.
+  Then 
+  \begin{align*}
+    I(Z;X|Y) = 0
+  \end{align*}
+  Thus,
+  \begin{align*}
+    I(Y;X) = I(Z;X) + I(Y;X|Z)
+  \end{align*}
+\end{proof}
+
+$X \to Y \to \hat{X}$ is called the \enquote{estimate} of $X$.
+
+\begin{lemma}
+  Let $X,\hat{X}$ be two random variables on $\mathcal{X}$ and $p_{\text{err}} = \prob[\hat{X} \neq X]$.
+  Then 
+  \[ \underbrace{H(p_{\text{err}},1-p_{\text{err}})}_{\leq 1} + p_{\text{err}} \log_2 \abs{X} \geq H(X|\hat{X}) \]
+\end{lemma}
+
+\begin{proof}
+  \begin{align*}
+    E = \mathbb{1}_{[\hat{X} \neq X]}
+  \end{align*}
+  We know $H(X,E|\hat{X}) = H(E,X|\hat{X})$.
+  \begin{align*}
+    H(X,E|\hat{X}) &= H(X|\hat{X}) + H(E|X,\hat{X}) \\
+    H(E,X|\hat{X}) &= H(E|\hat{X}) + H(X|E,\hat{X})
+  \end{align*}
+  Since $H(E|X,\hat{X}) = 0$, it follows
+  \begin{align*}
+    H(X|\hat{X}) = \underbrace{H(E|\hat{X})}_{\bigstar} + \underbrace{H(X|E,\hat{X})}_{\blacktriangle}
+  \end{align*}
+  \begin{align*}
+    \bigstar &\leq H(E) = H(p_{\text{err}},1-p_{\text{err}}) \\
+    \blacktriangle &= \prob[E = 0] \underbrace{H(X|E=0,\hat{X})}_{=0} + \prob[E=1] H(X|E=1,\hat{X}) \\
+    &\leq p_{\text{err}} H(X|E=1) \leq \begin{cases} p_{\text{err}} \log_2 \abs{\mathcal{X}} \\ p_{\text{err}} \log_2 (\abs{\mathcal{X}}) \end{cases} \\
+    \blacktriangle \leq p_{\text{err}} \log_2 \abs{\mathcal{X}}
+  \end{align*}
+  Then
+  \begin{align*}
+    \underbrace{H(p_{\text{err}},1-p_{\text{err}})}_{\leq 1} + p_{\text{err}} \log_2 \abs{X} \geq H(X|\hat{X})
+  \end{align*}
+\end{proof}
+
+\begin{theorem}[Fana's inequality]
+  If $X \to Y \to \hat{X}$ is a Markov triple and $p_{\text{err}} = \prob[\hat{X} \neq X]$ then
+  \[ H(p_{\text{err}},1-p_{\text{err}}) + p_{\text{err}} \log_2 \abs{\mathcal{X}} \geq H(X|\hat{X}) \geq H(X|Y) \text{.} \]
+  In particular,
+  \[ p_{\text{err}} \geq \frac{H(X|Y) - 1}{\log_2 \abs{\mathcal{X}}} \]
+\end{theorem}
+
+\begin{proof}
+  The first inequality follows by the lemma before.
+  The second inequality follows from the Data processing inequality:
+  \begin{align*}
+    H(X) - H(X|Y) = I(X;Y) \geq I(X;\hat{X}) = H(X) - H(X|\hat{X})
+  \end{align*}
+\end{proof}
+
+\end{document}

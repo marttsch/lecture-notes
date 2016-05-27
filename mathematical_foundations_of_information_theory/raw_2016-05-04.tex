@@ -1,0 +1,144 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\begin{proof}
+  $(v) \Rightarrow (iii),(iv)$\\
+  $U_{x,x} \overset{(c) z=1}{=} \sum_y p_{x,y} \underbrace{F_{y,x}}_{1} = 1$ for all $x$\\
+  $(iv) \Rightarrow (v)$\\
+  fix $y$. Then $h(x) = F_{x,y}$. By (d), $h(x) = \sum_w p_{x,w} h(w)$ $x \neq y$.
+  By (c), $F_{y,y} = 1 = U_{y,y} = \sum_w p_{y,w} F_{w,y}$
+  Then $h(y) = \sum_w p_{y,w} h(w)$
+  $P h = h$ for $0 < h \leq 1 = h(y)$
+  Thus, $h$ is constant and $h \equiv 1$
+  
+  $\expect_x(t^x) = U_{x,x}^\prime(1-)$.
+  Then there exists an $x$ such that $U_{x,x}^\prime (1-) < \infty \iff \forall x$.
+  $M_{x,y} \geq \frac{G_{x,x}(z)}{G_{y,y}(z)} = \frac{1 - U_{y,y}(z)}{1- U_{x,x}(z)}$
+  
+  $\mathcal{X}$ finite $P$ irreducible, then it is positive recurrent $\expect_x(t^x) < \infty$ for all $x$
+  
+  \begin{align*}
+    \sum_y G_{x,y}(z) = \frac{1}{1-z}
+  \end{align*}
+  Since $z \to 1-$, there exists a $y$ such that $G_{x,y} = \infty$ is recurrent
+  \begin{align*}
+    1 = \sum_y F_{x,y}(z) \frac{1-z}{1-U_{y,y}(z)}
+  \end{align*}
+  since $z \to 1-$,
+  \begin{align*}
+    1 = \sum_y 1 \frac{1}{\expect_y(t^y)}
+  \end{align*}
+  There exists a $y$ such that $\expect_y(t^y) < \infty$, thus for all $y$.
+  
+  \begin{align*}
+    \nu_y = \frac{1}{\expect_y(t^y)} > 0 
+  \end{align*}
+  probability distribution on $\mathcal{X}$.
+\end{proof}
+
+\begin{theorem}[Ergodensatz für endliche irreduzible MK]
+  Let $f: \mathcal{X} \to \R$. Then for every starting distribution
+  \begin{align*}
+    \frac{1}{n} \sum_{k=0}^{n-1} f(X_k(\omega)) \overset{a.s.}{\to} \int_\mathcal{X} f d\nu = \sum_x p(x) \nu_x
+  \end{align*}
+  In particular, $\nu$ is the unique stationary probability measure.
+\end{theorem}
+
+\begin{proof}
+  Let $\mu$ be the starting distribution. Then define a sequence of stopping times as follows: Choose a fix $y \in \mathcal{X}$.
+  \begin{align*}
+    \tau_0 &= 0 \\
+    \tau_n &= \inf \{k > \tau_{n-1}: X_k = y \}
+  \end{align*}
+  Thus (Note that start distribution is $\mu$),
+  \begin{align*}
+    \tau_1 &= t^y < \infty \text{ a.s.}
+    \tau_n &< \infty \text{ a.s.}
+  \end{align*}
+  Look at the increments: $\sigma_n = \tau_n - \tau_{n-1}$ for $n \geq 1$.
+\end{proof}
+
+\begin{lemma}
+  Let $(\sigma_n)_{n \in \N}$ be independent. 
+  And for $n \geq 2$ let $(\sigma_n)_{n \in \N}$ be distributed like $t^y$ at the start in $y$.
+\end{lemma}
+
+\begin{proof}
+  By \enquote{Händewackeln}
+\end{proof}
+
+Continue proof of theorem:
+\begin{proof}
+  $\tau_n = \sigma_1 + \sum_{k=2}^n \sigma_k$
+  We know $\expect(\sigma_k) = \expect_y(t^y) < \infty$.
+  Then by LLN, 
+  \begin{align*}
+    \frac{1}{n} \tau_n = \frac{\sigma_1}{n} + \frac{n-1}{n} \frac{1}{n-1} \sum_{k=2}^n \sigma_k
+  \end{align*}
+  Then this tends to $\expect_y(t^y)$ almost surely. (for all $\omega \in \Omega_0 \in \mathcal{A}$: $\prob_\mu(\Omega_0) = 1$)
+  
+  Therefore, $\tau_n$ tends to $\infty$ for $n \in \N$.
+  For any $n \in \N$ there exists a $k_n = k_n(\omega)$ such that $\underbrace{\tau_{k_n}(\omega)}_{\tau_{k_n(\omega)}(\omega)} \leq n < \tau_{k_n + 1} (\omega)$.
+  If $n \to \infty$, then $k_n(\omega) \to \infty$.
+  \begin{align*}
+    \frac{\tau_{k_n}}{k_n} \leq \frac{n}{k_n} \leq \frac{\tau_{k_n+1}}{k+1} \frac{k_n + 1}{k_n}
+  \end{align*}
+  For $n \to \infty$ $\frac{\tau_{k_n}}{k_n} \to \expect_y(t^y)$ and $\frac{\tau_{k_n+1}}{k_n+1} \to \expect_y(t^y)$ and $\frac{k_n+1}{k_n} \to 1$
+  Thus, $\frac{k_n}{n} \to \frac{1}{\expect_y(t^y)}$.
+  
+  \begin{align*}
+    V_k^y = \mathbb{1}_{[X_k = y]} \\
+    \sum_{k=1}^n V_k^y = k_n \\
+    \implies \frac{1}{n} \sum_{k=1}^n V_k^y \to \frac{1}{\expect_y(t^y)} \text{ a.s.}
+  \end{align*}
+  Whether we consider $\sum_{k=1}^n V_k^y$ or $\sum_{k=0}^n V_k^y$ does not influence the Grenzwert
+  
+  Let $f: \mathcal{X} \to \R$. Then
+  \begin{align*}
+    f = \sum_{y \in \mathcal{X}} f(y) \mathbb{1}_y \\
+    f(X_k) = \sum_y f(y) V_k^y
+  \end{align*}
+  \begin{align*}
+    \frac{1}{n} \sum_{k=0}^{n-1} f(X_k) = \frac{1}{n} \sum_{k=0}^{n-1} \sum_{y \in \mathcal{X}} f(y) V_k^y \\
+  \end{align*}
+  Since we have finite sums we can exchange them
+  \begin{align*}
+    = \sum_{y \in \mathcal{X}} f(y) ( \frac{1}{n} \sum_{k=0}^{n-1} V_k^y) \to \sum_{y \in \mathcal{X}} f(y) \frac{1}{\expect_y(t^y)} \text{ a.s.}
+  \end{align*}
+  \begin{align*}
+    \expect_\mu (\frac{1}{n} \sum_{k=0}^{n-1} V_k^y) \overset{n \to \infty}{ \to} \expect_\mu(\nu_y) = \nu_y
+  \end{align*}
+  is true by Lebesgue!
+  
+  Let $\mu = \delta_x$.
+  \begin{align*}
+    \frac{1}{n} \sum_{k=0}^{n-1} p_{x,y}^{(k)} \to \nu_y
+  \end{align*}
+  for all $y$
+  \begin{align*}
+    \frac{1}{n} \sum_{k=0}^{n-1} \delta_y P^k \to \nu
+  \end{align*}
+  This results in
+  \begin{align*}
+    \frac{1}{n} \sum_{k=0}^{n-1} \mu P^k \to \nu
+  \end{align*}
+  for all $\mu$ starting distribution
+  
+  Let $\mu P = \mu$, then
+  \begin{align*}
+    \frac{1}{n} \sum_{k=0}^{n-1} \mu P^k = \mu \to \nu
+  \end{align*}
+  $\mu = \nu$.
+\end{proof}
+
+\begin{rem}
+  Wenn \enquote{Ergdoensatz für endl. pos rekurrent irred MK}, dann bei GW und summen vertauschungen aufpassen
+  $f \in L^1(\mathcal{X},\nu)$ und
+  \begin{align*}
+    \sum_x \abs{f(x)} \nu_x < \infty
+  \end{align*}
+  Schwieriger Fall: $\sum_{y \in \mathcal{X}} f(y) ( \frac{1}{n} \sum_{k=0}^{n-1} V_k^y)$
+  wenn $f$ keinen endlichen Träger hat (allg Ergodensatz)
+\end{rem}
+
+\end{document}

@@ -1,0 +1,188 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\lecture{02.03.2016}
+
+If $\Omega$ is at most countable, $\mathcal{A} = \mathcal{P}(\Omega)$. $\PP(A) = \sum_{\omega \in A} \underbrace{\mathcal{P}(\{ \omega \})}_{p(\omega)}$.
+
+If we have $\infty$ many coin tosses, $\Omega = \{ 0,1 \}^\N$ is uncountable.
+
+\begin{defi*}[Conditional probability]
+  $A,B \in \mathcal{A}$
+  \[ \PP(A | B) < \begin{cases} \frac{\PP(A \cap B)}{\PP(B)} & \PP(B) > 0 \\ 0 & \PP(B) = 0 \end{cases} \]
+  \todo{add pic}
+\end{defi*}
+
+\begin{lemma*}[Rule of total probability]
+  $\Omega = \biguplus_{i \in I} B_i$ for $B_i \in \mathcal{A}$, $I$ finite or countable.
+  Then 
+  \[ \PP(A) =  \sum_{i \in I} \PP(A | B_i) \PP(B_i) \]
+\end{lemma*}
+
+\begin{proof}
+  Let $A \in \mathcal{A}$. 
+  \[ A = \biguplus_{i \in I} A \cap B_i \]
+  \begin{align*}
+    \PP(A) &= \sum_{i \in I} \PP(A \cap B_i) \\
+    &= 
+  \end{align*}   
+\end{proof}
+
+\begin{ex}[very simple example on this kind of proof]
+  There are $2$ urns.
+  \todo{add pic}
+  Experiment:
+  \begin{enumerate}
+    \item Transfer a random ball form urn I to urn II
+    \item extract a ball from urn II
+  \end{enumerate}
+  We want to compute $\PP[\text{ball extracted from II is red}]$.
+  Now consider:
+  \begin{align*}
+    A &= [\text{ball extracted from II is red}] \\
+    B_1 &= [\text{transfered ball is red}] \\
+    B_2 &= [\text{transfered ball is yellow}]
+  \end{align*}
+  So we can write
+  \begin{align*}
+    \PP(A) &= \underbrace{\PP(A | B_1)}_{\frac{3}{10}} \underbrace{\PP(B_1)}_{\frac{6}{10}} 
+    + \underbrace{\PP(A | B_2)}_{\frac{2}{10}} \underbrace{\PP(B_2)}_{\frac{4}{10}} \\
+    &= \frac{26}{100}
+  \end{align*}
+  Another question:\\
+  Suppose the ball from I is red. What is the probability that the transferred ball was red?
+  \[ \PP[\text{transferred ball was red}] = ? \]
+  Use the formula of Bayes:
+  \begin{align*}
+    \PP(B | A) &= \frac{\PP(A \cap B)}{\PP(B)} \frac{\PP(B)}{\P(A)} \\
+    &= \PP(A | B) \frac{\PP(B)}{\PP(A)}
+  \end{align*}
+  Combination of total probability and Bayes (sometimes also called formula of Bayes):
+  \begin{align*}
+    \PP(B_j | A) = \frac{\PP(A | B_j) \PP(B_j)}{\sum_{i} \PP(A | B_j) \PP(B_j)}
+  \end{align*}
+  Now we can use this formula:
+  \begin{align*}
+    \PP(B_1 | A) &= \frac{\PP(A | B_1) \PP(B_1)}{\prob(A)} \\
+    &= \frac{\frac{3}{10} \cdot \frac{6}{10}}{\frac{26}{100}} = \frac{18}{26}
+  \end{align*}
+\end{ex}
+
+\begin{defi*}
+  $A,B \in \mathcal{A}$ are \emph{independent} if
+  \[ \prob(A \cap B) = \prob(A) \cdot \prob(B) \]
+\end{defi*}
+
+\begin{defi*}
+  Let $k \geq 2$. $A_1,A_2,\dots,A_n \in \mathcal{A}$ are independent, if for all $\{i_1,\dots,i_k\} \subset \{1,\dots,n\}$
+  \[ \prob(\bigcap_{j=1}^\infty A_{i_j}) = \prod_{j=1}^k \prob(A_{i_j}) \]
+\end{defi*}
+
+\begin{ex}
+  \todo{add pic}
+  Experiment: Extract a random ball.
+  For $i = 1,2,3$:
+  \[ A_i = [\text{extracted ball carries digit } i] \]
+  Then
+  \begin{align*}
+    \prob(A_i) &= \frac{2}{4} = \frac{1}{2} \\
+    \prob(A_i \cap A_j) = \frac{1}{4} = \prob(A_i) \cdot \prob(A_j) \text{ for } i \neq j \\
+    \prob(A_1 \cap A_2 \cap A_3) &= \frac{1}{4} + \prob(A_1) \cdot \prob(A_2) \cdot \prob(A_3)
+  \end{align*}
+\end{ex}
+
+\begin{obs}
+  \begin{enumerate}
+    \item If $A$ and $B$ are independent, then
+    \begin{enumerate}
+      \item $A^C$ and $B$
+      \item $A$ and $B^C$
+      \item $A^C$ and $B^C$
+    \end{enumerate}
+    are independent.
+    \item Let $A_i^1 \coloneq A_i$ and $A_i^{-1} \coloneq A_i^C$.
+    Then $A_1,\dots,A_n$ are independent if and only if for all $\varepsilon_1,\dots,\varepsilon_n \in \{-1,1\}$
+    \[ \prob(A_1^{\varepsilon_1} \cap \dots \cap A_n^{\varepsilon_n}) = \prod_{i=1}^n \prob(A_i^{\varepsilon_i}) \]
+  \end{enumerate}
+\end{obs}
+
+\begin{defi*}
+  Let $A_i$ where $(i \in I)$ be a collection of events (in $\mathcal{A}$) are independent, if any finite subcollection is independent:
+  \[ \forall J \subset I, \: J \text{ finite} \]
+  \[ \prob(\bigcap_{j \in J} A_j) = \prod_{j \in J} \prob(A_j) \]
+\end{defi*}
+
+
+\subsection{Random variables}
+
+\begin{defi*}
+  A random variable is a function
+  \begin{align*}
+    X: (\Omega,\mathcal{A}) \to \R
+  \end{align*}
+  which is \emph{measurable}
+  \begin{align*}
+    \inv{X}(I) \in \mathcal{A}
+  \end{align*}
+  for all interval $I \subset \R$.
+  Equivalent: 
+  \[ \inv{X}(B) \in \mathcal{A} \]
+  for all $b \in \mathcal{B}_\R$.
+\end{defi*}
+
+\begin{ex}
+  Coin toss: $\Omega = \{ 0,1 \} \times \R^2 \times \N_0$
+  $X_1$: $0$ or $1$ and $\omega = (\varepsilon,x,y,n)$ $\varepsilon \in \{0,1\}$, $x,y \in \R$, $n \in \N_0$.
+  \begin{align*}
+    X_1(\omega) &= \varepsilon \\
+    X_2(\omega) &= \sqrt{x^2 + y^2}
+  \end{align*}
+\end{ex}
+
+\todo{add earth and sky pic}
+
+The distribution of $X$ is the probability measure on $(\R,\mathcal{B}_\R)$ given by 
+\begin{align*}
+  P_X(B) &= \prob(\inv{X}(B)) \\
+  &= \prob[X \in B]
+\end{align*} 
+for $B \in \mathcal{B}_\R$.
+
+Typical classes of Random variables and distributions
+\begin{enumerate}
+  \item value set of $X$ is at most countable (finite or countable).
+  \[ X(\Omega) = \{ x_i: i \in I\}\]
+  where $I$ is finite or countable.
+  \begin{align*}
+    P_X(B) &= \sum_{i: x_i \in B} P_X(\{ x_i \}) \\
+    &= \sum_{i: x_i \in B} \underbrace{\prob[X = x_i]}_{p(x_i) = p_X(x_i)} \\
+    \sum_{i} p_X(x_i) &= 1
+  \end{align*}
+  only in discrete case, you write
+  \begin{align*}
+    p_X(x) = \prob[X = x] = \begin{cases} 0 & x \notin \{x_i: i \in I\} \\ p_X(x_i) \end{cases}
+  \end{align*}
+  \begin{align*}
+    \sum_{x \in \R} p_X(x) = 1
+  \end{align*}
+  \item \emph{continuous}\\
+  There is a density function $f_X: \R \to [0,\infty)$ such that
+  \begin{align*}
+    \prob_X(B) = \int_B f_X(x) dx
+  \end{align*}
+  
+  \todo{add pic}
+  \begin{align*}
+    \int_\R f_X(x) dx &= 1 \\
+    \prob[X = x] &= 0
+  \end{align*}
+\end{enumerate}
+
+Note: for us, two random variables $X$, $X^\prime$ are the same, if
+\[ \prob[X \neq X^\prime] = 0 \]
+which is the same as
+\[ \prob(\{ \omega \in \Omega: X(\omega) \neq X^\prime(\omega) \} ) = 0 \]
+
+\todo{add pic}
+
+\end{document}

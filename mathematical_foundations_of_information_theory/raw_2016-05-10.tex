@@ -1,0 +1,142 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\section{Asymptotic Equipartition}
+
+Recall: $X$ random variable: 
+\[ H(X) = - \sum_{x \in \mathcal{X}} p_X(x) \log_2 p_X(x) = \sum_{x \in \mathcal{X}} p_X(x) \underbrace{(-\log_2 p_X(x))}_{\expect(-\log_2 p_X(X)} \]
+
+\begin{ex}
+  $\mathcal{X} = \{0,1\}$ and $\prob[X=1] = p (= \theta)$ and $\prob[X=0] = 1 - p (= 1 - \theta)$
+  So, $p_X(1) = p$ and $p_X(0) = 1-p$.
+  \begin{align*}
+    p_X(X) = \begin{cases} p & \text{ if } X = 1 \\ 1-p \text{ if } X=0 \end{cases}
+  \end{align*}
+  \begin{align*}
+    h = \lim \frac{1}{n} H(X_1,\dots,X_n)\\
+    \lim \frac{1}{n} \expect(-\log_2 p_{X_1,\dots,X_n} (X_1,\dots,X_n)
+  \end{align*}
+\end{ex}
+
+\begin{defi*}
+  The $\mathcal{X}$-valued stochastic process $(X_n)_{n \in \N}$ has the asymptotic equipartition property if 
+  \[ - \frac{1}{n} \log_2 p_n(X_1,\dots,X_n) \to h \text{ almost surely} \]
+\end{defi*}
+
+\begin{rem}
+  We have in the definition above $p_n = p_{X_1,\dots,X_n}$ and $p_n(x_1,\dots,x_n) = \prob[X_1=x_1,\dots,X_n=x_n]$
+\end{rem}
+
+\begin{enumerate}
+  \item Specify classes of stochastic processes which do have the AEP
+  \item How can it be used?
+\end{enumerate}
+
+\begin{lemma}
+  If The $X_n$ are iid $[h = H(X_1)]$, then the AEP holds.
+\end{lemma}
+
+\begin{proof}
+  \begin{align*}
+    p_n(x_1,\dots,x_n) &= p(x_1)p(x_2)\dots p(x_n) \\
+    -\frac{1}{n} \log_2 p_n(X_1,\dots,X_n) &= -\frac{1}{n} \log_2 p(X_1)p(X_2)\dots p(X_n) \\
+    &= -\frac{1}{n} \left[ \log_2 p(X_1) + \log_2 p(X_2) + \dots + \log_2 p(X_n) \right]\\
+    \implies \expect(-\log_2 p(X_1)) = H(X_1) = h
+  \end{align*}
+\end{proof}
+
+\begin{ex}
+  Continued $X_n$ are iid Bernoulli, $\mathcal{X} = \{0,1\}$ and $(X_1,\dots,X_n)$ are values in $\{0,1\}^n$
+  \begin{align*}
+    p_n(x_1,\dots,x_n) = p(x_1)p(x_2) \dots p(X_n) = \theta^k (1-\theta)^{n-k}
+  \end{align*}
+  where $k = \abs{\{j: x_j = 1\}}$ and $n-k = \abs{\{j: x_j = 0\}}$.
+  \begin{align*}
+    p_n(X_1,\dots,X_n) = \theta^K (1 -\theta)^{n-K}
+  \end{align*}
+  where $K = \abs{\{j: X_j = 1\}}$ (is random since value of rvs).
+  \begin{align*}
+    - \frac{1}{n} \log_2 \theta^K (1-\theta)^{n-K} sim h
+  \end{align*}
+\end{ex}
+
+$\frac{K}{n} = \frac{X_1+\dots+X_n}{n} \to \theta$ almost surely
+
+\begin{defi*}
+  Let $\varepsilon > 0$ and $n \in \N$. The \emph{typical set} is 
+  \[ A_\varepsilon^{(n)} = \{ (x_1,\dots,x_n) \in \mathcal{X}^n: \abs{- \frac{1}{n} \log_2 p_n(x_1,\dots,x_n) - h} < \varepsilon\} \]
+\end{defi*}
+
+\begin{theorem}
+  If the AEP holds, then
+  \begin{enumerate}
+    \item $\prob[(X_1,\dots,X_n) \in A_\varepsilon^{(n)}] > 1 - \varepsilon$ for all $n \geq N_\varepsilon$
+    \item $(1-\varepsilon) 2^{n(h-\varepsilon)} < (\leq) \abs{A_\varepsilon^{(n)}} < (\leq) 2^{n(h+\varepsilon)$ for $n \geq N_\varepsilon$
+    \item[0] For $(x_1,\dots,X_n) \in A_\varepsilon^{(n)}$
+    \[ 2^{-n(h+\varepsilon)} < p_n(x_1,\dots,x_n) < 2^{-n(h-\varepsilon)} \]
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  \begin{enumerate}
+    \item \begin{align*}
+      \prob[ \abs{- \frac{1}{n} \log_2 p_n(X_1,\dots,X_n) - h} \geq \varepsilon] &\overset{n \to \infty}{\to} 0 \\
+      \prob[  < \varepsilon] &\overset{n \to \infty}{\to} 1
+    \end{align*}
+    Thus,
+    \begin{align*}
+      \prob[(X_1,\dots,X_n) \in A_\varepsilon^{(n)}] > 1 - \varepsilon
+    \end{align*}
+    for $n \geq N_\varepsilon$
+    \item 
+    \begin{align*}
+      1 \geq \sum_{(x_1,\dots,x_n) \in A_\varepsilon^{(n)}} p_n(x_1,\dots,x_n) > 2^{-n(h+\varepsilon)} \abs{A_\varepsilon^{(n)}}
+    \end{align*}
+    \begin{align*}
+      1- \varepsilon < \prob[(X_1,\dots,X_n) \in A_\varepsilon^{(n)}] = \sum_{(x_1,\dots,x_n) \in A_\varepsilon^{(n)}} p_n(x_1,\dots,x_n) < 2^{-n(h-\varepsilon)} \abs{A_\varepsilon^{(n)}}
+    \end{align*}
+  \end{enumerate}
+\end{proof}
+
+\begin{rem}
+  Let $\varepsilon$ be very small, then
+  \[ \abs[A_\varepsilon^{(n)} \approx 2^{nh} \]
+  on $A_\varepsilon^{(n)}$:
+  \[ p_n(x_1,\dots,x_n) \approx 2^{-nh} \]
+  This is the reason why it is called asymptotic equipartition distribution.
+\end{rem}
+
+\subsection{Coding / Data compression}
+
+Let $n$ be large, $p_n(x_1,\dots,x_n)$. Elements to be encoded are $\mathcal{X}^n$, look for binary code $C(x_1,\dots,x_n)$ such that 
+\[ \sum_{(x_1,\dots,x_n)} p_n(x_1,\dots,x_n) \cdot \text{length}(C(x_1,\dots,x_n)) \]
+is small.
+
+Without probability: $l \equiv \lciel n \log_2 \abs{\mathcal{X}} \rceil$ (ever sequence is encoded by a word in $\{0,1}^l$)
+
+AEP: $\overbar{(x_1,\dots,x_n)} \in A_\varepsilon^{(n)} \to $ words over $\{0,1\}$, length: $1 + \lceil n (h+\varepsilon) \rceil$ where the $1$ is an initial $1$, indicating \enquote{typical}
+
+$(x_1,\dots,x_n) \in \mathcal{X}^n \setminus A_\varepsilon^{(n)}$ length: $1 + \lceil \log_2 \abs{\mathcal{X}} \rceil$ where the $1$ is an initial $0$ for non-typical.
+
+Expected length: 
+\begin{align*}
+  \expect(l(X_1,\dots,X_n)) &= \sum_{(x_1,\dots,x_n)\in \mathcal{X}^n} p_n(x_1,\dots,x_n) l(x_1,\dots,x_n)
+  = \sum_{(x_1,\dots,x_n) \in A_\varepsilon^{(n)}} \dots + \sum_{(x_1,\dots,x_n)\in\mathcal{X}^n\setminus A_\varepsilon^{(n)}} \dots \\
+  &\leq \sum_{(x_1,\dots,x_n)\in A_\varepsilon^{(n)}} p_n(x_1,\dots,x_n) (n(h-\varepsilon)+2) + \sum_{(x_1,\dots,x_n)\in \mathcal{X}^n\setminus A_\varepsilon^{(n)}} p_n(x_1,\dots,x_n) (n \log_2 \abs{\mathcal{X}} + 2) 
+  = (n(h+\varepsilon)+2) \prob[(X_1,\dots,X_n) \in A_\varepsilon^{(n)}] + (n \log_2 \abs{\mathcal{X}} + 2) \underbrace{(1 - \prob[])}_{< \varepsilon} \\
+  &\leq n ( h + \varepsilon) + 2 + (n \log_2 \abs{\mathcal{X}} + 2) \varepsilon
+  = n (h+\varepsilon^\prime)
+\end{align*}
+where $\varepsilon^\prime = \varepsilon + \varepsilon \log_2 \abs{\mathcal{X}} + \frac{2+2\varepsilon}{n}$
+which is small for large $n$.
+Thus,
+\[ \expect(l(X_1,\dots,X_n)) \approx nh \]
+
+
+\subsection{Shannon-McMillan-Breiman}
+
+If the stochastic process $(X_n)_{n\in \N}$ is stationary and ergodic, then it has the AEP.
+
+Nice version: If $(X_n)_{n \geq 0}$ is an irreducible, time homogeneous Markov chain, then it has the AEP.
+
+\end{document}

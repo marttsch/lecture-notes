@@ -1,0 +1,145 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\lecture{26.04.2016}
+
+\begin{rem}[Final remark]
+  Entropy, relative entropy and so on can also be considered for RVs with (infinite???) values in countable sets, or for probability \enquote{vectors} $p = (p_1,p_2,p_3,\dots)$, but one has to require absolute convergence of
+  \[ H(p_1,p_2,\dots) = \sum_{n=1}^\infty p_n (-\log_2 p_n) \]
+  Same for 
+  \[ D(p||q) = \sum_{n=1}^\infty p_n \log_2 \frac{p_n}{q_n} \]
+\end{rem}
+
+\begin{ex}
+  If $\sum_{n=1}^\infty n p_n < \infty$, then $H(p) < \infty$.
+  Use:
+  \begin{itemize}
+    \item $x \mapsto -x \log_2 x$ \todo{add pic} increasing on $[0,\frac{1}{e}]$.
+    \item $-p_n \log_2 p_n \leq \max \{n, -\log_2 p_n\} p_n$
+  \end{itemize}
+\end{ex}
+
+
+\subsection{3) Asymptotic entropy}
+
+\begin{defi*}
+  \begin{enumerate}[label=(\alph*)]
+    \item A \emph{stochastic process} in discrete time is a sequence $(X_n)_{n \geq 1}$ of random variables.
+    \item Suppose that the $X_n$ are discrete and take values in a finite (or countable) set $\mathcal{X}$.
+    Then the \emph{asymptotic entropy} (entropy rate) of the stochastic process is 
+    \[ h = \lim_{n \to \infty} \frac{H(X_1,\dots,X_n)}{n} \text{,} \]
+    if the limit exists.
+  \end{enumerate}
+\end{defi*}
+
+Question: For which types of stochastic processes does the limit exist? For which types of stochastic processes is there a formula for $h$?
+
+Simplest case: $(X_n)_{n \in \N}$ are iid
+\begin{align*}
+  H(X_1,\dots,X_n) &= H(X_1) + \dots + H(X_n) = n H(X_1) \\
+  h &= H(X_1)
+\end{align*}
+
+Recall chain rule:
+\begin{align*}
+  H(X_1,\dots,X_n) = \sum_{k=1}^n H(X_k|X_{k-1},\dots,X_1)
+\end{align*}
+And recall from Analysis 1: If $(a_n)$ is a sequence of real numbers such that $\lim_{n \to \infty} a_n = a$ exists, then
+$\lim_{n \to \infty} \frac{1}{n} (a_1+\dots+a_n)$ exists and 
+\begin{align*}
+  \lim_{n \to \infty} \frac{1}{n} (a_1+\dots+a_n) = a
+\end{align*}
+
+Consequence: If $h^\prime = \lim_{n \to \infty} H(X_n|H_{n-1},\dots,X_1)$ exists, then $h$ exists and $h = h^\prime$.
+
+\begin{defi*}
+  The process $(X_n)_{n \geq 1}$ is called \emph{stationary}, if for all $n,l \in \N$:
+  \[ p_{X_1,\dots,X_n} = p_{X_{l+1},\dots,X_{l+n}} \]
+\end{defi*}
+
+Recall: for all $x_1,\dots,x_n \in \mathcal{X}: \prob[X_1 = x_1,\dots,X_n = x_n] = \prob[X_{l+1} = x_{l+1},\dots,X_{l+n} = x_{l+n}]$
+
+\begin{lemma}
+  If $(X_n)$ is stationary, then $h^\prime (= h)$ exists.
+\end{lemma}
+
+\begin{proof}
+  \begin{align*}
+    C \leq H(X_n|X_{n-1},\dots,H_2,H_1) \leq H(X_n|X_{n-1},\dots,H_2) = H(X_{n-1}|H_{n-2},\dots,H_1)
+  \end{align*}
+\end{proof}
+
+\begin{defi*}
+  An $\mathcal{X}$-valued stochastic process $(X_n)_{n \in \N_0}$ is called a (\emph{time-homogeneous}) \emph{Markov chain} if
+  for all $x_0,x_1,\dots,x_{n-1},x,y \in \mathcal{X}$
+  \begin{align*}
+    \prob[X_{n+1} = y| X_n = x,X_{n--1} = x_{n-1},\dots,X_0 = x_0] &= \prob[X_{n+1} = y|X_n=x] \\
+    &= p(y|x) = p_{x,y}
+  \end{align*}
+  whenever $\prob[X_{n+1} = y| X_n = x,X_{n--1} = x_{n-1},\dots,X_0 = x_0] > 0$.
+  We call $p(y|x)$ transition probability form $x$ to $y$.
+  Transition matrix:
+  \begin{align*}
+    P = \left( p(y|x) \right)_{x,y \in \mathcal{X}}
+  \end{align*}
+  where $x$ denotes the row and $y$ denotes the column. So we can also write $P_{x,y}$.
+\end{defi*}
+
+\begin{rem}
+  Avoid in future courses: $p(x,y)$!
+\end{rem}
+
+Consider $\mathcal{X},P)$ as a directed graph. The vertex set is $\mathcal{X}$ and the edges are $x \overset{p(y|x)>0}{\to} y$
+
+\begin{ex}[Weather in the land OZ]
+  Weather evolves as follows:
+  there are 3 types: bright (b), rainy (r), snowy (s)
+  The rules are:
+  \begin{itemize}
+    \item If one day is bright, then the next day it will always turn bad, r and s with equal probability
+    \item If one day is bad (r or s), in 50\% of all cases, it will stay as it is, and only in 25\% of cases it will turn bright.
+  \end{itemize}
+  $\mathcal{X} = \{b,r,s\}$
+  \todo{add pic}
+  \begin{align*}
+    P = 
+    \bordermatrix{
+    ~ & b & r & s \cr
+    b & 0 & \frac{1}{2} & \frac{1}{2} \cr 
+    r & \frac{1}{4} & \frac{1}{2} & \frac{1}{4} \cr
+    s & \frac{1}{4} & \frac{1}{4} & \frac{1}{2} \cr
+    }
+  \end{align*}
+\end{ex}
+
+We also need the \emph{initial distribution} 
+\[ \mu(x) = \mu_x = \prob[X_0 = x] \]
+$\nu(x) = \nu_x$ (special)
+
+$\prob_\mu$ is the distribution, when initial distribution is $\mu$.
+
+\begin{align*}
+  \prob_\mu[X_0 = x_0,&X_1=x_1,\dots,X_n=x_n] \\
+  &= \prob_\mu[X_0 = x_0,\dots,X_{n-1}=x_{n-1}] \prob[X_n=x_n|X_{n-1}=x_{n-1},\dots,X_0=x_0] \\
+  &= \underbrace{\prob[X_0=x_0]}_{\mu_{X_0}} \underbrace{p_{x_0,x_1}}_{=p(x_1|x_0)} \dots \underbrace{p_{x_{n-1},x_n}}_{p(x_n|x_{n-1})}
+\end{align*}
+\begin{align*}
+  \prob[X_2=y|X_0=x] &= \sum_{w \in \mathcal{X}} \prob[X_2=y,X_1=w|X_0=x] \\
+  &= \sum_{w \in \mathcal{X}} \underbrace{\prob[X_1=w|X_0=x]}_{p_{x,w}} \underbrace{\prob[X_2=y|X_1=w,X_0=x]}_{p_{w,y}} \\
+  &= \sum_{w \in \mathcal{X}} p_{x,w} p_{w,y} 
+\end{align*}
+
+\begin{lemma}
+  $\prob[X_{l+n}=y|X_l=x] = p_{x,y}^{(n)} = p^{(n)}(y|x)$ where $P^n = (p_{x,y}^{(n)})_{x,y \in \mathcal{X}}$
+  The (unconditional) distribution of $X_n$ is 
+  \[ \mu P^n \]
+  (row vectors matrix)
+\end{lemma}
+
+\begin{align*}
+  \prob_\mu[X_n=y] &= \sum_{x \in \mathcal{X}} \prob_\mu[X_n=y,X_0=x] \\
+  &= \sum_{x \in \mathcal{X}} \prob_\mu[X_0=x] \prob_\mu[X_n=y|X_0=x] \\
+  &= \sum_{x \in \mathcal{X}} \mu_x p_{x,y}^{(n)}
+\end{align*}
+
+\end{document}
