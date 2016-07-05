@@ -1,0 +1,76 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+
+\begin{proof}[continuation of proof]
+To describe the error (event):
+\begin{align*}
+  E_w = \{ (X^{(n)}(w),Y^{(n)}(1)) \in A_\varepsilon^{(n)} \}
+\end{align*}
+
+If input is $1 \in \mathcal{W}$
+\[ E_1^C \cup (E_2 \cup \dots \cup E_M) \]
+
+Then
+\begin{align*}
+  \prob[\hat{W} \neq W| W=1] \leq \prob[E_1^C|W=1] + \sum_{w=2}^M \prob[E_w| W=1]
+\end{align*}
+
+Since for $W,X^{(n)}$, transmissions through $\mathcal{C}^{(n)}$ are independent, we get
+\begin{align*}
+  \prob[\hat{W} \neq W| W=1] \leq \prob[E_1^C] + \sum_{w=2}^M \prob[E_w]
+\end{align*}
+
+By proposition (joint typically sequences) form yesterday: $n \geq N_\varepsilon$
+\[ \prob[(X^{(n)}(1),Y^{(n)}(1)) \in A_\varepsilon^{(n)}] \geq 1 - \varepsilon \]
+
+So $\prob[E_1^C] < \varepsilon$.
+
+For $W \neq 1$: 
+\[ \prob[(X^{(n)}(w),Y^{(n)}(1)) \in A_\varepsilon] \leq 2^{-n(I(X;Y) - 3 \varepsilon)} = 2^{-n(\capa(\mathcal{C}) - 3 \varepsilon)} \]
+
+Thus,
+\begin{align*}
+  \prob[E_1^C] + \sum_{w=2}^M \prob[E_w] &< \varepsilon + (M-1) 2^{-n(\capa(\mathcal{C}) - 3 \varepsilon)} \\
+  &< \varepsilon + 2^{-n (\capa(\mathcal{C}) - \frac{\log_2 M}{n} - 3 \varepsilon)}
+\end{align*}
+
+If $R = \frac{\log_2 M}{n} < \capa(\mathcal{C}) - 4 \varepsilon$, then
+\begin{align*}
+  \varepsilon + 2^{-n (\capa(\mathcal{C}) - \frac{\log_2 M}{n} - 3 \varepsilon)} < \varepsilon + 2^{-n \varepsilon}
+\end{align*}
+
+Further, for $n \geq \tilde{N}_\varepsilon$
+\[ \varepsilon + 2^{-n \varepsilon} < 2 \varepsilon \]
+
+So let $\varepsilon > 0$.
+If $R < \capa(\mathcal{C}) - 4 \varepsilon$ and $n \geq \tilde{N}_\varepsilon$, then $\prob[\hat{W} \neq W] < 2 \varepsilon$, that is
+\[ \sum_B \prob[X^{(n)} = B] \ape(B) < 2 \varepsilon \]
+
+So there exists $B \in \mathcal{B}$ such that $\ape(B) < 2 \varepsilon$.
+
+For this codebook 
+\begin{align*}
+  \frac{1}{M} \sum_{w \in \mathcal{W}} \lambda_w^{(n)} < 2 \varepsilon
+\end{align*}
+
+Let 
+\begin{align*}
+  \mathcal{W}^\prime &= \{w: \lambda_w < 2 \varepsilon \} \\
+  \mathcal{W}^{\prime \prime} &= \{w: \lambda_w \geq 4 \varepsilon \} = \mathcal{W} \setminus \mathcal{W}^\prime
+\end{align*}
+
+Then
+\begin{align*}
+  2 \varepsilon > \frac{1}{M} \sum_{w \in \mathcal{W}^{\prime\prime}} \underbrace{\lambda_w^{(n)}}_{\geq 4 \varepsilon} \geq \frac{4 \varepsilon \abs{\mathcal{W}^{\prime\prime}}}{M} \\
+  \implies \abs{\mathcal{W}^{\prime\prime}} \leq \frac{M}{2} \text{ and } \abs{\mathcal{W}^\prime} > \frac{M^2}{•}
+\end{align*}
+
+Restrict everything to $\mathcal{W}^\prime$.
+Then we get an $(M^\prime,n)$-code for $\mathcal{W}^\prime$, $\mathcal{C}$ and rate 
+\[ \frac{\lceil Rn \rceil - 1}{n} \frac{\log_2 M_n^\prime}{n} \leq \frac{\lceil n R \rceil}{n} \]
+where $\frac{\lceil Rn \rceil - 1}{n}$ and $\frac{\lceil n R \rceil}{n}$ tend to $R$ for $n \to \infty$ and thus $\approx R- \varepsilon$.
+Therefore, max probability of error is less than $4$ ($< 4$).
+\end{proof}
+
+\end{document}

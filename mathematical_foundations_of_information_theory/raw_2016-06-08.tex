@@ -1,0 +1,76 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\begin{defi*}[conditional probability of error]
+  $w \in \mathcal{W}$
+  \[ \lambda_w^{(n)} = \sum_{\ubar{y} \in \mathcal{Y}^n: g(\ubar{y}) \neq w} p_n(\ubar{y}|x^{(n)}(w)) \]
+\end{defi*}
+
+\begin{defi*}[average probability of error]
+  \[ p_{\text{err}}^{(n)} = \frac{1}{M} \sum_w \lambda_w^{(n)} \]
+\end{defi*}
+
+Imagine you have an input RV $W$ (uniform distributed?), equidistributed on $\mathcal{W}$.
+\[ W \to \ubar{X} = x^{(n)}(W) \to \ubar{Y} \to g(\ubar{Y}) = \hat{W} \]
+$\hat{W}$-valued RV
+
+\begin{align*}
+  \lambda_w^{(n)} &= \prob[\hat{W} \neq w| W = w] \\
+  p_{\text{err}}^{(n)} &= \prob[\hat{W} \neq W] = \sum_{w \in W} \prob[\underbrace{\hat{W} \neq W}_{W \neq w}| W= w] \underbrace{\prob[W = w]}_{\frac{1}{M}} = \frac{1}{M} \lambda_w^{(n)}
+\end{align*}
+
+\begin{defi*}
+  A number $R > 0$ is called an \emph{achievable rate} if there is a sequence of $(M_n,n)$-codes such that for $n \to \infty$ and $M_n \to \infty$
+  \begin{enumerate}
+    \item $R_n = \frac{\log_2 M_n}{n} \to R$
+    \item $\lambda^{(n)} \to 0$
+  \end{enumerate}
+\end{defi*}
+
+\begin{defi*}
+  The \emph{achievable capacity} $R^\ast$ of $\mathcal{C}$ is
+  \[ R^\ast = \sup\{R>0: R \text{ achievable} \} \]
+\end{defi*}
+
+So: rates $> R^\ast$ are not achievable for any $\varepsilon > 0$ there exists $(M_n,n)$-code with rate $R > R^\ast - \varepsilon$ and $\lambda^{(n)} < \varepsilon$
+
+\begin{theorem}[Shannon's channel coding theorem]
+  \[ R^\ast = \capa(\mathcal{C}) \]
+\end{theorem}
+
+\begin{proof}
+  We prove this by showing $R^\ast \leq \capa(\mathcal{C})$ (easy direction) and $R^\ast \geq \capa(\mathcal{C})$ (difficult direction).
+  \begin{enumerate}
+    \item[\enquote{$\leq$}] We need to show that for any sequence of $(M_n,n)$-codes with $\lim \frac{\log_2 M_n}{n} > \capa(\mathcal{C})$, $\lambda^{(n)} \nrightarrow 0$. $R_n = \frac{\log_2 M_n}{n}$.
+    Show $p_{\text{err}}^{(n)} \nrightarrow 0$ since this implies $\lambda^{(n)} \nrightarrow 0$.
+    With such a code ( $\lim \frac{\log_2 M_n}{n} > \capa(\mathcal{C})$), look at the Markovian quatruple 
+    \[ W \to \ubar{X} = x^{(n)}(W) \to \ubar{Y} \to g(\ubar{Y}) = \hat{W} \]
+    By Fano, 
+    \begin{align*}
+      H(W|\hat{W}) \leq 1 + p_{\text{err}}^{(n)} \log_2 M_n = 1 + p_{\text{err}}^{(n)} n R_n \\
+    \end{align*}
+    \begin{align*}
+      \log_2 M_n = H(W) = H(W|\hat{W}) + I(W;\hat{W})
+    \end{align*}
+    Note that
+    \begin{align*}
+      I(W;\hat{W}) \leq I(W; \ubar{Y}) \leq I(\ubar{X};\ubar{Y}) = I(X_1,\dots,X_n;Y_1,\dots,Y_n) \leq \capa(\mathcal{C}^{(n)})
+    \end{align*}
+    So this gives
+    \[ I(W;\hat{W}) \leq n \capa(\mathcal{C}) \]
+    Then
+    \begin{align*}
+      H(W|\hat{W}) \leq 1 + \ape \log_2 M_n + n \capa(\mathcal{C})
+    \end{align*}
+    Further
+    \begin{align*}
+      R_n ( 1 - \ape) \leq \frac{1}{n} + \capa(\mathcal{C})
+    \end{align*}
+    Since $R_n \to R > \capa(\mathcal{C})$ and $\frac{1}{n} \to 0$, it follows that $1 - \ape \neq 0$.
+    So $\ape \nrightarrow 0$.
+  \end{enumerate}
+\end{proof}
+
+\todo{add pic}{Codebook}
+
+\end{document}

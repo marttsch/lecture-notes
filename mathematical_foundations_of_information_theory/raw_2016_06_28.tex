@@ -1,0 +1,147 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\section{Differential Entropy}
+
+\begin{defi*}
+  $X$ real random variable, (absolutely) countinuous:
+  \[ F_X(x) = \prob[X \leq x] = \int_{(-\infty,x]} f(t) dt \]
+  where $f(t)$ is the density and $\int_{\R} f(x) dx = 1$.
+  \emph{Differential entropy}
+  \[ h(X) = - \int_{\R} f(x) \log_2 f(x) dx \]
+  We also might write $h(f)$ instead of $h(X)$.
+  Let $P_X$ be the distribution of $X$.
+  Then 
+  \[ S \coloneqq \supp P_X = \{x: P_X(U) > 0 \forall U \in \mathcal{U}(x) \} \]
+  where $\mathcal{U}(x)$ denote the set of neighbourhoods of $x$.
+  $S$ is a closed set. Also $S = \{ x: f(x) >0 \}^-$.
+\end{defi*}
+
+The integral $h(X)$ lives on $S$. All other values give $0$.
+
+\begin{ex}
+  \begin{enumerate}
+    \item $X \sim $ continuous uniform on $[a,b]$
+    \[ f_X(x) = \frac{1}{b-a} \mathbb{1}_{[a,b]}(x) \]
+    \begin{align*}
+      h(X) &= - \frac{1}{b-a} \int_a^b \log_2 \frac{1}{b-a} dx = - \log \frac{1}{b-a} \\
+      &= \log_2(b-a) \begin{cases} < 0, & b-a < 1 \\ = 0, & b-a = 1 \\ > 0, & b-a > 1 \end{cases}
+    \end{align*}
+    \item $X \sim N(\mu,\sigma^2)$
+    \begin{align*}
+      h(X) = h(X - \mu)
+    \end{align*}
+    so $X \sim N(0,\sigma^2)$.
+    Then
+    \begin{align*}
+      h(X- \mu) &= - \frac{1}{\ln 2}\int \frac{1}{\sqrt{2 \pi} \sigma} e^{- \frac{x^2}{2 \sigma^2}} (\ln \frac{1}{\sqrt{2 \pi} \sigma} - \frac{x^2}{2 \sigma^2}) dx \\
+      &= - \frac{1}{\ln 2} (\ln \frac{1}{\sqrt{2 \pi} \sigma} - \frac{\sigma^2}{2\sigma^2}) \\
+      &= \frac{1}{2} \log_2 (2 \pi e \sigma^2)
+    \end{align*}
+  \end{enumerate}
+\end{ex}
+
+\begin{rem}(for exercise 2)
+  Obvious: $h(X + b) = h(X)$.\\
+  Recall $f(x) = \frac{1}{\sqrt{2 \pi} \sigma} e^{- \frac{(x-\mu)^2}{2 \sigma^2}}$.
+\end{rem}
+
+Discretization: step length $\delta > 0$
+\todo{add pic}{pic}
+$[k \delta, (k+1) \delta) \ni x_k = x_k(\delta)$
+\[ \int_{k \delta}^{(k+1) \delta} f(x) dx = \delta f(x_k) \]
+$X^\delta = x_k$, if $X \in [k \delta, (k+1) \delta)$. 
+\[ p_\delta(x_k) = \prob[X^\delta = x_k] = \int_{k \delta}^{(k+1) \delta} f(x) dx \]
+\begin{align*}
+  H(X^\delta) &= - \sum_{k \in \Z} p_\delta(x_k) \log_2 p_\delta (x_k)
+  = - \sum_k p_\delta(x_k)  (\log_2 \delta + \log_2 f(x_k)) \\
+  &= - \log_2 \delta - \sum_k f(x_k) \log_2 f(x_k) \approx - \log_2 \delta - \int f(x) \log_2 f(x) dx \\
+  &= \log_2 \delta + h(X)
+\end{align*}
+
+\begin{lemma}
+  $\underbar{X} = (X_1,\dots,X_n)$ random variable in $\R^n$, density $f(\underbar{x}) = f(x_1,\dots,x_n) = f 
+  \left( \begin{matrix}
+    x_1 \\ \vdots \\ x_n
+  \end{matrix}   \right)$
+  $\underbar{b} = (b_1,\dots,b_n) \in \R^n$, $A \in GL(n,\R)$
+  \begin{align*}
+    h(A \underbar{X}^T + \underbar{b}^T) = h(\underbar{X}) + \log_2 \abs{\det A}
+  \end{align*}
+\end{lemma}
+
+\begin{proof}
+  \begin{enumerate}
+    \item $h(A \underbar{X}^T + \underbar{b}^T) = h(A \underbar{X}^T)$
+    density:
+    \[ f_{A \underbar{X}^T}(\underbar{y}) = \frac{1}{\abs{\det A}} f(\inv{A} \underbar{y}^T) \]
+    \begin{align*}
+      h(A \underbar{X}^T) = - \int \frac{1}{\abs{\det A}} f(\inv{A} \underbar{y}^T) \log_2 (\dots) d \underbar{y}
+    \end{align*}
+    substitute $\underbar{x} = \inv{A} \underbar{y}^T$ and $\frac{d\underbar{y}}{\abs{\det A}} = d\underbar{x}$
+  \end{enumerate}
+\end{proof}
+
+\begin{ex}
+  $\underbar{X} \sim N_n(\ubar{\mu},\Sigma)$
+  \[ \Sigma = (Cov(X_i,X_j))_{i,j=1}^n \text{ pos. definite} \]
+  \begin{align*}
+    f(\underbar{x}) = \frac{1}{\sqrt{(2 \pi)^n \det \Sigma}} e^{- \frac{1}{2} \ubar{x} - \ubar{\mu}) \inv{\Sigma} (\ubar{x} - \ubar{\mu})^T}
+  \end{align*}
+  \begin{align*}
+    h(\ubar{X}) = \dots = \frac{1}{2} \log_2((2 \pi e)^n \det \Sigma)
+  \end{align*}
+  as in 2), or first considering $(Y_1,\dots,Y_n)$ iid $N(0,1)$,
+  \[ \ubar{X}^T = \sqrt{\Sigma} \ubar{Y}^T + \ubar{\mu}^T \sim N_n(\ubar{\mu},\Sigma) \]
+\end{ex}
+
+\begin{defi*}
+  $(X,Y) \in \R^2$ joint density $f(x,y)$.
+  Then define conditional density $f(x|y) \coloneqq \frac{f(x,y)}{f_Y(y)}$, for $f_Y(y) > 0$, otherwise $0$.
+  \begin{align*}
+    h(X|Y) &\coloneqq - \int_\R h(f(\cdot,y)) f_Y(y) dy = - \int_{\{f_Y > 0 \}} h(f(\cdot,y)) f_Y(y) dy \\
+    &= h(X,Y) - h(Y)
+  \end{align*}
+\end{defi*}
+
+\begin{defi*}
+  $f,g$ two probability densities on $\R^n$.
+  \[ \KLdiv(f||g) = \int_{\R^n} f(\ubar{x}) \log_2 \frac{f(\ubar{x})}{g(\ubar{x})} d \ubar{x} \]
+  [ finite $\implies S = \supp P_f \subset \supp P_g$ ]
+\end{defi*}
+
+\begin{theorem}
+  $\KLdiv(f||g) \geq 0$, equality holds if and only if $f = g$ a.e. (almost everywhere)
+\end{theorem}
+
+\begin{proof}
+  \begin{align*}
+    - \KLdiv(f||g) = \int_S f(x) \log_2 \frac{g(x)}{f(x)} dx \overset{\log \text{ is str. concave}}{\underset{\text{Jenson}}{\leq}} \log_2 \int_S f(x) \frac{g(x)}{f(x)} dx = \log_2 \underbrace{\int_S g(x) dx}_{\leq 1} \leq 0
+  \end{align*}
+  equality holds $\iff \supp P_g \subset \supp P_f$,
+  $\frac{g}{f}$ a.e. constant
+  Thus, constant $=1$.
+\end{proof}
+
+\begin{theorem}
+  $\ubar{X}$ random vector in $\R^n$ with density $f(\ubar{x})$ wlog
+  \[ \expect(\ubar{X}) = (\expect(X_1),\dots,\expect(X_n)) = \ubar{0} \]
+  assume finite $\Sigma = (Cov(X_i,X_j))_{i,j=1}^n = (\expect(X_i,X_j))_{i,j}$
+  $\implies h(\ubar{X}) \leq h(N_n(\ubar{0},\Sigma))$
+\end{theorem}
+
+\begin{proof}
+  $\varphi_\Sigma(\ubar{x}) = \frac{1}{\sqrt{(2 \pi)^n \det \Sigma}} e^{- \frac{1}{2} \ubar{x} \inv{\Sigma} \ubar{x}^T}$
+  Note that $\log_2 \varphi_\Sigma (\ubar{x}) = \text{ const } + \underbrace{- \frac{1}{\ln 2} \frac{1}{2} \ubar{x} \inv{\Sigma} \ubar{x}}_{\text{ quadratic form}}$
+  \begin{align*}
+    0 \leq \KLdiv(f||\varphi_\Sigma) = \int_{\R^n} f(\ubar{x}) \log_2 \frac{f(\ubar{x})}{\varphi(\ubar{x})} d\ubar{x}\\
+    = -h(\varphi) - \int_{\R^n} (\text{const} - \frac{1}{\ln 2} \frac{1}{2} \ubar{x} \inv{\Sigma} \ubar{x}^T) f(\ubar{x}) d \ubar{x}\\
+    = -h(\varphi - \frac{\text{const}}{2 \ln 2} \int_{\R^n} \ubar{x} \inv{\Sigma} \ubar{x}^T f(\ubar{x}) d\ubar{x}\\
+    \text{replace } f( \ubar{x}) \text{ by } \varphi_\Sigma(\ubar{x}) \\
+    = -h(f) - \int (log_2 \varphi_\Sigma(\ubar{x})) \varphi_\Sigma(\ubar{x}) dx\\
+    = - h(f) + h(\varphi_\Sigma)
+  \end{align*}
+  equality holds $\iff \ubar{X} \sim N(\ubar{0},\Sigma)$
+\end{proof}
+
+\end{document}

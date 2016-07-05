@@ -1,0 +1,109 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\section{Information Channels}
+
+\begin{defi*}
+  A \emph{discrete} (memoryless) \emph{channel} $\mathcal{C} = (\mathcal{X}, P, \mathcal{Y})$ consists of two finite sets $\mathcal{X}, \mathcal{Y}$ and a stochastic \emph{transition matrix} (or function)
+  \[ P = (p(y|x))_{x \in \mathcal{X},y \in \mathcal{Y}} \]
+  [To be a transition matrix means $\sum_{y \in \mathcal{Y}} p(y|x) = 1$ for all $x \in \mathcal{X}$.]
+  \todo{add pic}
+  Interpretation: send input $x \in \mathcal{X}$ through the channel to output $y \in \mathcal{Y}$.
+  $p(y|x)$ it the probability that the output is $y$, giben that the input was $x$.
+\end{defi*}
+
+\begin{defi*}
+  The $n$-th \emph{channel extension} of $\mathcal{C}$ without feedbach is 
+  \[ \mathcal{C}^n = (\mathcal{X}^n, P_n, \mathcal{Y}^n) \]
+  where $P_n = (p_n(\underbar{y},\underbar{x}))_{\underbar{y} \in \mathcal{X}^n, \underbar{y} \in \mathcal{Y}^n}$
+  with $\underbar{x} = (x_1,\dots,x_n)$ and $\underbar{y} = (y_1,\dots,y_n)$.
+  Further,
+  \[ p_n(\underbar{y}|\underbar{x}) = p(y_1|x_1) p(y_2|x_2) \dots p(y_n|x_n) \]
+  complete picture:
+  \todo{add pic}
+  
+  $\mathcal{W}$...set of original messages\\
+  $\hat{\mathcal{W}}$...estimated messages
+\end{defi*}
+
+If $\mathcal{X}$ is equipped with a probability distribution $p_X(\cdot)$; interpret it in terms of an $\mathcal{X}$-valued RV $X$.
+\[ p_X(x) = \prob[X=x] \]
+Then the output is also a RV.
+$Y$ ($\mathcal{Y}$-valued)
+
+\begin{defi*}
+  The \emph{channel capacity} 
+  \[ \capa(\mathcal{C}) = \max\{I(X;Y): p_X(\cdot) \in \mathcal{M}(\mathcal{X})\} \]
+  where $\mathcal{M}(X) = \{ \text{probability distribution on } \mathcal{X}\}$
+  [If $\mathcal{X} = \{x_1,\dots,x_N\}: \mathcal{M}(\mathcal{X}) = \{(p_1,\dots,p_N): p_i \geq 0, \sum_{i=1}^N p_i = 1 \} \subseteq \R_+^N$]
+\end{defi*}
+
+given $P$ and $p_X(\cdot)$, what is the joint distribution of $(X,Y)$?
+\begin{align*}
+  p_{X,Y} (x,y) = \prob[X=x,Y=y] = p_X(x) p(y|x)
+\end{align*}
+Recall, $p(y|x) = \frac{\prob[Y=y,X=x]}{\prob[X=x]}$.
+
+\begin{align*}
+  I(X;Y) = \sum_{(x,y) \in \mathcal{X} \times \mathcal{Y}} p(x,y) \log_2\frac{p(x,y)}{p_X(x)p_Y(y)} = \text{ function of } p_X
+\end{align*}
+continuous function, compact.
+
+\begin{lemma}
+  $p_X \mapsto I(X;Y)$ is concave.
+\end{lemma}
+
+\begin{proof}
+  Recall: for two probability distributions $p^{(1)}$, $p^{(2)}$ on $\mathcal{X}$ and $0 < \lambda < 1$
+  \[ H(\lambda p^{(1)} + (1-\lambda) p^{(2)}) \geq \lambda H(p^{(1)}) + (1-\lambda) H(p^{(2)}) \]
+  Let $p_X = \lambda p_X^{(1)} + (1-\lambda) p_X^{(2)}$, $p_{X,Y} = \lambda p_{X,Y}^{(1)} + (1-\lambda) p_{X,Y}^{(2)}$,
+  $p_Y = \lambda p_Y^{(1)} + (1-\lambda) p_Y^{(2)}$
+  \begin{align*}
+    I(X;Y) &= H(Y) - H(Y|X) = H(\lambda p_Y^{(1)} + (1-\lambda) p_Y^{(2)}) - \sum_{x} p_X(x) \underbrace{H(Y|X=x)}_{H(p(\cdot,x))} \\
+    &= H(\lambda p_Y^{(1)} + (1-\lambda) p_Y^{(2)}) - \sum_x (\lambda p_X^{(1)}(x) + (1-\lambda) p_X^{(2)}(x)) H(Y|X=x) \\
+    &\geq \lambda H(p_Y^{(1)}) + (1-\lambda) H(p_Y^{(2)}) - \lambda \sum_x p_X^{(1)}(x) H(Y|X=x) - (1-\lambda) \sum_x p_X^{(2)} H(Y|X=x) \\
+    &= \lambda (H^{(1)}(Y) - H^{(1)}(Y|X)) + (1-\lambda) (H^{(2)}(Y) - H^{(2)}(Y|X)) = I^{(1)}(X;Y) + I^{(2)}(X;Y)
+  \end{align*}
+\end{proof}
+
+\begin{exs}
+  \begin{enumerate}
+    \item Noiseless binary channel. $\mathcal{X} = \mathcal{Y} = \{0,1\}$
+    \begin{align*}
+      p(0|0) &= p(1|1) = 1 \\
+      p(0|1) &= p(1|0) = 0
+    \end{align*}
+    \todo{add pic}
+    $Y = X$: 
+    \begin{align*}
+      I(X;Y) = H(X) = H(p_X(0),p_X(1)) \leq 1
+    \end{align*}
+    $\max = 1$ for $p_X = \left( \frac{1}{2},\frac{1}{2} \right)$
+    \item Channel with non-overlapping outputs $\mathcal{X} = \{0,1\}$, $\mathcal{Y} = \{1,2,3,4\}$
+    \todo{add pic}
+    \begin{align*}
+      p(1) &= p(2) = 0 \\
+      p(3) &= p(4) = 1
+    \end{align*}
+    $X = f(Y)$
+    \begin{align*}
+      I(X;Y) = H(X) - H(X|Y) = H(X) - \underbrace{(f(Y)|Y)}_{=0} = H(X) \leq 1 = \max
+    \end{align*}
+    for $p_X = \left( \frac{1}{2},\frac{1}{2} \right)$
+    \item Noisy typewriter: $\mathcal{X} = \mathcal{Y} =$ alphabet $= \{x_0,\dots,x_{25}\} = \{x_0,\dots,x_{2N-1}\}$
+    \todo{add pic}
+    \[ Y = \begin{cases} X & p = \frac{1}{2} \\ X+1 \bmod 2N & p = \frac{1}{2} \end{cases} \]
+    or write
+    \[ X = \begin{cases} Y & p= \frac{1}{2} \\ Y - 1 \bmod 2N & p = \frac{1}{2} \end{cases} \]
+    \begin{align*}
+      I(X;Y) &= H(X) - H(X|Y) = H(X) - \sum_y \prob[Y=y] \underbrace{H(X|Y=y)}_{H\left(\frac{1}{2},\frac{1}{2}\right) = 1} \\
+      &= H(X) -1 \leq \log_2(2N) - 1 = \max
+    \end{align*}
+    achieved for $p_X = $ uniform on $\mathcal{X}$.
+    \[ \capa(\mathcal{C}) = \log_2 N \]
+    Half ot the symbols can be transmitted such that the input can be recovered.
+    \todo{add pic}
+  \end{enumerate}
+\end{exs}
+
+\end{document}

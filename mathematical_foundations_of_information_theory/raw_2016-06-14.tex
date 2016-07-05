@@ -1,0 +1,130 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+Note: $M$ refers to $M_n$!!
+
+Preparation for \enquote{$\geq$} of proof of Shannon's channel coding theorem.
+
+\begin{prop}[\enquote{jointly typical sequences}]
+  Let $(X,Y)$ be an $\mathcal{X} \times \mathcal{Y}$-valued RV with joint distribution $p(x,y)$, $p_X(x)$, $p_Y(y)$ its marginals.
+  \[ p^{(n)} (\ubar{x},\ubar{y}) = \prod_{i=1}^n p(x_i,y_i) \]
+  where $\ubar{x} = (x_1,\dots,x_n) \in \mathcal{X}^n$, $\ubar{y} = (y_1,\dots,y_n) \in \mathcal{Y}^n$.
+  $p^{(n)}(\ubar{x},\ubar{y})$ is the joint distribution of $n$ independent copies $(X_i,Y_i)$ of $(X,Y)$.
+  Analogous: $p_X^{(n)}(\ubar{x})$, $p_Y^{(n)}(\ubar{y})$ are marginals.
+\end{prop} 
+
+We know: 
+\begin{align*}
+  - \frac{1}{n} \log_2 r^{(n)} (\ubar{X}_n;\ubar{Y}_n) &\to H(X,Y) \text{ a.s. in probability} \\
+  - \frac{1}{n} \log_2 p_X^{(n)}(\ubar{X}_n) &\to H(X) \text{ a.s. in probability} \\
+  - \frac{1}{n} \log_2 p_Y^{(n)}(\ubar{Y}_n) &\to H(Y) \text{ a.s. in probability}
+\end{align*}
+
+\begin{align*}
+  A_\varepsilon^{(n)} = \{ (\ubar{x},\ubar{y}) \in \mathcal{X}^n \times \mathcal{Y}^n: 
+  &\abs{ - \frac{1}{n} \log_2 p^{(n)} (\ubar{x};\ubar{y}) - H(X,Y)} < \varepsilon \\
+  &\abs{ - \frac{1}{n} \log_2 p_X^{(n)}(\ubar{x}) - H(X)} < \varepsilon \\
+  &\abs{ - \frac{1}{n} \log_2 p_Y^{(n)}(\ubar{y}) - H(Y)} < \varepsilon
+  \}
+\end{align*}
+is the set of jointly typical sequences.
+
+\begin{theorem}
+  \begin{enumerate}
+    \item $\prob[(\ubar{X}_n,\ubar{Y}_n) \in A_\varepsilon^{(n)}] \to 1$ for $n \to \infty$.
+    $\prob[(\ubar{X}_n,\ubar{Y}_n) \in A_\varepsilon^{(n)}] \geq 1 - \varepsilon$ ($n \geq N_\varepsilon$)
+    \item $(1-\varepsilon) 2^{n (H(X,Y)-\varepsilon)} \underset{n \geq N_\varepsilon}{\leq} \abs{A_\varepsilon^{(n)}} \leq 2^{n (H(X,Y) +\varepsilon)}$
+    \item If $X_1^\prime, \dots, X_n^\prime$ are iid copies of $X_1,\dots,X_n$ and $Y_1^\prime,\dots,Y_n^\prime$ are iid copies of $Y_1,\dots,Y_n$ but (and??) $\ubar{X}_n^\prime$ and $\ubar{Y}_n^\prime$ are independent,
+    so that 
+    \begin{align*}
+      \prob[\ubar{X}_n^\prime,\ubar{Y}_n^\prime) = (\ubar{x},\ubar{y}) = p_X^{(n)}(\ubar{x}) p_Y^{(n)}(\ubar{y})
+    \end{align*}
+    then
+    \begin{align*}
+      \prob[(\ubar{X}_n^\prime,\ubar{Y}_n^\prime) \in A_\varepsilon^{(n)}] &\leq 2^{-n(I(X;Y) - 3 \varepsilon)} \\
+      &\geq (1-\varepsilon) 2^{-n(I(X;Y) + 3 \varepsilon)}
+    \end{align*}
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  1 and 2 are done as before.
+  
+  3) If $(\ubar{x},\ubar{y}) \in A_\varepsilon^{(n)}$, then
+  \begin{align*}
+    2^{-n(H(X) + \varepsilon)} &< p_Y^{(n)} (\ubar{x}) < 2^{-n(H(X) - \varepsilon)} \\
+    2^{-n(H(Y) + \varepsilon)} &< p_>^{(n)} (\ubar{y}) < 2^{-n(H(Y) - \varepsilon)}
+  \end{align*}
+  
+  \begin{align*}
+    \sum_{(\ubar{x},\ubar{y}) \in A_\varepsilon^{(n)}} p_X^{(n)}(\ubar{x}) p_Y^{(n)}(\ubar{y}) 
+    &< 2^{-n(H(X) + H(Y) - 2 \varepsilon)} \abs{A_\varepsilon^{(n)}} \\
+    &\overset{2}{<} 2^{-n( \underbrace{H(X) + H(Y) - H(X,Y)}_{I(X;Y} - 3 \varepsilon)}
+  \end{align*}
+\end{proof}
+
+We want to show $R^\ast \geq \capa(\mathcal{C})$:
+Show: If $R < \capa(\mathcal{C})$, then $R$ is achievable.
+we shall show: with $M_n = \lceil 2^{nR} \rceil$ there exists a sequence of $(M_n,n)$-codes with $\lambda^{(n)} \to 0$.
+
+Let $\mathcal{B} = \{ B: \text{ codebook} \}$ where
+\[ x^{(n)} = B = \begin{pmatrix}
+  x_1(1) & \dots & x_n(1) \\
+  x_1(2) & \dots & x_n(2) \\
+  & \vdots & \\
+  x_1(M_n) & \dots & x_n(M_n)  
+\end{pmatrix}
+\]
+which is a $M \times n$-\enquote{matrix} over $\mathcal{X}$.
+$\abs{\mathcal{B}} = \abs{\mathcal{X}}^{M \cdot n}$
+
+Let $p_X$ be the input distribution such that $\capa(\mathcal{C}) = I(X;Y)$.
+\\
+
+Let $X^{(n)}: \mathcal{W} \to \mathcal{X}^n$.
+
+Use a random Codebook!
+probability on $\mathcal{B}$:
+\begin{align*}
+  \prob[X^{(n)} = B] &= \prob[X^{(n)}(w) = x_1(w) \dots x_n(w), w = 1,\dots,M] \\
+  &= \prod_{w \in \mathcal{W}, i \in \{1,\dots,n\}} p_X(x_i(w))
+\end{align*}
+
+random $W \in \mathcal{W}$: $\prob[W=w] = \frac{1}{M}$.
+The codebook should be independent (!) of $X^{(n)}$.
+Then $X^{(n)}(W) = \ubar{X}_1$ (random) is transmitted, $Y^{(n)} = \ubar{Y}$ is received.
+
+Decoding? We use jointly typical decoding!
+
+$p_X(x)$ as above, $p_{X,Y}(x,y) = p_X(x) p(y|x)$ and $p_Y(y)$ marginal $\leftrightarrow A_\varepsilon^{(n)}$
+
+Given a codebook $x^{(n)} (=B)$ (outcome of $X^{(n)}$) and $\ubar{y} \in \mathcal{Y}^n$ (outcome of channel use)
+
+We decode $\ubar{y}$ as follows:
+If there is a \underline{unique} $\hat{w} \in \mathcal{W}$ such that $(x^{(n)},\ubar{y}) \in A_\varepsilon^{(n)})$, then $g(\ubar{y}) = \hat{w}$.
+otherwise: $g(\ubar{y}) = 0$ (or dummy/erasure symbol, $\hat{\mathcal{W}} = \{ 0,\underbrace{1,\dots,M}_{\mathcal{W}} \}$
+
+Let $\hat{W}$ be the output RV values in $\hat{\mathcal{W}}$
+\[ W \to X^{(n)}(W) \to Y^{(n)} \to \hat{W} \]
+
+\begin{align*}
+  \prob[\hat{W} \neq W] &= \sum_{w=1}^M \sum_{B \in \mathcal{b}} \prob[\hat{W} \neq w| X^{(n)} = B, W = w] \cdot \prob[X^{(n)} = B] \frac{1}{M_n} \\
+  &= \sum_{B \in \mathcal{B}} \prob[X^{(n)} = B] \frac{1}{M} \sum_{w=1}^M  \lambda_w^{(n)}(B)
+\end{align*}
+where $\lambda_w^{(n)}(B)$ is the conditional probability of error if codebook is $B$.
+Further, $\ape(B) = \frac{1}{M} \sum_{w=1}^M \lambda_w^{(n)}(B)$.
+Then
+\[ \prob[\hat{W} \neq W] = \sum_{B \in \mathcal{B}} \prob[X^{(n)} = B] \ape(B) \text{.} \]
+We can also write
+\begin{align*}
+   \prob[\hat{W} \neq W] &= \sum_{w=1}^M \sum_{B \in \mathcal{b}} \prob[\hat{W} \neq w| X^{(n)} = B, W = w] \cdot \prob[X^{(n)} = B] \frac{1}{M_n} \\
+   &= \frac{1}{M} \sum_{w=1}^M \sum_{B \in \mathcal{B}} \prob[X^{(n)}(\cdot) = B] \lambda_w^{(n)}(B)
+\end{align*}
+Consider $\sum_{B \in \mathcal{B}} \prob[X^{(n)}(\cdot) = B] \lambda_w^{(n)}(B)$ and for $w \in \mathcal{W}$ let $\pi_w B$ be $B$ with rows $1$ and $w$ exchanged.
+(is the same if rows $w$ and $1$ are exchanged)
+Then
+\begin{align*}
+  &= \frac{1}{M} \sum_w \sum_B \prob[X^{(n)}(\cdot) = \pi_w B] \lambda_w^{(n)}( \pi_w B) \\
+  &= \sum_B \prob[X^{(n)}(\cdot) = B] \lambda_1^{(n)}(B) = \prob[\hat{W} \neq W | W = 1]
+\end{align*}
+\end{document}

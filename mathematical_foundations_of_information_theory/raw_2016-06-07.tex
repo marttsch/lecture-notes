@@ -1,0 +1,144 @@
+\documentclass[mfit.tex]{subfiles}
+\begin{document}
+
+\begin{exs}
+  \begin{enumerate}
+    \item[4.] Binary symmetric channel $\mathcal{X} = \mathcal{Y} = \{0,1\}$
+    \todo{add pic}
+    \begin{align*}
+      I(X;Y) &= H(Y) - H(Y|X) \\
+      &= H(Y) - \sum_{x \in \mathcal{X}} \prob[X=x] H(Y|X=x) \\
+      &= H(Y) - \sum_{x \in \mathcal{X}} \prob[X=x] H(p,1-p) \\
+      &= H(Y) - H(p,1-p) \\
+      &\leq 1 - H(p,1-p) \text{ (upper bound)}
+    \end{align*}
+    ?: input distribution $p_X$ such that $Y$ is equidistributed on $\{0,1\}$.
+    Try: $p_X = \left( \frac{1}{2},\frac{1}{2}\right)$
+    \begin{align*}
+      \prob[Y=0] &= \prob[Y=0|X=0] \frac{1}{2} + \prob[Y=0|X=1] \frac{1}{2} \\
+      &= \underbrace{p(0|0)}_{p-1} \frac{1}{2} + \underbrace{p(0|1)}_{p} \frac{1}{2} \\
+      &= \frac{1}{2} = \prob[Y = 1]
+    \end{align*}
+    \begin{align*}
+      \capa(\mathcal{C}) = 1 - H(p,1-p)
+    \end{align*}
+    If $p = \frac{1}{2}$, then $\capa(\mathcal{C}) = 0$. (useless channel, completely random output)
+    \item[5.] Binary erasure channel $\mathcal{X} = \{0,1\}$, $\mathcal{Y} = \{0,1,e\}$
+    \todo{add pic}
+    \begin{align*}
+      \prob[X=i|Y=i] &= 1, \;\; i=0,1 \\
+      \prob[X=1-i|Y=i] &= 0 \\
+      \prob[X=i|Y=e] = \frac{\prob[Y=e|X=i] \prob[X=i]}{\prob[Y=e]}
+    \end{align*}
+    Use $\prob[Y=e] = \prob[Y=e|X=0] \prob[X=0] + \prob[Y=e|X=1] \prob[X=1] = p$
+    \begin{align*}
+      \prob[X=i|Y=e] = \frac{p \prob[X=i]}{p}
+    \end{align*}
+    \begin{align*}
+      I(X;Y) &= H(X) - H(X|Y) \\
+      &= H(X) - \sum_{y \in \{0,1,e\}} \prob[Y=y] \underbrace{(X|Y=y)}_{=0 \text{, if } y=0 \text{ or }1} \\
+      &= H(X) - \underbrace{\prob[Y=e]}_{p} \underbrace{H(X|Y=e)}_{H(X)} \\
+      &= (1-p)H(X) \leq 1-p,
+    \end{align*}
+    the maximum is achieved for $X$ uniform.
+  \end{enumerate}
+\end{exs}
+
+\begin{defi*}
+  $\mathcal{C} = (\mathcal{X},P,\mathcal{Y})$ is called \emph{weakly symmetric} if 
+  \begin{enumerate}
+    \item The rows of $P$ ($\equiv$ the probability vectors $p(\cdot|x)$, $x \in \mathcal{X}$) are permutations of each other.
+    \item The column sums are constant, i.e. there exists a constant $C$ such that for all $y \in \mathcal{Y}$:
+    \[ \sum_x p(y|x) = C \]
+    \begin{align*}
+      \sum_y \underbrace{\sum_x p(y|x)}_{C} = C \abs{y} \\
+      \sum_x \underbrace{\sum_y p(y|x)}_{1} = \abs{\mathcal{X}}
+    \end{align*}
+    Thus,
+    \[ C = \frac{\abs{\mathcal{X}}}{\abs{\mathcal{Y}}} \]
+  \end{enumerate}
+\end{defi*}
+
+\begin{theorem}
+  If $\mathcal{C}$ is weakly symmetric, then 
+  \[ \capa(\mathcal{C}) = \log_2 \abs{\mathcal{Y}} - H(p(\cdot|x_0)) \]
+  The maximum is achieved for $p_X = u_X$ (uniform distribution of $X$)
+\end{theorem}
+
+\begin{proof}
+  \begin{align*}
+    I(X;Y) &= H(Y) - H(Y|X) \\
+    &= H(Y) - \sum_x p_X(x) H(Y|X=x) \\
+  \end{align*}
+  Recall $H(Y|X=x) = H(p(\cdot|x)) = H(p(\cdot|x_0))$
+  \begin{align*}
+    I(X;Y) &= H(Y) - H(p(\cdot|x_0)) \cdot 1 \\
+    &\leq \log_2 \abs{Y} - H(p(\cdot|x_0))
+  \end{align*}
+  is upper bound achieved?
+  \begin{align*}
+   \prob[Y=y] &= \sum_x \underbrace{\prob[X=x]}_{\frac{1}{\abs{\mathcal{X}}}} p(y|x) = \frac{1}{\abs{\mathcal{X}}} \cdot C = \frac{1}{\abs{\mathcal{Y}}}
+  \end{align*}
+  If $X$ is uniform, then $Y$ is uniform.
+\end{proof}
+
+\begin{rem}[Recall]
+  $\mathcal{C}^{(n)} = (\mathcal{X}^n, P_n, \mathcal{Y}^n)$
+  \begin{align*}
+    p_n(\ubar{y}|\ubar{x}) = p(y_1|x_1) p(y_2|x_2) \dots p(y_n|x_n)
+  \end{align*}
+  $\capa(\mathcal{C}^n) = ?$
+  
+  Any input distribution on $\mathcal{X}^n$ equals input random variable $(X_1,\dots,X_n) = \ubar{X}$ where $X_1,\dots,X_n$ are not necessarily independent.
+  And output $(Y_1,\dots,Y_n) = \ubar{Y}$.
+  \begin{align*}
+    \prob[\ubar{Y} = \ubar{y}|\ubar{X} = \ubar{x}] = p_n(\ubar{y}|\ubar{x})
+  \end{align*}
+  \begin{align*}
+    I(\ubar{X},\ubar{Y}) &= I(X_1,\dots,X_n;Y_1,\dots,Y_n) \\
+    &= H(Y_1,\dots,Y_n) - H(Y_1,\dots,Y_n|X_1,\dots,X_n) \\
+    &= H(Y_1,\dots,Y_n) - \sum_{i=1}^n H(Y_i|Y_{i-1},\dots,Y_1,X_1,\dots,X_n) \\
+  \end{align*}
+  since conditionally upon $X_1,\dots,X_n$, the $Y_1,\dots,Y_n$ are independent,
+  \begin{align*}
+    H(Y_1,\dots,Y_n) - \sum_{i=1}^n \underbrace{(Y_i|X_1,\dots,X_n)}_{H(Y_i|X_i)} 
+  \end{align*}
+  By $H(Y_1,\dots,Y_n) \leq \sum_{i=1}^n H(Y_i)$ (\enquote{$=$} if $X_1,\dots,X_n$ are independent),
+  \begin{align*}
+    I(\ubar{X},\ubar{Y}) &\leq \sum_{i=1}^n \left( H(Y_i) - H(Y_i|X_i) \right)
+  \end{align*}
+  And since $H(Y_i) - H(Y_i|X_i) = I(X_i;Y_i) \leq \capa(\mathcal{C})$ (\enquote{$=$} if $X_i$ is distributed according to $p_X(\cdot)$ which maximises $\capa(\mathcal{C})$),
+  \begin{align*}
+    I(\ubar{X},\ubar{Y}) \leq n \capa(\mathcal{C})
+  \end{align*}
+  With $n \capa(\mathcal{C})$ we obtained an upper bound for
+  \[ p_{X_1,\dots,X_n}(x_1,\dots,x_n) = \prod_{i=1}^n p_X(x_i) \]
+\end{rem}
+
+We have proved:
+
+\begin{prop}
+  \[ \capa(\mathcal{C}^n) = n\capa(\mathcal{C}) \]
+\end{prop}
+
+\begin{defi*}
+  An $(M,n)$-code for the channel $\mathcal{C} = (\mathcal{X}, P, ,\mathcal{Y})$ consists of the following:
+  \todo{add pic}
+  \begin{enumerate}
+    \item an \emph{input alphabet} $\mathcal{W}$ with $\abs{\mathcal{W}} = M$, wlog: $\mathcal{W} = \{1,\dots,M\}$
+    \item the \emph{codebook}: $x^{(n)}: \mathcal{W} \to \mathcal{X}^n$
+    \item a \emph{decoding function}: $g: \mathcal{Y}^n \to \hat{\mathcal{W}}$ where $\hat{\mathcal{W}}$ is the set of \enquote{guessed} symbols/\enquote{estimated inputs} (typically: $\hat{\mathcal{W}} = \mathcal{W}$ or $\mathcal{W} \cup \{ e \}$)
+  \end{enumerate}
+  The \emph{rate} of this code is $R = \frac{\log_2 M}{n}$.
+\end{defi*}
+
+\begin{defi*}
+  For any $w \in \mathcal{W}$ the conditional probability of error is
+  \[ \lambda_w = \lambda_w^{(n)} = \prob[g(Y^{(n)}) \neq w | \text{ input was } w] \]
+  The \emph{maximal probability} of error is
+  \[ \lambda^{(n)} = \max \{ \lambda_w^{(n)}: w \in \mathcal{W} \} \]
+  The average probability of error is
+  \[ \frac{1}{\mathcal{W}} \sum_w \lambda_w^{(n)} \]
+\end{defi*}
+
+\end{document}
