@@ -8,8 +8,8 @@
 \usepackage{hyperref}
 \usepackage{amsthm}
 \usepackage{stmaryrd}
-%\usepackage{algpseudocode}
-%\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
 %\usepackage{MnSymbol}
 %\usepackage{xcolor}
 \usepackage[nameinlink]{cleveref}
@@ -19,7 +19,8 @@
 \usepackage{color}
 \usepackage{enumitem}
 \usepackage{csquotes}
-\usepackage{titlesec}
+%\usepackage{titlesec}
+\usepackage{wasysym}
 
 \usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize]{todonotes}
 
@@ -37,25 +38,24 @@
 
 \newcounter{cnt} \numberwithin{cnt}{section}
 
-\newtheorem{defi}[cnt]{Definition}
-\newtheorem*{defi*}{Definition}
-\newtheorem*{rem}{Remark}
-\newtheorem*{rem*}{Remark}
-\newtheorem{lemma}[cnt]{Lemma}
-\newtheorem*{lemma*}{Lemma}
-\newtheorem*{ex}{Example}
-\newtheorem*{exs}{Examples}
-\newtheorem{theorem}[cnt]{Theorem}
-\newtheorem*{theorem*}{Theorem}
-\newtheorem{prop}[cnt]{Proposition}
-\newtheorem*{prop*}{Proposition}
-\newtheorem{cor}[cnt]{Corollary}
-\newtheorem*{cor*}{Corollary}
-\newtheorem{nota}{Notation}
-\newtheorem*{nota*}{Notation}
+\theoremstyle{definition}\newtheorem*{defi*}{Definition}
+\theoremstyle{remark}\newtheorem*{rem}{Remark}
+%\theoremstyle{remark}\newtheorem*{rem*}{Remark}
+\theoremstyle{plain}\newtheorem{lemma}[cnt]{Lemma}
+%\newtheorem*{lemma*}{Lemma}
+\theoremstyle{definition}\newtheorem*{ex}{Example}
+\theoremstyle{definition}\newtheorem*{exs}{Examples}
+\theoremstyle{plain}\newtheorem{theorem}[cnt]{Theorem}
+%\newtheorem*{theorem*}{Theorem}
+\theoremstyle{plain}\newtheorem{prop}[cnt]{Proposition}
+%\newtheorem*{prop*}{Proposition}
+\newtheorem{cor}{Corollary}
+\theoremstyle{plain}\newtheorem*{cor*}{Corollary}
+\theoremstyle{definition}\newtheorem{nota}{Notation}
+\theoremstyle{definition}\newtheorem*{nota*}{Notation}
 %\newtheorem*{app}{Application}
 %\newtheorem*{app*}{Application}
-%\newtheorem{conj}[cnt]{Conjecture}
+\theoremstyle{plain}\newtheorem{conj}[cnt]{Conjecture}
 %\newtheorem{op}[cnt]{Open Problem}
 
 
@@ -66,6 +66,12 @@
 \DeclareMathOperator{\circum}{c}
 \DeclareMathOperator{\dist}{dist}
 \DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\rad}{rad}
+\DeclareMathOperator{\bigO}{\mathcal{O}}
+\DeclareMathOperator{\bc}{bc}
+\DeclareMathOperator{\col}{col}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\prob}{Prob}
 
 
 \newcommand{\N}{\mathbb{N}}
@@ -400,8 +406,164 @@ has the property for some $x,y \in V(G)$, $x \neq y$ with $\{x,y\} \notin E(G)$.
 \end{proof}
 
 
-\lecture{04.02.2016}
+%\lecture{04.02.2016}
+\subfile{raw_2016-03-04.tex}
+\subfile{raw_2016-03-07.tex}
+\subfile{raw_2016-03-10.tex}
+\subfile{raw_2016-03-17.tex}
+\subfile{raw_2016-04-11.tex}
+\subfile{raw_2016-04-21.tex}
+\subfile{raw_2016-04-25.tex}
+\subfile{raw_2016-05-02.tex}
+\subfile{raw_2016-05-09.tex}
 
+
+
+
+
+\section{Colouring problems in graphs}
+
+\lecture{12.05.2016}
+
+\subsection{Definitions, bounds and other basics}
+
+\begin{defi*}[vertex $k$-colouring]
+  Let $G=(V,E)$ be a graph. A proper \emph{vertex $k$-colouring} in $G$ is a mapping
+  $c: V(G) \to \{1,2,\dots,k\}$
+  such that for all $u,v \in V(G)$:
+  \[ \{u,v\} \in E(G) \implies c(u) \neq c(v) \text{.} \]
+\end{defi*}
+
+\begin{defi*}[$k$-edge-colouring]
+  Let $G=(V,E)$ be a graph. A proper \emph{$k$-edge-colouring} in $G$ is a mapping 
+  $c: E(G) \to \{1,2,\dots,k\}$
+  such that for all $e_1,e_2 \in E(G)$:
+  \[ e_1 \cap e_2 \neq \emptyset \implies c(e_1) \neq c(e_2) \text{.} \]
+\end{defi*}
+
+\begin{defi*}[$k$-colourable, chromatic number, $k$-chromatic]
+  $G$ is called \emph{$k$-colourable} if a proper $k$-colouring exists.
+  The \emph{chromatic number} of $G$, denoted by $\chi(G)$, is the smallest $k \in \N$ such that $G$ is $k$-colourable.
+  If $\chi(G) = k$, then $G$ is called \emph{$k$-chromatic}.
+\end{defi*}
+
+\begin{defi*}[$k$-edge-colourable, chromatic index, $k$-edge-chromatic]
+  $G$ is called \emph{$k$-edge-colourable} if a proper $k$-edge-colouring exists.
+  The \emph{chromatic index} of $G$, denoted by $\chi^\prime(G)$, is the smallest $k \in \N$ such that $G$ is $k$-edge-colourable.
+  If $\chi^\prime(G) = k$, then $G$ is called \emph{$k$-edge-chromatic}.
+\end{defi*}
+
+\begin{ex}
+  \begin{enumerate}[label=(\alph*)]
+    \item $\chi(K_n) = n$,
+    \item $\chi(K_{n,n}) = 2$, 
+  \end{enumerate}  
+\end{ex}
+
+\begin{rem}
+  \begin{enumerate}
+    \item $\chi(G) = 1 \implies E(G) = \emptyset$,
+    \item $\chi(G) = 2 \iff G$ bipartite $\iff$ there exists no odd cycle in $G$
+    \item Let $L(G)$ be the line graph, then $\chi(L(G)) = \chi^\prime(G)$ .[apply definition to check this statement]
+  \end{enumerate}
+\end{rem}
+
+\begin{defi*}[colour class]
+  Let $c$ be a feasible $k$-colouring of a graph $G$. 
+  A \emph{colour class} is a maximal set of vertices (with respect to set inclusion), where all of them have the same colour, 
+  i.e. $\inv{c}(\{i\})$, $i \in \{1,2,\dots,k\}$, is the colour class related to colour~$i$.
+\end{defi*}
+
+\begin{defi*}[clique partition number]
+  Let $G$ be a graph. The smallest number of cliques in which $G$ can be partitioned is called \emph{clique partition number} of $G$ and is denoted by $\theta(G)$.
+\end{defi*}
+
+\begin{rem}
+  Clearly, $\{ \inv{c}(\{i\}): 1 \leq i \leq k\}$ builds a partition of $V(G)$.
+  Every colour class is a stable set in $G$ and a clique in $G^C$.
+  \begin{enumerate}
+    \item Therefore, $G$ is k-colourable if and only if $G^C$ can be partitioned into k cliques.
+    Furthermore, $\chi(G)$ is the smallest number of cliques in which $G^C$ can be partitioned.
+    So $\chi(G) = \theta(G^C)$.
+    \item We get a first \emph{lower bound}: Let $k \coloneqq \chi(G)$ and $c$ a $k$-colouring.
+    We can write the vertex set as disjoint union of all partitions,
+    \begin{align*}
+      V(G) &= \uplus_{1 \leq i \leq k} \inv{c}(\{i\}) \text{,}
+    \end{align*}
+    then
+    \begin{align*}
+       \abs{V(G)} &= \sum_{i=1}^k \abs{\inv{c}(\{i\})} \leq k \alpha(G) \text{,}
+    \end{align*}
+    since $\abs{\inv{c}(\{i\})} \leq \alpha(G)$ holds for all $1 \leq i \leq k$.
+    It follows that
+    \[ \chi(G) = k \geq \frac{\abs{V(G)}}{\alpha(G)} \text{.} \]
+
+    How good is this bound?
+    
+    It is tight for 
+    \begin{enumerate}
+      \item $K_n$ (since $\chi(K_n) = n$ and $\alpha(G) = 1$),
+      \item $K_{n,n}$ (since $\chi(K_{n,n}) = 2$ and $\alpha(K_{n,n}) = n$).
+    \end{enumerate}
+    In general, the bound can be arbitrarily bad (see exercises).
+  \end{enumerate}
+\end{rem}
+
+\begin{theorem}[The four-colour theorem]
+  Every planar graph is four-colourable.
+\end{theorem}
+
+\begin{proof}
+  No proof. 
+  
+  K. Appel and W. Haken, Every planar map is 4-colourable, J. AMS, 1989.
+  
+  N. Robertseon, D. Sanders, P.D. Seymour, R. Thomas, The four-colouring theorem, J. Combinatorial Theory B 70, 1997, 2-44.
+\end{proof}
+
+\underline{The graph $k$-colouring problem} \todo{create a suited problem environment}
+
+Instance: $G= (V,E)$ graph, $k \in \N$
+
+Question: Is $G$ k-colourable?
+
+\begin{rem}
+  The graph $k$-colouring problem is
+  \begin{enumerate}
+    \item polynomial for $k=1$ $\iff$ $E(G) \neq \emptyset$
+    \item polynomial for $k=2$ $\iff$ there exist no odd cycles
+    \item NP-complete $\forall k \geq 3$
+    \item NP-complete for $G$ planar and $\Delta(G) \leq 4$
+    \item polynomial for $\Delta(G) \leq 3$ (Brooks 1941)
+    \item polynomially solvable for a number of graph classes like interval graphs, perfect graphs, comparability graphs.
+  \end{enumerate}
+
+  M.R. Garey and D.S. Johnson, computers and Interactability. A Guide to the Theory of NP-Comleteness, W.H. Freeman and Campany, NY, 1979.
+\end{rem}
+
+
+\begin{theorem}[Grötzsch 1959]
+  Every planar graph which does not contain any triangle (triangle-free planar graph) is 3-colourable.
+\end{theorem}
+
+\begin{proof}
+  No proof.
+  
+  C. Thomassen, A short list colour proof of Grötzsch' theorem, J. Comb Theory B 88, 2003, 189-192.
+\end{proof}
+
+
+
+\subfile{raw_2016-05-12.tex}
+\subfile{raw_2016-05-19.tex}
+\subfile{raw_2016-05-30.tex}
+\subfile{raw_2016-06-02.tex}
+\include{raw_2016-06-02_rem.pdf}
+\subfile{raw_2016-06-06.tex}
+\subfile{raw_2016-06-13.tex}
+\subfile{raw_2016-06-16.tex}
+\subfile{raw_2016-06-20.tex}
+\subfile{raw_2016-06-27.tex}
 
 
 \end{document}
