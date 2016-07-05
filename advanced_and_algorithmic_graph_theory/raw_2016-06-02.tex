@@ -1,0 +1,151 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{02.06.2016}
+
+\begin{cor}[Vizing, Fournier 1973](Corollary of Vizing's Theorem)\\
+  Let $G=(V,E)$ be a graph with $S \coloneqq \{v \in V(G): \deg(v) = \Delta(G) \}$.
+  If $G[S]$ is cycle-free (i.e. $G[S]$ is a forest), then $G$ is a class 1 graph.
+  A corresponding $\Delta(G)$-edge-colouring can be constructed in $\bigO(mn)$ time ($m \coloneqq \abs{E(G)}$, $n \coloneqq \abs{V(G)}$).
+\end{cor}
+
+\begin{proof}
+  Proof idea analogous to proof of Vizing's theorem: we willshow that under the conditions of corollary one of the colours $\{1,2,\dots,\Delta(G)\}$ is missing in every vertex. Having shown that, the proof will be the same as in Vizing's theorem.
+  
+  If $\Delta(G) = 0$, then nothing to show.
+  Assume $\Delta(G) \geq 1$. Let $F$ be the set of edges of $G[S]$, $F \coloneqq E(G[S])$.
+  Induction on $\abs{F}$. Induction basis: $F = \emptyset$, so $S$ is a stable set in $G$.
+  For every $x \in S$ choose one edge $\{x,y\} \in E(G)$ (arbitrarily but fixed).
+  Let $M$ be the set of all these edges.
+  Consider $G - M$ and apply Vizing: 
+  \[ \chi^\prime(G-M) \leq \Delta(G-M) + 1 < \Delta(G) - 1 + 1 \]
+  Thus,
+  \[ \chi^\prime(G-M) \leq \Delta(G) \]
+  Colour $G-M$ by colours $\{1,2,\dots,\Delta(G) \}$.
+  Colour iteratively the edges from $M$ (one edge at a time) with colours $\{1,\dots,\Delta(G)\}$ like in the proof of Vizing's theorem, it works because one colour is missing for every vertex all the time.
+  Assume we want to colour $\{x,y\}$
+  \todo{add pic}
+  
+  Induction hypothesis: Works for $F$ with $\abs{F} \leq k$.
+  Induction step: Works for $F$ with $\abs{F} = k + 1$.
+  
+  Let $x \in S$ be a leaf in $G[S]$ and let $\{x,y\} \in F$.
+  Consider $G-\{x,y\}$. Set of vertices of max degree in $G-\{x,y\}$ is $S \setminus \{x\}$.
+  \todo{add pic}
+  \[ \abs{E((G-\{x,y\})[S\setminus \{x,y\}])} < \abs{F} \]
+  ($S \setminus \{x,y\}$ are the vertices of max degree in $G - \{x,y\}$)
+  Apply Induction hypothesis for $G-\{x,y\} \implies G-\{x,y\}$ is class 1 coloured by $\Delta(G-\{x,y\}) \leq \Delta(G)$ colours.
+  Can we colour $\{x,y\}$ by a colour in $\{1,2,\dots,\Delta(G) \}$?
+  Yes, because there is a missing colour both in $x$ and in $y$ ($\deg_{G-\{x,y\}}(x) = \deg_{G_{\{x,y\}}}(y) = \Delta(G) - 1$)
+  so we can colour like in Vizing's proof.
+  
+  Time complexity: Colouring like in Vizing's is possible in $\bigO(mn)$ time.
+  More than in Vizing: identify $S$ (some search algorithm over $G$ (DFS); $\bigO(m+n)$), check that $G[S]$ is a forest (DFS in $G[S]$; $\bigO(m+n)$; there exists a cycle if and only if there exists a backward edge)
+  
+  \todo{add pic}
+  special case
+\end{proof}
+
+
+\subsection{5.4 Edge choosability and list colouring}
+
+\begin{defi*}
+  Let $G=(V,E)$ and a list $L(e)$ of colours for all $e \in E(G)$.
+  A \emph{list colouring} is a mapping $c: E \to \bigcup_{e \in E(G)} L(e)$, such that $c(e) \in L(e)$, for all $e \in E(G)$ and $c(e) \neq c(f)$ for all $e,f \in E(G)$, $e \cap f \neq \emptyset$.
+  Analogou list vertex colouring.
+\end{defi*}
+
+\begin{ex}
+  \todo{add pic}
+  \todo{add pic}
+\end{ex}
+
+\begin{rem}
+  \begin{enumerate}
+    \item Example cases all $L(e)$ coincide classic colouring problem
+    \item lists are disjoint; trivial problem
+  \end{enumerate}
+\end{rem}
+
+\begin{defi*}
+  $G$ is called \emph{$k$-edge-chooseable} if for any given lists $L(e)$, $e \in E(G)$, which constains at least $k$ different elements each, there exists an edge list colouring.
+  The smallest number $k$, such that $G$ is $k$-edge-chooseable is called \emph{list chromatic index of $G$}, $\chi_e^\prime(G)$.
+\end{defi*}
+
+\[\chi^\prime(G) \leq \chi_e^\prime(G) \]
+because $G$ is not $\chi^\prime(G) -1)$ edge choosable, just take $L(e) = \{1,2,\dots,\chi^\prime(G) -1 \}$ for all $e \in E(G)$.
+
+\begin{conj}[Vizing]
+  $\chi^\prime(G) = \chi_e^\prime(G)$ for all graphs (196? probably)
+\end{conj}
+
+Still open: 
+
+\begin{theorem}[5.10 Galvin 1995]\label{th_5_10}
+  Bipartite graphs are $\chi^\prime(G)$-edge-choosable.
+\end{theorem}
+
+\begin{proof}
+  Based on Slivnik (1996).\\
+\end{proof}
+
+\begin{defi*}
+  Let $G=(L\uplus R,E)$ be a bipartite graph and $f: E \to \N$. We say $G$ is $f$-edge-choosable if and only if for any given lists of colours $L(e)$, $e \in E(G)$, with $\abs{L(e)} \geq f(e)$, there exists a list-edge-colouring.
+\end{defi*}
+
+\begin{nota*}
+  Let $G=(L\uplus R,E)$. For all $e \in E$ denote by $e_L$, $e_R$ its endpoints in the sets $L$ and $R$, respectively ($e=\{\underbrace{e_L}_{\in L}, \underbrace{e_R}_{\in R}\}$).
+\end{nota*}
+
+\begin{lemma}\label{l_5_11}
+  Let $G=(L\uplus R,E)$ be a bipartite graph and let $c: E \to \N$ be a proper edge-colouring of $G$.
+  Define a function $T_{G,c}: E \to \N$,
+  \[ T_{G,c}(e) \coloneqq \underbrace{\abs{\{f \in E: (f_L=e_L) \wedge (c(f) > c(e))\}}}_{f \text{ dominates $e$ from the left}} + \underbrace{\abs{\{f \in E: (f_R = e_R) \wedge (c(f) < c(e))\}}}_{\text{$f$ dominates $e$ from rht right}} \]
+  \todo{add pic}
+  Then $G$ is $(T_{G,c} + 1)$-edge-choosable.
+\end{lemma}
+
+\begin{proof}
+  No proof.
+\end{proof}
+
+\begin{proof}[Proof of Theorem \ref{th_5_10} assuming Lemma \ref{l_5_11} holds.]
+  Let $c$ be an optimal edge colouring of $G=(L\uplus R,E)$, i.e. $c$ uses colour $\{1,2,\dots,\chi^\prime(G)\}$.
+  \begin{align*}
+    T_{G,c}(e) \leq (\chi^\prime(G) - c(e)) + (c(e) - 1) = \chi^\prime(G) -1
+  \end{align*}
+  Apply Lemma \ref{l_5_11}: $G$ is $(T_{G,c} + 1)$-edge-choosable, i.e. $\chi^\prime(G)$-edge-chooseable.
+\end{proof}
+
+
+\section{Perfect graphs}
+
+\begin{defi*}
+  A graph $G$ is callec \emph{perfect} if and only if for all induced subgarphs $H$ of $G$, $\chi(H) = \omega(H)$ holds, i.e. the clique number $\omega(H)$ which generarlly is a trivial but not tight lower bound on $Xi(H)$, is in this case a tight lower bound.
+\end{defi*}
+
+\begin{ex}
+  \begin{enumerate}
+    \item )$\chi(G) = \omega(G)$ is fullfilled for $K_n$ but not for its subgraphs\\
+  $H \subseteq K_n$ (induced!): $\chi(H) = \omega(H)$ because induced subgarphs of $K_n$ are complete; thus, perfect
+    \item bipartite graphs $G$: $\chi(G) = \omega(G) = 2$, $H \subseteq G \implies H$ bipartite $\implies \chi(H) = \omega(H)$ (all induced subgraphs are again bipartite); thus, bipartite graphs are perfect
+    \item comparability graphs are perfect (exercise)
+    \item Interval graphs are perfect (exercises)
+    \item chordal graphs
+  \end{enumerate}
+\end{ex}
+
+\begin{defi*}
+  A graph $G=(V,E)$ is a comparability graph if and only if there exists partial ordering of the vertices usch that only comparable vertices wrt ordering are joined by an edge. (e.g. trees)
+\end{defi*}
+
+\begin{defi*}
+  A graph $G=(V,E)$ is called an \emph{interval graph} if and only if there exists a set $\{I_v: v \in V(G)\}$ of intervals in the real line such that $\{u,v\} \in E(G)$ is an edge if and only if $I_v \cap I_u \neq \emptyset$.
+  \todo{add pic}
+\end{defi*}
+
+\begin{defi*}
+  A graph $G=(V,E)$ is called a \emph{chordal graph} if and only if every cycle of length more than 3 has a chord, or equivalently there are no induced cycles of length more than 3. (also called \enquote{triangulated graph})
+  \todo{add pic}
+\end{defi*}
+
+\end{document}

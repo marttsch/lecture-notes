@@ -1,0 +1,141 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{06.06.2016}
+
+\begin{defi*}
+  If a graph $G$ has induced subgraphs $G_1,G_2,S$ such that $G = G_1 \cup G_2$ ($V(G) = V(G_1) \cup V(G_2)$, $E(G) = E(G_1) \cup E(G_2)$) and $S = G_1 \cap G_2$ we say that \emph{$G$ is obtained from $G_1$ and $G_2$ by pasting them along $S$}.
+  \todo{add pic}
+\end{defi*}
+
+\begin{prop} \label{prop_6-2}
+  A graph is chordal if and only if it can be constructed recursively by pasting chordal graphs along complete subgraphs starting from complete graphs.
+\end{prop}
+
+\begin{proof}
+  \begin{enumerate}
+    \item[$\Leftarrow$] If $G$ is obtained from two chordal graphs $G_1,G_2$ pasted along a complete subgraph $S$, then it is chordal. Consider an induced cycle $C$ in $G$. If $C$ induced cycle of $G_i \implies \abs{C} = 3$ $G_i$ chordal, $i=1,2$.
+    Otherwise $C$ \enquote{jumps} from $G_1$ to $G_2$ and back to $G_1$. 
+    \todo{add pic}
+    If length of $C \geq 4$, then there exist $s_1,s_2 \in V(C)$ such that $s_1,s_2 \in S$, and therefore $\{s_1,s_2\} \in E(G)$. So $C$ is not chordal.
+    \item[$\Rightarrow$] Assume that $G$ is chordal, show that it has the required structure.
+    Induction on $\abs{V(G)}$. If $G$ is complete $\checkmark$ (Set $G_1 = G$, $G_2 = G$, $S= G$)
+    Assume wlog $G$ is not complete, in particular $\abs{V(G)} > 1$. Let $a,b \in V(G)$ such that $\{a,b\} \notin E(G)$.
+    Consider minimal separator $X$ of $a$ and $b$ (minimal wrt inclusion). Let $C$ be the connected component of $G \setminus X$ which contains $a$.
+    \[ G_1 \coloneqq G[V(C) \cup X], G_2 \coloneqq G[V(G)\setminus V(C)], S = G_1 \cap G_2 \]
+    \todo{add pic}
+    Need to show $G_1,G_2$ chordal and $S$ complete.
+    $G_1,G_2$ induced subgraphs of chordal graph $G \implies G_1,G_2$ are chordal.
+    It remains to show $S$ is complete. Assume it is not, let $u,v \in V(S)$ such that $\{u,v\} \in E(G)$.
+    Since $X$ is a minimal separator both $u$ and $v$ have neighbours in $C$ and also in $G \setminus (V(C) \cup X)$.
+    So there exists a $u$-$v$-path $P_1$ with inner vertices lying in $C$.
+    Analogously there exists $u$-$v$-path $P_2$ with inner vertices lying in $G \setminus (V(C) \cup X)$.
+    Choose $P_1$ and $P_2$ to be shortest such paths, respectively.
+    Then there exists a cycle $P_1,P_2$ with length $\geq 4$ and no chord. $\lightning$ chardinality of $G$.
+    $\implies S$ is complete.
+  \end{enumerate}
+\end{proof}
+
+\begin{prop}[6.2]
+  Every chordal graph is perfect.
+\end{prop}
+
+\begin{proof}
+  Since complete graphs are perfect, it is enough to show it for non complete chordal graphs.
+  Let $G$ be such a graph and let $G_1,G_2$ be such a graph and let $G_1,G_2$ and $S$ like in Proposition \ref{prop_6-2}.
+  Let $H$ be an induced subgraph of $G$. Want to show $\chi(H) \leq \omega(H)$.
+  Let $H_i = H \cap G_i$, $i=1,2$-, $T \coloneqq H \cap S$ complete because $S$ complete.
+  $H$ arises from $H_1$ and $H_2$ by pasting them along $T$.
+  As an induced subgraph of $G_i$ each $H_i$ can be coloured by $\omega(H_i)$ colours, because $G_i$ is a chorda graph and $\abs{V(G_i)} < \abs{V(G)}$.
+  So by induction, assumption $G_i$ is perfect and $\chi(H_i) \leq \omega(H_i)$ for its induced subgraph $H_i$.
+  \todo{add pic}
+  Paste a colouring of $H$ from colourings of $H_i$ (with $\leq \omega(H_i)$ colours each) by eventually permuting the colours in $H_2$.
+  We will use $\leq \max\{\omega(H_1),\omega(H_2)\}$ colours. But $\max\{\omega(H_1),\omega(H_2)\} \leq \omega(H)$.
+\end{proof}
+
+Idea: Characterization of perfect graphs by forbidden induced subgraph (e.g. all imperfect induced subgraphs should be forbidden!!!)
+such that the class of forbidden induced subgraphs is as \enquote{small} as possible.
+Strong perfect graph conjecture of Berge (1963) was proven in 2002.
+
+\begin{theorem}[6.3 Chudnovsky, Robertson, Seymour, Thomas 2002]
+  A graph $G$ is perfect if and only if neither $G$ nor $\overbar{G}$ (complement of $G$) contains an odd cycle of length at least 5 as an induced subgraph
+\end{theorem}
+
+\begin{proof}
+  No proof.
+\end{proof}
+
+We prove the former weak perfect graph conjecture (Berge 1963).
+
+\begin{theorem}[6.4 Lovesz 1972]\label{th_6-4}
+  G is perfect $\iff$ $\overbar{G}$ is perfect.
+\end{theorem}
+
+\begin{defi*}
+  Consider graph $G$ and $x \in V(G)$. Let $G^\prime$ be obtained from $G$ by adding a new vertex $x^\prime$ and connecting it only to $\{x\} \cup N(x)$. We say \emph{$G^\prime$ is obtained from $G$ by expanding $x$ to $x^\prime$}.
+  \todo{add pic}
+\end{defi*}
+
+\begin{lemma}\label{l_6-5}
+  Any graph obrained from a perfect graph by expanding a vertex is again perfect.
+\end{lemma}
+
+\begin{proof}
+  Induction on $\abs{V(G)}$ where $G$ is the considered graph for expansion.
+  Observe: Expanding some vertex of $K_n$ yields $K_{n+1}$. (Induction basis $\abs{v(G)} = 1 \implies G=K_1 \checkmark$)
+  So assume $G$ perfect but is not complete, i.e. $\abs{V(G)} > 1$.
+  Let $G^\prime$ be obtained from $G$ by expanding $x$ to $x\prime$. We show that $G^\prime$ is perfect, i.e. 
+  \begin{align}\label{0606_star}
+    \chi(H) \leq \omega(H) \text{, } H \text{ induced subgraph of } G^\prime \text{.}
+  \end{align}
+  Observe: \ref{0606_star} is immediately fulfilled if $H$ is a proper induced subgraph of $G$:
+  \todo{add pic}
+  Indeed if $x^\prime \notin V(H)$, then it is not subgraph of $G$ then \ref{0606_star} follows because $G$ perfect.
+  Otherwise, $x^\prime \in V(H)$, $H_1 \coloneqq H \cap G$ is a proper induced subgarph of $G$, and $H$ is obtained from $H_1$ by extending it on $x$.
+  OR $H$ if $x \notin V(H)$ then $H$ is an induced subgraph of $G^{\prime\prime} = G^\prime \setminus \{x\} \simeq G$ which is perfect.
+  
+  So it remains to show $\chi(G^\prime) \leq \omega(G^\prime)$. Let $\omega \coloneqq \omega(G)$.
+  Then $\omega(G^\prime) \in \{\omega, \omega+1\}$.
+  If $\omega(G^\prime) = \omega + 1$, $\checkmark$ because $\chi(G^\prime) \leq \chi(G) + 1 \leq \omega(G) + 1 = \omega + 1 = \omega(G^\prime)$.
+  Assume $\omega(G^\prime) = \omega$. Then \emph{$x \notin K$ for any clique $K$ with $\omega$ vertices in $G$}.
+  \todo{add pic}
+  because $K \cup \{x^\prime\}$ would yield a clique with $\omega + 1$ elements in $G^\prime$ $\lightning$.
+  Let us colour $G$ with $\omega$ colours. Every $K_\omega \subseteq G$ meets the colour class of $x$ but not $x$ itself.
+  Thus, $H \coloneqq G - (X \setminus \{x\})$ has clique number $\omega(H) < \omega$ where $X$ is the colour class of $x$.
+  \todo{add pic}
+  (all maximal cliques of $G$ \enquote{loose} one vertex in $H$, namely the one coloured like $x$)
+  
+  Observe that $X \setminus\{x\} \cup \{x^\prime\}$ is a stable set in $G^\prime$,
+  so extend a coluring of $H$ which use $< \omega$ colours to a colouring of $G^\prime$ by adding a new colour on $X \setminus \{x\} \cup \{u^\prime\}$.
+  This yields a colouring with $\leq \omega$ colours for $G^\prime$. $\checkmark$
+\end{proof}
+
+\begin{proof}[Proof of Theorem \ref{th_6-4}]
+  Induction on $\abs{V(G)}$. We show $G$ is perfect $\implies \overbar{G}$ perfect.
+  For $\abs{V(G)} = 1$ we have $\overbar{G} = G \checkmark$.
+  Let $\abs{V(G)} \geq 2$. Let $\mathcal{K}$ denote the set of all vertex set of complete subgraphs of $G$,
+  \begin{align*}
+    \mathcal{K} &\coloneqq \{K \subseteq V(G): G[K] \text{ is complete}\} \\
+    \mathcal{A} &\coloneqq \{S \subseteq V(G): G[S] \text{ is empty graph, } \abs{S} = \alpha \}
+  \end{align*}
+  where $\alpha \coloneqq \alpha(G)$ (cardinality of max stable set in $G$).
+  Observe: Every proper unduced subgraph of $\overbar{G}$ is the complement of a proper induced subgraph of $G$ and hence it is perfect by induced.(induction??)
+  It remains to show $\chi(\overbar{G}) \leq \omega(\overbar{G}) = \alpha(G)$.
+  
+  To this end we shall find a set $K \in \mathcal{K}$ such that $K \cap A \neq \emptyset$, for all $A \in \mathcal{A}$,
+  then $\omega(\overbar{G} - K) = \alpha(\overbar{G} - K) \overset{\ref{0606_star}}{<} \alpha = \omega(\overbar{G})$,
+  so by induction hypothesis
+  \begin{align*}
+    \chi(\overbar{G}) \leq \chi(\overbar{G} - K) + 1 \leq \omega(\overbar{G} - K) + 1 \overset{\ref{0606_star}}{\leq} \omega(\overbar{G})
+  \end{align*}
+  Assume there exists no such a $K \in \mathcal{K}$. Then for all $K \in \mathcal{K}$ there exists a $A_K \in \mathcal{A}$ such that $K \cap A_K = \emptyset$.
+  Let $k(x) \coloneqq \abs{\{ K \in \mathcal{K} : x \in A_K \}}$.
+  Construct $G^\prime$ via substituting every vertex $x$ by a complete graph $K_{k(x)}$ and for all $\{x,y\} \in E(G)$ cannect all vertices of $K_{k(x)}$ to all vertices of $K_{k(y)}$.
+  \todo{add pic}
+  then $V(G^\prime) = \bigcup_{x \in V(G)} V(G_x)$ and $u,v \in V(G^\prime)$ are connected by an edge if either $u,v \in G_x$ for some $x \in V(G)$ or $u \in G_x$, $v \in G_y$ with $\{x,y\} \in E(G)$.
+  
+  Notice that $G^\prime$ can be obtained by vertex expansion from $G[\{x \in v: k(x) >0 \}]$
+  So $G^\prime$ is perfect because $G[\{x \in v: k(x) >0 \}]$ is perfect as induced subgraph of $G$ and because of Lemma \ref{l_6-5}.
+  \[ \chi(G^\prime) \leq \omega(G^\prime) \]
+\end{proof}
+
+\end{document}

@@ -1,0 +1,182 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{21.04.2016}
+
+\begin{proof}
+$(\Rightarrow)$ $0 < a_1 \leq a_2 \leq \dots \leq a_n < n$, $a_i \in \N$ for all $1 \leq i \leq n$ and
+$a_i \leq i \iff a_{n-i} \geq n-i$ for all $i < \frac{n}{2}$
+Thus, $(a_i)_{1\leq i \leq n}$ ham seq
+By condtradiction there exists a $G$ with degree sequence $(d_i)_{1\leq i \leq n}$, $d_i \geq a_i$ for all $1 \leq i \leq n$ and $G$ non ham
+
+We showed $d_i \leq i \implies d_{n-i} \geq n-i$ for all $i < \frac{n}{2}$ (\ref{0418_2})
+
+Let $x,y \in V(G)$ such that $\{x,y\} \notin E(G)$ with max $\de(x) + \de(y)$, wlog $\de(x) \leq \de(y)$.
+Thus, $G \cup \{x,y\}$ is ham and every cycle $H$ in $G \cup \{x,y\}$ contains $\{x,y\}$.
+\todo{add pic}
+$H - \{x,y\}$ is a ham path in $G$. Denote it by $x_1 \coloneqq x, x_2,\dots,x_n \coloneqq y)$
+\todo{add pic}
+As in proof of Dirac's theorem 
+\begin{align*}
+  I &\coloneqq \{i: 1 \leq i \leq n-1, \{x_1,x_{i-1}\} \in E\} \\
+  J &\coloneqq \{i: 1 \leq i \leq n-1, \{x_i,x_n\} \in E \}
+\end{align*}
+
+$I \cup J \subseteq \{1,2,\dots,n-1\}$, $I \cap J = \emptyset$ (as in Dirac's theorem)
+\begin{align}\label{0421_4}
+  \de_G(x) + \de_G(y) = \abs{I} + \abs{J} = \abs{I \cup J} \leq n-1
+\end{align}
+
+Recall
+\begin{align}\label{0421_3}
+  \de_G(x) = \de(x) < \frac{n}{2}
+\end{align}
+
+For all $i \in I$
+\[ \de(x_i) \leq \de(x) \]
+because otherwise $\de(x_i) + \de(y) > \de(x) + \de(y)$ and $\{x_i,y\} \notin E(G)$, so instead of $x$ and $y$ we would have chosen $x_i$ and $y$ $\lightning$.
+
+So $G$ contains at least $\abs{I}$ vertices with degree $\leq \de(x) \eqqcolon h = \abs{I}$.
+Thus, $d_h \leq h \overset{\ref{0418_2}}{\implies} d_{n-h} \geq n-h$
+\todo{add pic}
+
+There exists at least one vertex among these $h+1$ ($d_{n-h} \leq d_{n-h+1} \leq \dots \leq d_n$) which is non-adjacent to $x$.
+Let this vertex be $z$, so $\{x,z\} \notin E(G)$.
+\[ \de(x) + \de(z) \geq h + n-h = n \]
+which contradicts \ref{0421_4}.
+
+So $(a_i)_{1\leq i\leq n}$ has to be a hamilt seq
+
+$(\Leftarrow)$ $(a_i)_{1 \leq i \leq n}$ is hamilt $\implies$ condition \ref{0418_star} is fulfilled
+or equivalently, condition \ref{0418_star} is not fulfilled $\implies$ $(a_i)_{1 \leq i \leq n}$ is not hamilt, i.e. there exists a graph $G$ with degree sequence $d_i \geq a_i$ for all $i$ which is not hamilt.
+
+Construct such a graph for the sequence $a_i$ which violated the condition \ref{0418_star} at index $h$, $a_h \leq h$ and $a_{n-h} \leq n-h-1$.
+Consider 
+\begin{align}\label{0421_5}
+  (\underbrace{h,h,\dots,h}_{h \text{ times}},\underbrace{n-h-1,\dots,n-h-1}_{n-2h \text{ times}},\underbrace{n-1,\dots,n-1}_{h \text{ times}})
+\end{align}
+\begin{align*}
+  k &\leq n-h-1 \\
+  2h &\leq n-1 (\text{ because } h < \frac{n}{2}
+\end{align*}
+
+So the sequence is non decreasing and of length $n$.
+
+Construct $G$ having the above mentioned sequence as the degree sequence
+\todo{add pic}
+
+\begin{align*}
+  E = \{\{v_i,v_j\}: i,j > h\} \cup \{\{v_i,v_j\}: 1 \leq i \leq h, j > n-h \}
+\end{align*}
+
+\enquote{$G$ is complete over red and green vertices. $G$ is complete bipartite over blue on on one side and green on the other siede.}
+
+Show degree seq of is
+First,
+\begin{align*}
+  \de(v_i) &= h \;\; \forall 1 \leq i \leq k \text{ (blue vertices)} \\
+  \de(v_i) &= n-h-1 \;\; \forall h+1 \leq i \leq n-h \text{ (red vertices)} \\
+  \de(v_i) &= h+n-h-1 = n-1 \;\; \forall n-h+1 \leq i \leq n \text{ (green vertices)}
+\end{align*}
+
+Second, pic
+\todo{add pic}
+Red vertices are missing because the successor of every blue vertex is a green vertex, and the are exactly as many green ($h$) vertices as blue vertices, and also the predecessor of every blue vertex is a green vertex
+
+\begin{align*}
+  d_{n-h} &\geq n-h \text{ and} \\
+  d_h > h
+\end{align*}
+
+\begin{rem}[Exercise]
+  Insert exercise here. Analogous construction like above
+\end{rem}
+\end{proof}
+
+\section{4. Topological graph theory; planar graph}
+
+History of this theory:
+\begin{enumerate}
+  \item Euler formula
+  \item Theorem of Kuratowski
+  \item four colours conjecture and then theorem
+  \item algorithmic aspects: a number of NP-hard opt. problems in general graphs are efficiently solvable or approximable in planar graphs (max cut, k-multi cut, colouring problem, stable set,...)
+\end{enumerate}
+
+\subsection{4.1 Definitions and elementary concepts}
+
+\begin{defi*}
+  A graph $G$ is called \emph{planar} if there exists an embedding (or representation) of $G$ in the plane such that
+  \begin{enumerate}
+    \item the vertices of $G$ are points in the plane
+    \item the edges of $G$ are Jordan curves, such that 
+    \begin{enumerate}
+      \item every Jordan curve intersects the set of points representing vertices only on its endpoint, and
+      \item any two different Jordan curves can intersect only at some endpoints.
+    \end{enumerate}
+  \end{enumerate}
+  A \emph{plane graph} is just a representation of a planar graph as described above in the plane.
+  \todo{add pic}
+\end{defi*}
+
+\begin{defi*}
+  A \emph{Jordan curve} is (the image of) a homeomorphic mapping $f$ of $I_1 = [0,1]$ into a topological space,
+  i.e. $f: [0,1] \to A$ (top. space) such that $f$ is bijective, continuous and $\inv{f}$ is also continuous.
+\end{defi*}
+
+We will prove all results in this chapter for the topological space $(\R^2,O)$ where the basis $O$ of the open sets is
+\[ O \coloneqq \{B(x,r): x \in \R^2, r>0\} \]
+with $B(x,r) \coloneqq \{y \in R^2: l_2(x,y) < r \}$.
+
+\begin{rem}
+  Dimension is 1. $S_1$ is cycle of radius $1$, $P$ the North Pole
+  \todo{add pic}
+  $f: S_1 \setminus \{P\} \to \R$, $x \mapsto f(x)$
+  Stereographic projection $S_1 \setminus \{P\} \ni \R$, $S_2 \setminus \{P\} \ni \R^2$
+  \todo{add pic}
+\end{rem}
+
+\begin{defi*}
+  If the edges are removed from a planar embedding of a planar graph, then the plane would decompose in connected areas which are called \emph{regions} (or \emph{face}) of which exactly one is unbounded.
+  This unbounded region is called \emph{outer region}. The \emph{boarder of a region} consists of  all edges which are contained in the (topol.) closure of the region.
+\end{defi*}
+
+\begin{rem}
+  Consider an arbitrary plane embedding of a planar graph $G$ and a face $F$ which is not the outer face.
+  There exists another plane embedding $H_2$ of $G$ in which the image of $f$ is the outer face.
+  \todo{add pic}
+  By stereographic projection place a sphere \enquote{on the plane} such that it touces the plane where $H_1$ lies
+  and do the projection $H_1$ on this sphere. Rotate sphere s. t. the nothe pole becomes the touching point that lies on $F$, project the sphere embedding back to the plane. This is the required $H_2$.
+\end{rem}
+
+\begin{prop}[4.1]\label{p_4_1}
+  A graph is planar if and only if all its blocks are planar.
+\end{prop}
+
+\begin{proof}
+  wlog assume that $G$ is connected, otherwise ... with connected components am embedded there s.t. the embeddings are \enquote{far apart}.
+  
+  Consider $\bc(G)$, we know it is a face.
+  \begin{enumerate}
+    \item[$\Rightarrow$] trivial
+    \item[$\Leftarrow$] Assume every block is planar, Show that $G$ is planar.
+    Pick up an arbitrary block, say $b_1$, and construct one plane embedding of it.
+    Do a DFS (or BFS...) on $\bc(G)$ starting at $b_1$.
+    Visit the other blocks of $G$ in the order implied by this search.
+    and every time a new block is encountered construct a planar embedding oth this block such that the cur vertex from which th block is entered has on the boarder of the outer face of the embedding construction so far.
+    \todo{add pic}
+    (Maybe the embedding constructed so far needs to be transformed so that the cut vertex mentioned above lies on its outer face.)
+  \end{enumerate}
+\end{proof}
+
+\begin{prop}\label{p_4_2}
+  A planar graph is 2-connected if and only if the boarder of each face of any plane embedding of $G$ is a cycle.
+\end{prop}
+
+\begin{proof}
+  \begin{enumerate}
+    \item[$\Leftarrow$] \todo{add pic}
+    \item[$\Rightarrow$] Exercise
+  \end{enumerate}
+\end{proof}
+
+\end{document}

@@ -1,0 +1,111 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{07.03.2016}
+
+\begin{proof}
+  vertex version:\\
+  For all $s,t \in V(G)$ $\{s,t\} \notin E(G)$, max number of independent s-t-paths = min cardinality of an s-t-separator\\
+  \\
+  \enquote{$\leq$} trivial \todo{add pic} implies every s-t-separator contains at least one vertex per path implies cardinality of every s-t-sep $\geq k$.\\
+  \enquote{$\geq$} Assume there exists an s-t- sep with card  $k$. 
+  Show that there are at least $k$ independetn s-t-paths.\\
+  construct a network $N^\prime = (V^\prime,A^\prime,s,t,c=1)$.
+  \[V^\prime = \bigcup_{v \in V(G)} \{v^-,v^+\} \cup \{s,t\}\]
+  \todo{add pic}
+  \begin{align*}
+    A^\prime = &\{(v^-,v^+): v \in V(G)\} \\
+    &\cup \{ (x^+,y^-), (y^+,x^-): e = \{x,y\} \in E(G), \{x,y\} \cap \{s,t\} = \emptyset \} \\
+    &\cup \{ (s,x^-): \{s,x\} \in E(G) \} \cup \{ (y^+,t): \{y,t\} \in E(G) \}
+  \end{align*}
+  \todo{add pic}
+  Observe: a min s-t-cut $\delta(X)$ in $N^\prime$ contains w.l.o.g. just arcs of the from $(v^-,v^+)$.
+  \todo{add pic}
+  $\delta(X^\prime)$ is again a min cut.\\
+  Observe 2: A min s-t-cut of the above type in $N^\prime$ corresponds to an s-t-separator $S$ in $G$, precisely 
+  \[ \mathcal{S} = \{ y \in V(G): (y^-,y^+) \in \delta(X) \} \implies \abs{S} = \abs{\delta(X)} = \abs{c(\delta(X))} \]
+  This implies min card of an s-t-separator in $G$ $\leq$ min capacity of an s-t-cut in $N^\prime$.
+  By max-flow-min-cut theorem, min capacity of an s-t-cut in $N^\prime$ = max value of s-t-flow in $N^\prime$ = max value of an integral s-t-flow in $N^\prime$ $\overset{\text{flow decomposition}}{=}$ number of s-t-paths (explanation below) carrying integral flow (= 1 unit of flow) in $N^\prime$ = number of independent s-t-paths in $G$ $\leq$ max number of independent s-t-paths.\\
+  \todo{add pic} different s-t-paths cannot share an edge or a vertex implies independent s-t-paths
+\end{proof}
+
+\begin{cor}\label{2_1_1}
+  The edge connectivity and the (vertex) connectivity can be defined equivalently as follows:\\
+  A graph $G$ with $\abs{G} > k$ is $k$-connected if and only if
+  \begin{enumerate}[label=(\alph*)]
+    \item every separator has cardinality $\geq k$, or equivalently
+    \item $\forall s,t \in V(G)$ there exist $k$ independent s-t-paths.
+  \end{enumerate}
+  A graph $G$ with $\abs{G} > 1$ is $l$-edge connected if and only if
+  \begin{enumerate}[label=(\alph*)]
+    \item every set of edges which separates $G$ has cardinality $\geq l$, or equivalently,
+    \item $\forall s,t \in V(G)$ there exists at least $l$ edge disjoint s-t-paths.
+  \end{enumerate}
+\end{cor}
+
+\begin{proof}
+  edge connect. equiv. def. follows directly from Menger.
+  (vertex) connect. We still need to show existence of $\geq k$ independent s-t-paths for $s,t \in V(G)$ such that $\{s,t\} \in E(G)$. If $\{s,t\} \notin E(G)$, apply Menger.\\
+  Assume $G$ is $k$-connected $(\abs{G} > k$). Let $\{s,t\} \in E(G)$. Show that there exist $\geq k$ independent s-t-paths in $G$.
+  wlog $k \geq 2$. (If $k=1$, need to show existence of one s-t-path and this is e.g. the edge.)\\
+  Claim: Consider $G - \underbrace{\{s,t\}}_{\eqqcolon e}$. Every s-t-separator has cardinality $\geq k - 1$. (to prove).\\
+  Apply Menger in $G - \underbrace{\{s,t\}}_{e}$ \todo{add pic} and find $k-1$ independent s-t-paths in $G-e$.
+  Add edge $\{s,t\}$ as the $k$-th path \todo{add pic}\\
+  Proof the claim: By contradiction.\\
+  Let $A$ be an s-t-separator in $G-e$ with $\abs{A} \leq k-2$.
+  $A$ does not separate $s$ and $t$ in $G$. 
+  Therefore, $G-A - \{e\}$ has (exactly) $2$ connected components $X,Y$ with $s \in X$ and $t \in Y$. \todo{add pic}
+  $\abs{G-e-A} \geq 3$ implies that there exists a vertex $v \in \{s,t\}$ in $G-e-A$ wlog let $v$ be on the same comp as $s$. \todo{add pic}
+  Consider $A \cup \{s\}$. $H$ is a separator of $v$ and $t$ in $G$.
+  $\lightning$ because $\abs{A \cup \{s\}} \leq k-1$ and $G$ is $k$-connected.
+\end{proof}
+
+\begin{cor}[fan theorem]\label{2_1_2}
+  Let $G$ be a graph with $\abs{G} \geq k+1$. $G$ is $k$-connected if and only if
+  $\forall A=\{ a_1,a_2,\dots,a_k\} \subset V, \forall s \in V \setminus A$, there exist a system of independent s-A-paths in $G$.
+\end{cor}
+
+\begin{proof}
+  \todo{add pic}
+  \begin{enumerate}
+    \item[$\Leftarrow)$] property holds. Show that $G$ is $k$-connected.\\
+    $\de_G(v) \geq k$ for all $v \in V(G)$.
+    We show that $G$ is $k$-connected by showing the existence of at least $k$ independent s-t-paths for all $s,t \in V(G)$ with $s \neq t$.
+    Consider $,t \in V(G)$, $s \neq t$, $\abs{N(g)} \geq k$. \todo{add pic}
+    Let $A \subseteq N(t)$ with $\abs{A} = k$.
+    Case1: $s \notin A$ \todo{add pic} Apply property for $s$ and $A$ and extending the paths by edges from $t$ the end vertices of paths in $A$.\\
+    Case2: $s \in A$ \todo{add pic}\\
+    Case2a: $\abs{N(t)} \geq k+1$ implies existence of $v \in N(t) \setminus A$
+    Consider $s$, $(A \setminus \{s\}) \cup \{v\} \eqqcolon A^\prime$.
+    Thus, there exist $k$ independent s-A-pathsi in $G$.
+    Extend them to s-t-paths as in Case1.
+    Case2b \todo{add pic}
+    Apply property for $s$ and $(A\setminus \{s\} \cup \{t\})$ and extend to $t$ those which do not of $t$ just as in Case1 or Case2a
+    \item[$\Rightarrow)$] Assume $G$ is $k$-connected. show property.\\
+    wlog $G$ is not a complete graph (in a complete graph the property holds anyway).
+    Let $A \subset V$, $\abs{A} = k$ and let $s \in V \setminus A$.
+    Add a new vertex $t$ to $G$ which is connected to all vertices in $A$. \todo{add pic}
+    Let $G^\prime$ be the resulting graph.\\
+    Claim: $G^\prime$ is $k$-connected.\\
+    If the Claim holds, find $k$ independent s-t-paths in $G^\prime$ and remove from those the edges incident to $t$.\\
+    Proof of the claim: Assume $G^\prime$ is not $k$-connected. Then  there exists a separator $S$ with $\abs{S} \leq k-1$.\\
+    Case1: $t \in S \implies S \setminus\{t\}$ is separator in $G$ with $\abs{S \setminus\{t\}} \leq k-2 \lightning G$ $k$-connected \todo{add pic}
+    Case2: $t \notin S$ \todo{add pic}
+    $\abs{S} \leq k-1 \implies S$ is not a separator in $G$ $implies$ $G-S$ is connected.
+    $N(t) = A$, $\abs{A} = k $. So $t$ is connected to $G - S$.
+    $S$ is not a separator of $G^\prime$ (does not separate $G$ and does not separate $t$) $\lightning$.
+  \end{enumerate}
+\end{proof}
+
+\begin{defi*}
+  A set of $a$-$B$-paths in a graph $G$ is called a \emph{fan} if the paths have only one vertex $a$ in common.  \todo{add pic}
+\end{defi*}
+
+\begin{theorem}[Dirac 1960] \label{2_2}
+  Any $k$-vertices of a $k$-connected graph, $k \geq 2$, lie on a common cycle.
+\end{theorem}
+
+\begin{proof}
+  Exercises
+\end{proof}
+
+\end{document}

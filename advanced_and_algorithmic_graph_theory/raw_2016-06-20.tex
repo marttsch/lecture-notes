@@ -1,0 +1,196 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+
+\section{Random graphs}
+\lecture{20.06.2016}
+
+\subsection{The notion of a random graph}
+
+$V = \{0,1,\dots,n-1\}$. Let $G$ be the set of all graphs on $V$. Introduce a probability space on $G$, i.e.
+a triple $(\Omega,\mathcal{F},P)$ where $\Omega$ is the sample space, $\mathcal{F}$ is a $\sigma$-algebra of events, $P$ is the probability measure.
+Let $p \in [0,1]$, $p \in \R$. For every $e \in V^2$ (non-ordered pair of different vertices), decide by some random experiment whether $e$ is an edge or not, e.g. biased coin with probability $p$ for \enquote{head} and $1-p$ for \enquote{tail}. Then $e$ is an edge with probability $p$ and no edge with probability $1-p$.
+Repeat this experiment independently for each $e$.
+At the end we have a graph $G$ on $n$ vertices in $V$.
+Consider a given graph $G_0$ on $V$. $\prob(G=G_0) = p^{\abs{E(G_0)}} (1-p)^{{n \choose 2} \abs{E(G_0)}}$.
+
+Need to check whether this prop form a probability measure.
+
+Alternative way of formally defining $(\Omega,\mathcal{F},P)$:
+
+Construct $(\Omega_e,\mathcal{F}_e,P_e)$ a probability space for all pair of different vertices $e$.
+\begin{align*}
+  \Omega_e &= \{0_e,1_e\} \\
+  \mathcal{F}_e &= 2^{\Omega_e} \\
+  P_e(\{1_e\}) &= p \\
+  P_e(\{0_e\}) &= 1-p \coloneqq q
+\end{align*}
+
+Set $(\Omega,\mathcal{F},P) \coloneqq \prod_{e \in  V^2} (\Omega_e,\mathcal{F}_e,P_e)$.
+
+(Note: alternative notation: $V^2 = {V \choose 2}$)
+
+An element $\omega \in \Omega$ is given as $(x_e)_{e \in V^2}$ where $x_e \in \{0_e,1_e\}$.
+Identify $\omega$ with a graph on $V$ such that for all $e$ with $x_e = 1_e$ the edge $e$ is present and otherwise not.
+\\
+
+The probability space $(\Omega,\mathcal{F},P)$ will be denoted shortly $G(n,p)$.
+Any set of graphs on $V$ can be considered as an event in $G(n,p)$ and we can talk about probabilities of such events.
+
+\begin{ex}
+  \begin{enumerate}
+    \item Consider event $A_e \coloneqq \{\omega = (x_e)_{e \in V^2}: x_e = 1_e \}$ which is the class of all graphs on $V$ which contain edge $e$.
+    One can prove formally:
+    \begin{prop}
+      The events $A_e$, $e \in V^2$, are independent of each other and $P(A_e) = p$, for every $e \in V^2$.
+    \end{prop}
+    \begin{proof}
+      No proof.
+    \end{proof}
+    \item Compute probability of the event that $G$ (random graph from $G(n,p)$) contains some given graph $H$ on a subset of $V$ as a subgraph.
+    Let $\abs{V(H)} \eqqcolon k$ and $\abs{E(H)} \eqqcolon l$:
+    \[ P(H \subseteq G) = p^l \]
+    \[ P[H \text{ is induced subgraph of } G] = p^l q^{{k \choose 2} - l} \]
+    Notice: The probability that $G$ contains an (induced) subgraph which is isomorphic to $H$ is larger and it is not so easy to compute because different isomorphic \enquote{copies} may contains common edges, which makes the corresponding events dependent.
+
+    \begin{align*}
+      P[H \simeq G[U] \text{ over all subsets } U \subseteq V \text{ with } \abs{U} = k] = P(\bigcup_{U \in {V \choose k}} A_U)\\
+      \text{where}\\
+      A_U = \{G^\prime \in G(n-p): G^\prime = G[U] \} \\
+      P(A_U) = p^l q^{{k \choose 2} - l}
+    \end{align*}
+    Thus, 
+    \begin{align} \label{0620_star}
+    P[H \simeq G[U] \text{ over all subsets } U \subseteq V \text{ with } \abs{U} = k] \leq \sum_{U \in {V \choose k}} P(A_U) = {n \choose k} p^l q^{{k \choose 2}-l}
+    \end{align}
+  \end{enumerate}
+\end{ex}
+
+\begin{lemma}[7.2]
+  For every natural number $n,k$, $n \geq k \geq 2$, the probability that $G \in G(n,p)$ has a set of $k$ independent vertices is at most $P(\alpha(G) \geq k) \leq {n \choose k} q^{{k \choose 2}}$.
+  Analogously $P(\omega(G) \geq k) \leq {n \choose k} p^{{k \choose 2}}$.
+\end{lemma}
+
+\begin{proof}
+  Apply \ref{0620_star} with $l=0$. for the first statement and \ref{0620_star} with $l = {k \choose 2}$ for the second statement.
+\end{proof}
+
+Assume $P(\alpha(G) \geq k) < \frac{1}{2}$ for some (small) $k$ and $P(\omega(G) \geq k) < \frac{1}{2}$ for some (small) $k$.
+Then $P(\alpha(G) \geq k \vee \omega(G) \geq k) < \frac{1}{2} + \frac{1}{2} = 1$.
+Thus,
+\[ P(\alpha(G) < k \wedge \omega(G) < k) > 0 \]
+$\implies$ such a graph with those particular properties exists.
+
+\begin{defi*}
+  Let $H$ be a graph. Then Ramsey number $R(H)$ is the smallest $n \in \N$, such that every graph $G$ on at least $n$ vertices has the property 
+  \enquote{$G$ or $\overbar{G}$ contains an induced subgraph isomorphic to $H$} (= Ramsey property).
+  If $H = K_r$ then denote $R(n) \coloneqq R(K_r)$.
+  More generally, let $H_1,H_2$ be two graphs.
+  Denote $R(H_1, H_2)$ the smallest number $n \in \N$, such that for every graph $G$ on at least $n$ vertices the property 
+  \enquote{$G$ contains an induced subgraph isomorphic to $H_1$ or $\overbar{G}$ contains an induced subgraph isomorphic to $H_2$}.
+\end{defi*}
+
+\begin{prop}[7.3]
+  Let $s,t \in \N$. Let $T$ be a tree with $t$ vertices.
+  Then $R(T,K_s) = (s-1)(t-1)+1$.
+\end{prop}
+
+\begin{proof}
+  No proof.
+\end{proof}
+
+\begin{theorem}\label{7.4-theorem}
+  For every $r \in \N$ $R(r) \leq 2^{2r-3}$ holds
+\end{theorem}
+
+\begin{proof}
+  No proof.
+\end{proof}
+
+\begin{theorem}[Erdös 1947]\label{7.5-theorem}
+  For every $k \in \N$, $k \geq 3$, $R(k) > 2^{\frac{k}{2}}$ holds.
+\end{theorem}
+
+\begin{proof}
+  For $k=3$: $n \geq 3$ for every graph fulfilling Ramsey property for $K_3 \implies R(k) \geq 3 > 2^{\frac{3}{2}}$.
+ 
+  Let $k \geq 4$. Show that for all $n \leq 2^{\frac{k}{2}}$ and for every $G \in \mathcal{G}(n,\frac{1}{2})$ the probability $P(\alpha(G) \geq k)$ and $P(\omega(G) \geq k)$ are both $< \frac{1}{2}$.
+  
+  \begin{lemma}
+    \begin{align*}
+      P(\alpha(G) \geq k) &\leq {n \choose k} \left( \frac{1}{2} \right)^{k \choose 2} < \frac{n^k}{2^k} 2^{-\frac{k(k-1)}{2}} \leq \frac{2^{\frac{k^2}{2}}}{2^k} 2^{- \frac{k^2-k}{2}} = 2^{\frac{k^2}{2} - k - \frac{k^2}{2} + \frac{k}{2}} = 2^{-\frac{k}{2}} < \frac{1}{2} \text{ for } k \geq 4 \\
+      P(\omega(G) \geq k) &\leq {n \choose k} \left( \frac{1}{2} \right)^{k \choose 2} < \frac{1}{2}
+    \end{align*}
+  \end{lemma}
+  Therefore, $\prob(G \text{ has no stable set on } k \text{ vertices and no clieque on } k \text{ vertices}) > 1 - \frac{1}{2} - \frac{1}{2}$ for $n \leq 2	{\frac{k}{2}}$
+  $\implies$ Ramsey property does not hold for $n \leq 2^{\frac{k}{2}} \implies R(k) > 2^{\frac{k}{2}}$
+\end{proof}
+
+In the context of random graphs \emph{graph invariants} like average degree, min degree, connectivity number, girth, chromatic number,... may be interpreted as non-negative random variables in $\mathcal{G}(n,p)$, 
+i.e. a function 
+\begin{align*}
+  X: \mathcal{G}(n-p) &\to [0,+\infty) \\
+  \text{e.g. } G &\mapsto \chi(G) \\
+  G &\mapsto \delta(G) \\
+  G &\mapsto \girth(G) \\
+  G &\mapsto \kappa(G)
+\end{align*}
+
+Let $E(X)$ the expected value of $X$.
+If $E(X)$ is \enquote{small} then $X$ is \enquote{large} part for a \enquote{small} portion of elements in $\mathcal{G}(n,p)$.
+So proving $E(X)$ for a class of graphs in $\mathcal{G}(n,p)$ with a certain property woould lead to existence proofs for graphs with the above mentioned properties and a small invariant $X$.
+
+\begin{lemma}[Markov Inequality]\label{7.6-lemma}
+  Let $X \geq 0$ on $\mathcal{G}(n,p)$ and $a > 0$, $a \in \R$. Then
+  \[ P[X \geq a] \leq \frac{E(X)}{a} \text{.} \]
+\end{lemma}
+
+\begin{proof}
+  \begin{align*}
+    E(X) &= \sum_{G \in \mathcal{G}(n,p)} P(\{G\}) X(G) \\
+    &\geq \sum_{G \in \mathcal{G}(n,p): X(G) \geq a} P(\{G\}) X(G) \\
+    &\geq a \sum_{G \in \mathcal{G}(n,p): X(G)\geq a} P(\{G\}) = a P(X \geq a)
+  \end{align*}
+\end{proof}
+
+Notice: $E(X)$ can be computed by double counting since $\mathcal{G}(n,p)$ is finite.
+E.g. if $X$ counts the number of subgraphs of $G$ from a family of graphs $\mathcal{H}$ (on $V$),
+then by definition $E(X) = \sum_{G \in \mathcal{G}(n,p)} P(\{G\}) \#\{\text{subgraphs from } \mathcal{H} \text{ in } G\} = \sum_{G \in \mathcal{G}(n,p)} P(\{G\}) \sum_{H \subset \mathcal{H}} P(\{H \subseteq G\}) 
+= \sum_{G \in \mathcal{G}(n,p)} \sum_{H \in \mathcal{H}, H \subseteq G} P(\{G\}) = \sum_{H \in \mathcal{H}} P(H \subseteq G)$
+
+Illustrate double counting with Lemma \ref{7.7-lemma}. Denote $(n)_k \coloneqq n (n-1) \dots (n-k+1)$.
+
+\begin{lemma}\label{7.7-lemma}
+  The expected number of $k$-cycles in $G \in \mathcal{G}(n,p)$ is $E(X) = \frac{(n)_k}{2k} p^k$ where $X: \mathcal{G}(n,p) \to \N$, $G \mapsto \#\{k \text{-cycles contained in } G \text{ as a subgraph}\}$.
+\end{lemma}
+
+\begin{proof}
+  For every cycle $C$ with $k$ vertices on $V$ introduce $X_C: \mathcal{G}(n,p) \to \{0,1\}$, $G \mapsto \begin{cases} 1 & C \subseteq G \\ 0 & \text{otherwise} \end{cases}$
+  \begin{align*}
+    E(X_C) = 1 P(X_C = 1) + 0 P(X_C = 0) = P(X_C = 1) = P(C \subseteq G) = p^k
+  \end{align*}
+  \todo{add pic}{pic}
+  can be run over in $2k$ ways (2 directions, $k$ possibilities for start vertex).
+  \begin{align*}
+    X = \sum_{C \text{ is } k \text{-cycle}} X_C \implies E(X) = \sum_{C \text{ is } k \text{-cycle}} E(X_C) = \frac{(n)_k}{2k} p^k
+  \end{align*}
+\end{proof}
+
+
+\subsection{The probabilistic method; an application}
+
+Let $k \in \N$. We will show for $n \to \infty$ there exist graphs $G$ with $\girth(G) > k$ and $\chi(G) > k$.
+
+Call cycles on at most $k$ vertices \emph{small cycles}; $\girth(G) > k \iff$ there are no small cycles in $G$.
+Call sets with at least $\frac{\abs{V}}{k}$ vertices big sets; $\chi(G) > k \Longleftarrow$ there are no big independent sets in $G$.
+
+Intuition: $p$ smaller $\implies$ probability of existence of small cycles gets smaller.
+$p$ larger $\implies$ probability of existence of big independent sets gets smaller.
+
+Assume there is a $p_C$ such for $p < p_C$ the probability of existence of small cycles $< \frac{1}{2}$ (unlikely event)
+Assume $p_S$ such that for $p > p_S$ the probability of existence of big independent set $< \frac{1}{2}$ (unlikely event).
+
+If $p_S < p_C$ happens to be true then take $p \in (P_S,p_C)$ and for sure $P(\exists G \text{ with } \girth(G) > k, \chi(G) > k \text{ in } \mathcal{G}(n,p)) > 0$ $\checkmark$
+
+It is not the case because $p_C < \frac{1}{n}$ and $p_S > n^{\varepsilon -1}$ for some $\varepsilon > 0$.
+
+\end{document}

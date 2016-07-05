@@ -1,0 +1,165 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{17.03.2016}
+
+\begin{theorem}[Tutte]
+  $G$ is $3$-connected if and only if there exists a sequence $G_0,G_1,\dots,G_n$ such that $G_0 = K_4$ and $G_n = G$ 
+  and for all $0 \leq i \leq n-1$ exists $\{x,y\} \in E(G_{i+1})$ such that 
+  \[ G_i = G_{i+1} | \{x,y\} \]
+  with $\de_{G_{i-1}}(x) \geq 3$ and $\de_{G_{i+1}}(y) \geq 3$.
+\end{theorem}
+
+\begin{proof}
+  \begin{enumerate}
+    \item[$\Rightarrow)$] trivial follows from the lemma and  observe that $K_4$ is the only $3$-connected graph on $4$ vertices ($3 = k(G) \leq \lambda(G) \leq \delta(G)$)
+    \item[$\Leftarrow)$] Given the sequences as above. Prove that $G$ is $3$-connected.
+    We show: If $G_9 = G_{i+1} | \{x,y\}$ is $3$-connected, then $G_{i+1}$ is $3$-connected.\\
+    Assume this is not true. Then there exists a separator $S$ in $G_{i+1}$ with $\abs{S} \leq 2$.
+    Let $C_1,C_2$ be two connected components in $G_{i+1} - S$ and $\{x,y\} \in E(G_i)$.
+    \todo{add pic}
+    The only possible inclusions for $x,y$ wrt $C_1,S,C_2$ is $x \in C_1$, $y \in S$ (or $x \in S, y \in C_1$, analogous).
+    (The other caes are excluded because otherwise $S$ with $\abs{S} \leq 2$ would be a separator of $G_i$ (!!), or $S$ would not be a separator in $G_{i+1}$!!\\
+    Then $\forall v \in C_1 \setminus \{y\}$, the $S$ is a separator of $v$ from $C_2$ in $G_i$. ($\lightning$)
+    Thus, $C_1$is a singleton $C_1 = \{y\}$. This implies that $\de_{G_{i+1}}(y) \leq 2$ $\lightning$
+    So every $G_i$ in the sequence is $3$-connected and so does $G_n = G$.
+  \end{enumerate}
+\end{proof}
+
+\subsection{2.3 The Computation of $k(G)$ and $\lambda(G)$}
+
+Question: $k(G) \geq 1$? is answered e.g. by depth first seqrch (DFS) in $\bigO(m+n)$ time.\\
+Question: $k(G) \geq 2$? is answered e.g. ....\\
+\\
+\underline{Main Code DFS(s) for a graph $G=(V,E)$, $s \in V$}
+Begin\\
+  for $v \in V$ do DFS Num(r) $\eqqcolon 0$\\
+  for $v \in V$ do SEEN(v) $\eqqcolon$ FALSE\\
+  for $v \in V$ do PREC(v) $\eqqcolon v$\\
+  $t \coloneqq 0$\\
+  SEEN(s) $\coloneqq$ TRUE\\
+  DFS(G,s)\\
+end (main)\\
+\\
+Procedure DFS(G,v)\\
+  $t \coloneqq t+1$\\
+  DFS Num(v) $\coloneqq t$\\
+  for $w \in N(v)$ do\\
+    if NOT SEEN(w) then\\
+      SEEN(w) = TRUE; PREC(w) = v; DFS(G,w)\\
+  end (for)\\
+\\
+DFSNum(v): order in which vetices are visisted\\
+SEEN(v): has v been visited up to the current moment\\
+PREC(v): perdedent of v, i.e. vertex from where v was visited\\
+\todo{add pic}
+
+\begin{prop}[2.8?]
+  Let $G$ be a connected graph and $s \in V(G)$.
+  Apply DFS(G,s). 
+  \begin{enumerate}[label=(\alph*)]
+    \item The edges of the form (prec(v),v) form a spanning tree $T$ in $G$.
+    \item DFS(G,s) runs in $\bigO(m+n)$ time.
+  \end{enumerate}
+  Call edges (prec(v),v) tree-edges.
+\end{prop}
+
+The other edges in $G$ are classified into \emph{forward edges} and \emph{backward edges}.
+An edge $\{v,w\} \in E(G) \setminus E(T)$ is called a forward edge if and only if DFSNum(w) > DFSNum(v) at the moment when DFS passes the edge $\{v,w\}$ for the first time starting at $v$.\\
+\emph{backward edge} DFSNum(w) < DFSNum(v)
+
+\begin{lemma}[2.9?]\label{2.9}
+  \begin{enumerate}[label=(\alph*)]
+    \item There are no forward edges.
+    \item For all backward edges $\{v,w\}$ the path joining $s$ and $v$ in $T$ contains $w$.
+  \end{enumerate}
+\end{lemma}
+
+\begin{defi*}
+  Let $v \in V(G)$ and $T$ be the spanning tree produced by DFS(G,s).
+  A descendent of $v$ is any $w \in V(G)$ such that $v$ is in the unique $s$-$w$-path in $T$.
+  In this case we call $v$ an ancestor of $w$.
+  Thus there is an order relation definied in $V(G)$ by ancestors and decendents.
+  Choose $s$ as a root in $T$. Then the root $s$ is the smallest element in this order.
+  For all $v \in V(G)$ its descendents form a tree, which we think of as being rooted at $v$ and denote by $T_v$.
+\end{defi*}
+
+\begin{defi*}
+  For all $v \in V(G)$ set LowPoint(v) $= min\{ DFSNum(v): \{ DFSNum(z): \exists descendant x of v in T, such that \{x,z\} a backward edge\}\}$. It could be that $x=v$.
+\todo{add pic 3}
+A directed tree edge $(v,w)$ is called a leading edge if and only if LowPoint(w) $\geq DFSNum(v)$.
+\end{defi*}
+
+\begin{lemma}
+  Let $\{v,w\}$ be a directed leading edge. Consider the subtree $T_w + \{v,w\}$ of $T$.
+  Then all backward edges starting in vertices from $T_w \cup \{v,w\}$ lead to $T_w + \{v,w\}$.
+  \todo{add pic - not necessarily}
+\end{lemma}
+
+\begin{theorem}
+  For all $v \in V(G) \setminus \{s\}$ and for all directed according to our order relation edges $\{v,w\} \in E(G)$ the following holds:
+  $\{v,w\}$ and the tree edge ending at $v$ belong to the same block of $G$ if and only if either
+  \begin{enumerate}[label=(\alph*)]
+    \item $\{v,w\}$ is a backward edge or
+    \item $\{v,w\} \in E(T)$ but not a leading edge.
+  \end{enumerate}
+\end{theorem}
+
+Let us bould the blocks of a connected graph $G$ with theorem 2.11 (or 2.12???)
+
+\begin{theorem}[2.12]
+  \begin{enumerate}[label=(\alph*)]
+    \item The root $s$ is a cut-vertex if and only if there exist more than $1$ leading edge starting at $s$
+    \item A vertex $v \in V(G) \setminus \{s\}$ is a cut-vertes if aond only if there exists at least one leading edge starting at $v$.
+  \end{enumerate}
+\end{theorem}
+\begin{proof}
+  No proof.
+\end{proof}
+
+\begin{theorem}[Even, Tarjan 1972]
+  The blocks and the cut-vertices as well as the bc(G) of (a connected) graph $G$ can be determined in linear time, i.e. in $\bigO(n+m)$ time, where $n \coloneqq \abs{V(G)}$ and $m \coloneqq \abs{E(G)}$.
+  As a sequence the question \enquote{$k(G) \geq 2$?} can be answered in $\bigO(m+n)$ time.
+\end{theorem}
+
+\begin{proof}
+  no proof
+\end{proof}
+
+\begin{rem}
+  Also \enquote{$k(G) \geq 3$?} can be decided in linear time.\\
+  Reference: J.E. Hopcroft and R.E. Tarjan, Dividing a graph into $3$-connected components, SIAM Journal on computing 2, 1972, 135-158
+\end{rem}
+
+$k(G)$ = ?\\
+From Menger $k(G) = \min \{u_{s,t}: s,t \in V(G), s \neq t\}$, where $u_{s,t} \coloneqq$ maximal number of independent a-t-paths in $G$. $u_{s,t}$ can be determined by solving a max flow problem as in the proof of Mengers's Theorem.
+
+So time complexity: $\bigO(n^2 \cdot \text{ time complesxity(max flow)}) = \bigO(n^2 \cdot \underbrace{n^2 \sqrt{m}}_{\text{push-relabel}}) = \bigO(n^4 \sqrt{m})$ 
+But unit capacity max flow solvable in $\bigO(m \cdot \min\{2n^{\frac{2}{3}},\sqrt{m}\}) \implies \bigO(m \cdot n^{\frac{2}{3}})$ with results in a complex time of $\bigO(n^2 n^{\frac{2}{3}} \sqrt{m})$.
+
+\begin{theorem}[Even, Tarjan 1975]
+  $k(G)$ can be computed in $\bigO(\sqrt{n} m^2)$ time with $n \coloneqq \abs{V(G)}$ and $m \coloneqq \abs{E(G)}$.
+\end{theorem}
+No proof
+\begin{rem}
+  Just a linear number of $u_{s,t}$ need to be computed)\\
+  Reference: S Even and R.E. Tarjan, Network flows and testing graph connectivity, SIAM Journaml Computing, 1975, 507-518.
+\end{rem}
+
+$\lambda(G) = $?\\
+efficiently computable by flow arguments\\
+Menger $\lambda(G) = \min \{ \overbar{u_{st}}: s,t \in V(G), s \neq t\}$ where $\overbar{u_{st}} = $ maximal number of edge disjoint s-t-paths in $G$.
+$\overbar{u_{st}}$ can be again compared by solving a max flow problem as in proof of Menger's Theorem.\\
+\\
+$\min \{ \overbar{u_{st}}: s,t \in V(G), s \neq t\}$ is the same as min (overall) int in the anxilary graph;
+can be also solved without using any flow argument in a time better than $\bigO(n^2) \times $(complexity of max flow)
+
+\begin{theorem}[2.15]
+  $\lambda(G)$ can be computed in $\bigO(m \cdot n + n^2 \log n)$, where $n = \abs{V(G)}$ and $m = \abs{E(G)}$
+\end{theorem}
+
+\begin{proof}
+  Proven by: Nagamchi and Ibaraki; 1992, Stoer and Wagner 1997, Frank 1994\\
+  Reference: Stoer and Wagner: A simple min cut algorithm, Journal of the ACM 44, 1997, 585-591.
+\end{proof}
+
+\end{document}

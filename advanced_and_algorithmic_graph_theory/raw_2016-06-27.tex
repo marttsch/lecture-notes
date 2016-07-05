@@ -1,0 +1,161 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{27.06.2016}
+
+\begin{lemma}\label{7.8-lemma}
+  Let $k > 0$, $k \in \N$, and let $p \coloneqq p(n) \geq \frac{6k \ln n}{n}$ for $n$ large.
+  Then $P[\alpha \geq \frac{1}{2} \frac{n}{k}] \to 0$ for $n \to \infty$.
+\end{lemma}
+
+\begin{proof}
+  $\forall n,r \in \N$, $n \geq r \geq 2$, $\forall G \in \mathcal{G}(n-p): P[\alpha \geq r] \leq {n \choose r} q^{r \choose 2}$ (Lemma \ref{7.2-lemma}).
+  $\implies P[\alpha \geq r] \leq n^r q^{r \choose 2} = (nq^{\frac{r-1}{2}})^r \overset{1-p \leq e^{-p}}{\leq} (n e^{-p(r-1)/2})^r$\\
+  For $r \geq \frac{1}{2} \frac{n}{k}$: $ne^{\frac{-p(r-1)}{2}} = ne^{\frac{-pr}{2} + \frac{p}{2}} \leq ne^{-\frac{3}{2} \ln n + \frac{p}{2}} \leq n n^{-\frac{3}{2}} e^{\frac{1}{2}} = \frac{\sqrt{e}}{\sqrt{n}}$.
+  Thus the above tends to $0$, i.e.
+  \[ \leq (n e^{-p(r-1)/2})^r \overset{n \to \infty}{\to} 0 \]
+  
+  So 
+  \[ \lim_{n \to \infty} P[\alpha \geq \frac{1}{2} \frac{n}{k}] = \lim_{n \to \infty} P[\alpha \geq r] = 0 \]
+\end{proof}
+
+\begin{theorem}[Erdös 1959] \label{7.9-theorem}
+  For all natural numbers $k$ there exists a graph $H$ with $\girth(H) \geq k$ and $\chi(H) \geq k$.
+\end{theorem}
+
+\begin{proof}
+  Assume wlog $k \geq 3$ and fix $\varepsilon$ such that $0 < \varepsilon < \frac{1}{k}$.
+  Set $p \coloneqq n^{\varepsilon-1} = \frac{n^\varepsilon}{n}$.
+  Let $X(G)$ be the number of short cycles (length $\leq k$) in $G \in \mathcal{G}(n,p)$.
+  By Lemma \ref{7.7-lemma}
+  \[ E(X) = \sum_{i=3}^k E(X_i) = \sum_{i=3}^k \frac{(n)_i}{2i} p^i \leq \frac{1}{2} \sum_{i=3}^k n^i p^i = \frac{k-2}{2} n^k p^k \]
+  (because the expectation of number cycles of length $i$ $E(X_i) = \frac{(n)_i}{2i} p^i$)
+  Note that $(np)^i \leq (np)^k$ because $np = nn^{\varepsilon-1} = n^\varepsilon \geq 1$.
+  So $E(X) \leq \frac{k-2}{2} n^k p^k$.
+  
+  Markov's inequality
+  \[ P(X \geq \frac{n}{2}) \leq \frac{E(X)}{\frac{n}{2}} \leq (k-2) n	{k-1} p^k = (k-2) n^{k-1} n^{\varepsilon k -k} = (k-2) n^{\varepsilon k - 1} \overset{n \to \infty}{\to} 0 \]
+  So $P(X \geq \frac{n}{2}) \overset{n \to \infty}{\to} 0$.
+  
+  (we can conclude from this that) There exists a graph $G \in \mathcal{G}(n-p)$ with fewer that $\frac{n}{2}$ short cycles.
+  Delete one vertex from each short cycle in this graph $G$.
+  Let us call the resulting graph $H$. $\abs{H} \geq \frac{n}{2}$.
+  Then $\girth(H) > k$.
+  By definition of $G$: $\chi(H) \geq \frac{\abs{H}}{\alpha(H)} \geq \frac{\abs{H}}{\alpha(G)} \geq \frac{n/2}{\alpha(G)} > k$
+  From Lemma \ref{7.8-lemma} we found a $G \in \mathcal{G}(n,p)$ with $\alpha < \frac{n/2}{k} \implies \frac{n/2}{\alpha}$.
+\end{proof}
+
+\begin{cor}
+  There are graphs with arbitrarily large girth and arbitrarily large values of the invariants $\kappa$ (connectivity number), $\varepsilon = \frac{\abs{E(G)}}{\abs{V(G)}}$ and $\delta$ (minimum degree).
+\end{cor}
+
+\begin{proof}(Sketch)
+  Uses the following two statements
+  \begin{itemize}
+    \item Apply Corollary \enquote{Every graph $G$ has a subgraph of minimum degree $\chi(G)-1$}.
+    \item Theorem of Mader \enquote{Let $k \in \N$ ($k \neq 0$). Every graph with $\de(G) \geq 4k$ has a $(k+1)$- connected subgraph $H$ such that $\varepsilon(H) > \varepsilon(G) - k$.}
+  \end{itemize}
+\end{proof}
+
+
+\subsection{Properties of almost all graphs}
+
+Let $p = p(n)$ be a given fixed function (possibly constant)
+$P[G \in \mathcal{P}]$ where $\mathcal{P}$ is a graph property (class of graphs closed wrt isomorphism)
+
+If $P[G \in \mathcal{P}] \overset{n \to \infty}{\to} 1$ we say \enquote{almost every $G \in \mathcal{G}(n,p)$ has property $\mathcal{P}$}.
+If $P[G \in \mathcal{P}] \overset{n \to \infty}{\to} 0$ we say \enquote{almost no $G \in \mathcal{G}(n,p)$ has property $\mathcal{P}$}.
+
+\begin{ex}
+  Lemma \ref{7.8-lemma}
+\end{ex}
+
+Another example is
+\begin{ex}
+  Proposition \ref{7.10-propositon}
+\end{ex}
+
+\begin{prop}\label{7.10-propostion}
+  For all given $p \in (0,1)$ and for every given graph $H$ almost every graph $G \in \mathcal{G}(n,p)$ contains an induced subgraph isomorphic to $H$.
+\end{prop}
+
+\begin{proof}
+  $k \coloneqq \abs{H}$, $l \coloneqq \abs{E(H)}$. Let $n \geq k$. Let $U \subseteq \{0,\dots,n-1\}$ be a fixed subset with $\abs{U} = k$.
+  Then $P[G[U] \simeq H] \eqqcolon r = p^l q^{{k \choose 2} - l} = p^l (1-p)^{{k \choose 2} - l} > 0$.
+  $U$ can be specified in ${n \choose k}$ ways; Among them there are at least $\lfloor \frac{n}{k} \rfloor$ which are pairwise disjoint.  
+  Prob[No $G[U]$ (among the disjoint ones) is isomorphic to $H$] $\leq (1-r)^{\lfloor \frac{n}{k} \rfloor}$
+  Prob[$H$ is not an induced subgraph of $G$] $\leq (1-r)^{\lfloor \frac{n}{k} \rfloor} \overset{n \to \infty}{\to} 0$.
+\end{proof}
+
+Given $i,j \in \N$ let $P_{i,j}$ denote the property \enquote{considered graph contains for all disjoint pair of vertex sets $U$, $W$, with $\abs{U} \leq i$, $\abs{W} \leq j$, a vertex $v \notin U \cup W$ that is adjacent to all vertices in $U$ and to none of the vertices in $W$}.
+\todo{add pic}
+
+\begin{lemma}\label{7.11-lemma}
+  For all constant $p \in (0,1)$ and for all $i,j \in \N$ almost every graph in $\mathcal{G}(n,p)$ has the property $P_{i,j}$.
+\end{lemma}
+
+\begin{proof}
+  For fixed $U,W$ ($\abs{U} \leq i$, $\abs{W} \leq j$) and fixed $v \notin U \cup W$ with probability that $v$ is connected by an edge to all $n \in U$ and to no $w \to W$ is $\geq p^i (1-p)^j$.
+  Prob[no such $v \notin U \cup W$ can be found] $\leq (1 - p^i (1-p)^j)^{n -i -j}$ (assuming $n > i+j$).
+  Notice that the corresponding events are independent for different vertices $v$.
+  
+  $\lim_{n \to \infty}$Prob[no such $v \notin U \cup W$ can be found] $\leq \lim_{n \to \infty} (1- p^i (1-p)^j)^{n-i-j} = 0$
+\end{proof}
+
+\begin{cor}
+  For every $p \in (0,1)$ constant and for every $k \in \N$ almost every graph in $\mathcal{G}(n,p)$ is $k$-connected.
+\end{cor}
+
+\begin{proof}
+  We show that every graph in $\mathcal{P}_{2,k-1}$ is $k$-connected.
+  Every graph in $P_{2,k-1}$ has at least $k+2 = 2 + (k-1) + 1$ vertices.
+  If $W$ is a set of fewer than $k$ vertices ($\leq k-1$):
+  Assume $G\setminus W$ is disconnected $\implies \exists$ two vertices $v_1,v_2$ which were connected by a path and are not connected by a path any more in $G \setminus W$.
+  Apply property $P_{2,k-1}$ with $U = \{v_1,v_2\}$ and $W = W$. Then there exists a $v$ with $\{v,v_1\} \in E(G)$, $\{v,v_2\} \in E(G)$ $\lightning$ \todo{add pic}
+\end{proof}
+
+For constant $p$ we had the situation that certain properties were almost surely present (independent on the value of $p$) and other properties were almost surely non-present (independent on value of $p$).
+The situation changes if $p$ is not constant but a function of $n$.
+
+$p < \frac{1}{n^2}$: almost no edges in $G \in \mathcal{G}(n,p)$\\
+$p = \frac{\sqrt{n}}{n^2}$: there exists a connected component with more than 2 vertices, almost surely.\\
+$p \approx \frac{1}{n}$: there exists a cycle in almost every $G \in \mathcal{G}(n,p)$\\
+$p \approx \frac{\log n}{n}$: $G \in \mathcal{G}(n,p)$ almost surely connected\\
+$p = \frac{(1+\varepsilon) \log n}{n}, \varepsilon > 0$: graph $G \in \mathcal{G}(n,p)$ has almost surely a hamiltonian cycle.
+
+Evolution of random graphs (sub area of random graphs)\\
+Main question is: Given a property, what is the value of $p$ which makes the property almost sure when for smaller $p$ the property was not almost surely there. Threshold $p$.
+
+\begin{defi*}
+  Call a real function $t: \N \to \R$ with $t(n) \neq 0$ for all $n \in \N$ a \emph{threshold function} for a graph property $\mathcal{P}$ if the following holds for every $p = p(n)$ and for every $G \in \mathcal{G}(n,p)$
+  \[ \lim_{n \to \infty} P[G \in \mathcal{P}] = \begin{cases} 0 & \text{ if } \frac{p}{t} \overset{n \to \infty}{\to} 0 \\ 1 & \text{ if } \frac{p}{t} \overset{n \to \infty}{\to} \infty \end{cases} \]
+\end{defi*}
+
+$\mathcal{P}$ could be for example class of graphs containing a particular given graph as an (induced) subgraph (an isomorphic copy of it).
+
+\begin{defi*}
+  A graph $H$ is called balanced if $\varepsilon(H^\prime) = \frac{\abs{E(H^\prime}}{\abs{V(H^\prime)}} \leq \varepsilon(H) = \frac{\abs{E(H)}}{\abs{V(H)}}$ for all subgraphs $H^\prime$ of $H$.
+\end{defi*}
+
+\begin{ex}
+  \begin{enumerate}
+    \item complete graph
+    \item cycle
+    \item not balanced: clique + (large enough) stable set, connect every vertex of the stable set with every vertex of the clique.
+  \end{enumerate}
+\end{ex}
+
+\begin{theorem}[Erdös, Renyi 1960]\label{7.12-theorem}
+  If $H$ is a balanced graph with $k$ vertices and $l \geq 1$ edges, 
+  then $t(n) \coloneqq n^{-k/l}$ is a threshold function for property $P_H$,
+  where $P_H$ is the class of graphs containing an induced subgraph isomorphic to $H$.
+\end{theorem}
+
+\begin{cor}[1 of \ref{7.12-theorem}]
+  If $k \geq 3$ then $t = \frac{1}{n}$ is a threshold function for the property $\mathcal{P}_{C_k}$, i.e. the property of containing a $k$-cycle.
+\end{cor}
+
+\begin{cor}[2 fo \ref{7.12-theorem}]
+  If $T$ is a tree with $k \geq 2$ vertices, then $t(n) = n^{-k(k-1)}$ is a threshold function for the property $\mathcal{P}_T$, i.e. property of containing a subgraph which is isomorphic to $T$.
+\end{cor}
+
+\end{document}

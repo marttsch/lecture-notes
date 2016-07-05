@@ -1,0 +1,161 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+
+\lecture{10.03.2016}
+\subsection{2.2 2-connected and 3-connected graphs}
+\lecture{10.03.2016}
+
+\begin{theorem}[ear decomposition]
+  A graph $G$ is $2$-connected if and only if the exist a so called ear decomposition, i.e.
+  \[ G = C \cup P_1 \cup \dots \cup P_k \]
+  with $k \in \N$ where $C$ is a cycle and $P_i$ is a path having just its end-vertices in common with 
+  \[ C \cup P_1 \cup \dots \cup P_{i-1} \]
+  for all $1 \leq i \leq k$.
+  \todo{add pic}
+\end{theorem}
+
+\begin{proof}
+  \begin{enumerate}
+    \item[$\Leftarrow)$] If $G = C \cup P_1 \cup \dots \cup P_k$ with ... $\implies G$ is $2$-connected.\\
+    Induction on $k$. $k = 0$. Then $G = C$ is $2$-connected.\\
+    Assume it holds for $k=i$. Now for $k = i+1$:
+    By Menger need to show: $\forall$ such that there exists 4 indep. s-t-paths.
+    \[ s,t \in V(C \cup P_1 \cup \dots \cup P_i) \checkmark \]
+    \begin{align*}
+      s,t \in P_{i+1} \implies \text{let } a,t \text{ be end points of } P_{i+1}\\
+      \implies a,b \in V(C \cup P_1 \cup \dots \cup P_i)
+    \end{align*}
+    \todo{add pic orange 1}
+    Then extend one of a-b-paths in $C \cup P_1 \cup \dots \cup P_i$ to an s-t path by adding the ubpaths from $a$ to $s$ and from $b$ to $t$ in $P_{i+1}$ path the s-t-subpath of $P_{i+1}$.\\
+    $s \in P_{i+1}$, $t \in  V(C \cup P_1 \cup \dots \cup P_i)$ Apply fan theorem in $C \cup P_1 \cup \dots \cup P_i$ with $t \notin \{a,b\} \eqqcolon A \implies $ there exists an t-a-path $P_1$ and a t-b-path $P_2$ independenin $(C \cup P_1 \cup \dots \cup P_i)$ \todo{add pic}
+    Extend then tow independent s-t-paths by adding suitable subpaths of $P_{i+1}$
+    \item[$\Rightarrow)$] Assume $G$ is a $2$-connected graph $\implies$ ther exists ear decompostion $C \cup P_1 \cup \dots \cup P_i$.\\
+    $\abs{G} \geq 3 \implies \exists s,t \in V(G), s \neq t \implies \exists 2$ independent s-t-paths in $G$, they build a cycle $C$.\\
+    Set $G_0 \coloneqq C$ and $i=1$. If $G_0 \neq G$, there exists an edge $e = \{x,y\} \not in E(G_O)$, such that 
+    \[ \{x,y\} \cap V(G_0) \neq \emptyset \text{.} \]
+    Case1: $\{x,y\} \subseteq V(G_0)$. Set $P_1 = x,y$ and $G_1 \coloneqq G_0 \cup P_1$.\\
+    Case2: wlog $x \in V(G_0), y \notin V(G_0)$ \todo{add pic}
+    There exist 2-indep x-y-paths in $G \implies$ there exist x-y-path which does not use $\{x,y\} = e$
+    Then there exists a path $P$ connecting $y$ to $G_0 \setminus \{x\}$.
+    Construct $P_1 \coloneqq P \cup \{x,y\}$. Set $G_1 \coloneqq G_0 \cup P_1$.
+    Ask again is $G_1 = G$. If yes $\checkmark$.
+    If not find again $\{x,y\} \in E(G_1)$ and so on.
+    Process end because $G$ is finite and so does $E(G)$.
+  \end{enumerate}
+\end{proof}
+
+\begin{defi*}
+  A maximal connected subgaph without cut-vertex is called a \emph{block}. \todo{add pic}  
+\end{defi*}
+
+Observe: \\
+1)A block $B$ is $2$-connected if $\abs{B} > 2$\\
+$\abs{B} = 2$  vertex-edge-vertex-pic bridge\\
+$\abs{B} = 1$ vertex-pic singleton
+
+\begin{ex}
+  \todo{add pic}
+\end{ex}
+
+2) If two blocks overlap, then on a cut vertex.\\
+3) Edges of blocks build a partition of $E(G)$.
+
+\begin{defi*}
+  The block-cut-vertex-graph $bc(G)$ of a given graph $G$ is a graph with vertex set $\mathcal{B} \cup \mathcal{C}$ 
+  where $\mathcal{B}$ is the set of the blocks in $G$ and $\mathcal{C}$ is the set of the cut-verices in $G_0$. there exists an edge $\{x,y\} \in E(bc(G))$ if and only if $x \in \mathcal{B}$ and $y \in \mathcal{C}$ and $y \in x$ or $y \in \mathcal{B}$, $x \in \mathcal{C}$, $x \in y$.
+\end{defi*}
+
+\begin{theorem}[Gallai 1964, Horary and Puns 1966]
+  The $bc(G)$ of a connected graph $G$ is a tree.
+\end{theorem}
+
+\begin{proof}
+  2 things need: a) $bc(G)$ is connedted; b) $bc(G)$ is cycle-free
+  \begin{enumerate}[label=(\alph*)]
+    \item trivial: Let $x,y \in V(bc(G))$\\
+    \begin{align*}
+      x,y &\in \mathcal{B} \\
+      x,y &\in \mathcal{C} \\
+      x \in \mathcal{B}, y \in \mathcal{C} &\text{ or } y \in \mathcal{B}, x \in \mathcal{C}
+    \end{align*}
+    \todo{add pic}
+    Since $G$ connedted $V(X),V(y)$ are connected in $G$ in a path $P$.
+    since for all $e \in E(G)$ belongs to some block the block contaionin the edges of $P$ build a path in $bc(G)$.
+    \item Assume by contradiction there exisist a cycle in $bc(G)$
+    \[ B_0 C_0 B_1 C_1 \dots B_k C_k \]
+    Consider $B_1$. It is not maximal 2 connected because $B_0 \cup B_1 \cup \dots B_k (\subseteq G)$ is 2-connected and $B_0 \subsetneqq B_0 \cup \dots \cup B_k$ $\lightning$
+    \todo{add pic}
+  \end{enumerate}
+\end{proof}
+
+\begin{defi*}
+  Let $e = \{x,y\}$ be an edge of graph $G=(V,E)$.
+  Denote by $G|e$ the graph obtained from $G$ by contracting edge $e$, i.e.
+  \[ V(G|e) = (V(G) \setminus \{x,y\}) \cup \{v_e\} \]
+  where $v_e \notin V(G)$ and
+  \begin{align*}
+    E(G|e) = &\{ \{u,v\} \in E(G): \{u,v\} \cap \{x,y\} = \emptyset \} \\
+    &\cup \{ \{w,v_e\}: w \in V(G)\setminus \{x,y\} \text{ and } [ \{w,x\} \in E(G) \text{ or } \{w,y\} \in E(G)] \}
+  \end{align*}
+  \todo{add pic}
+  More generally if $X$ is another graph and $\{V_x: x \in V(X)\}$ is a partition of $V(G)$ into conected subsets (i.e. $G[V_x]$ is connected) such that for all $x,y \in X$ there exists a $V_x$-$V_y$-edge in $G$ if and only if $\{x,y\} \in E(X)$, we define $G = MX$.
+  \todo{add pic orange 8}
+  The set $V_x$ are called \emph{branch sets} of $G$.
+  If $V_x = U \subseteq V$ and all other branch sets are singletons we denote $X = G|U$.
+  \todo{add pic}
+\end{defi*}
+
+\begin{prop}[2.5]
+  $G$ is an $MX$ if and only if $X$ can be obtained from $G$ by applying a sequence of edge contractions, i.e.,
+  there are graphs $G_0,G_1,\dots,G_k$ and edges $e_i \in G_i$ such that $G_0 \coloneqq G$, $G_k :\cong X$ and $G_{i+1} \coloneqq G_i|e_i$, for all $0 \leq i \leq k-1$.
+\end{prop}
+
+\begin{proof}
+  Induction on $\abs{G} - \abs{X}$ (Homework!)
+\end{proof}
+
+\begin{defi*}
+  If $G=MX$ and $G$is a subgaph of $Y$, $G \subseteq Y$, then we say \emph{$X$ is a minor of $Y$}.
+\end{defi*}
+
+\begin{ex}
+  \todo{add pic}
+  Since $G \subsetneqq Y$ and $G = MX$, then $X$ is a minor of $Y$. Notation: $X \leq Y$.
+\end{ex}
+
+\begin{lemma}[3.6]
+  If $G$ is a $3$-connected graph and $\abs{G} > 4$, then there exists an edge $e \in E(G)$ such that $G|e$ is $3$-connected.
+\end{lemma}
+
+\begin{proof}
+  By contradiction, assume there exists no such an edge in $G$.
+  Then for all $\{x,y \} \in E(G)$ $G(\{x,y\}$ has a separating set $S$ with at most 2 vertices.Since $G$ is 3-connected $S$ is not a separator in $G$. $v_{\{x,y\}} \in S$. \todo{add pic} $\abs{S}=2$.
+  Then there exists $z \in S|\{v_{xy}\}$.
+  \[ T \coloneqq \{ x,y,z \} \]
+  Every 2 vertices separated by $S$ in $G|\{x,y\}$, are separated by $T$ in $G$.
+  Thus, every vertice og $T$ hast a neighbour in every component of $G-T$ because otherwise if e.g. $z$ has no neighbour in some componennt $C$ then $T\setminus\{z\}$ would still be a separator of cardinality 2(!!)
+  \todo{add pic}\\
+  Choose an $\{x,y\}$, a $z$ and a component $C$ such that $\abs{C}$ is as small as possible.
+  Pick $v \in N(z) \cap C$. By assumption $G|\{z.v\}$ is not 3-connected. So we find a separator
+  \[ S_1 = \{v_{zv},w\}, \: T_1 = \{z,v,w\} \]
+  such that $T_1$ separates $G$ and as bfore every vertex in $T_1$ as a neighbour in every component of $G-T_1$.
+  Since $x$ and $y$ are dependent in $G-T_1$. \todo{add pic}
+  There exists a component $D$ in $G-T_1$ such that $D \cap \{x,y\} = \emptyset$.
+  Every neighbour of $v$ in $D$ lies in $C$ (because $v$ in $C$ and the neighbour cannot be $x,y$ or $z$)
+  $ \implies D \cap C \neq \emptyset \implies D \subsetneqq C$\\
+  $D \subset C$: If not, let $t^\prime \in N(v) \cap D$ and let $t \in D$.
+  $t$ and $t^\prime$ are connected in $D$ so also connected in $G-T$. So $t,t^\prime$ belong to the same component in $G-T$ and since $t^\prime \in C$ also $t \in C$.\\
+  $D \neq C$: ($v \in C$, $v \notin D$)\\
+  \\
+  $\abs{D} < \abs{C} \lightning$ to minimality of $C$.
+\end{proof}
+
+\begin{theorem}[Tutte 1061]
+  A graph $G$ is 3-connected if and only if there exists a sequence of graphs $G_0,G_1,\dots,G_n$ with the properties:
+  \begin{enumerate}[label=(\alph*)]
+    \item $G_0 \coloneqq K_4$, $G_n \coloneqq G$ and
+    \item $G_{i+1}$ has an edge $e_{i+1} = \{x,y\}$ with $\de_{G_{i+1}}(x) \geq 3$, $\de_{G_{i+1}}(y) \geq3$ such that $G_i = G_{i+1}|e_{i+1}$ for all $0 \leq i \leq n-1$
+  \end{enumerate}
+\end{theorem}
+
+\end{document}

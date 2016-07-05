@@ -1,0 +1,162 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{09.05.2016}
+
+The last theorem is not a characterization but a sufficient condition.
+
+\lecture{09.05.2016}
+Assume the geometrical dual $G^\ast$ of some graph $G$ has multiple edges. Thus, there exist at least 2 regions in $G$ with more than 1 common edge in their borders.
+\todo{add pic}
+
+Any pair of parallel edges in $G^\ast$ encloses a subgraph of $G$ which is connected to the rest exactly through the edges $e,f$ in $G$ which are the counter parts of $e^\ast,f^\ast$.
+Thus, the remaining $e,f$ from $G$ disconnects that subgraph from the set of $F$.
+Thus, $G$ is not 3-edge-connected. Thus, $G$ is not 3-connected.
+Moreover, if $G$ is 3-connected (even if $G$ is 2-connected) \todo{add pic}, then $G^\ast$ has no loops either.
+Thus, $G^\ast$ is simple.
+
+\begin{ex}
+  platonic solids
+  \todo{add pic}
+\end{ex}
+
+\begin{defi*}
+  A \emph{graph} is called \emph{polyhedral} if it is isomorphic to a 3-dimensional, convex, bounded polyhedron (bounded polyhedron = polytope) where the vertices, edges, facets of th polytope are the vertices, edges and region of the graph, respectively.
+\end{defi*}
+
+Homework: Polyhedral graphs are 3-connected (2-connectivity is trivial since every face is bounded by a cycle).
+Polyhedral graphs are planar (construct a sphere in the interior of the polytope project the polytope on the surface of the sphere, and then from the sphere to the plane)
+
+\begin{theorem}[4.12 Steinitz 1922]
+  A graph is polyhedral if and only if it is planar and 3-connected.
+\end{theorem}
+
+\begin{proof}
+  No proof.
+\end{proof}
+
+\begin{prop}
+  If a graph is 3-connected, then its geometric dual is 3-connected.
+\end{prop}
+
+\begin{proof}[Sketch of the proof.]
+  Let $S,T$ be two vertices in $G^\ast$ (i.e. two regions in $G$), $S \neq T$.
+  Show that there exist 3 independent $S$-$T$-paths in $G^\ast$. Take two points such that in the interior of $S,T$ in $G$, respectively.
+  \todo{add pic}
+  Since $G$ is 3-connected: for all $v \in V(G)$ and for all 3 vertices on the border of $S$ ($T$), there exist 3 independent paths joining $v$ to the vertices on the border (fan theorem).
+  connect $s$ ($t$) to 3 (arbitrarily chosen and then fixed) vertices on the border of $S$ ($T$).
+  Let $G^\prime$ be the resulting graph.
+  $G^\prime$ is 3 connected (e.g. 3 independent 1-v-paths (s-v-paths?) would be 3 independent  paths from v to the 3 vertices in the border (fan thm) extended by the three edges connecting $s$ to the border),
+  Thus, there exist 3 independent s-t-paths in $G$.
+  \todo{add pic}
+  Consider a pair of these 3 paths and the area enclosed by them.
+  There is a chain of regions which starts with $S$, ends with $T$, intersect this area such that any two consecutive regions in the chain are neighbouring. Such a chain in $G$ is an S-T-path in $G^\ast$.
+  \todo{add pic}
+  Any pair of path defines such a chain of regions, and hence an s-t-paths.
+  The 3 chains defined by the 3 pairs of paths have no inner region in common.
+  Therefore, the 3 corresponding s-t-paths are independent. (should be rigorously shown!)
+\end{proof}
+
+\begin{defi*}
+  A polyhedral is called \emph{regular} (or \emph{platonic solid}) if aond only if it has conruent, regular, polygonal faces with the same number of faces meeting at each vertex.
+\end{defi*}
+
+Thus, a polyhedral graph corresponding to a platonic solid is regular.
+
+\begin{theorem}[4.14]
+  There are exactly 5 platonic solids.
+\end{theorem}
+
+\begin{proof}
+  Consider the polyhedral graph corresopnding to a platonic solid.
+  It is  regular; denote by $k$ the common degree of its vertices and by $h$ the number of vertices in each region. Apply Euler 
+  \[ \abs{V} - \abs{E} + \abs{\mathcal{R}} = 2 \]
+  together with $\abs{V} k = 2 \abs{E}$, $\abs{\mathcal{R}} k = 2 \mathcal{E}$.
+  Then we get
+  \[ \frac{2 \abs{E}}{k} - \abs{E} + \frac{2 \abs{E}}{h} = 2 \]
+  Thus,
+  \[ \frac{1}{k} + \frac{1}{h} - \frac{2 + \abs{E}}{2 \abs{E}} > \frac{1}{2} \]
+  Furthermore, $k = \delta(G) \geq 3$ since $G$ is 3-connected, and $k \geq 3$ (number of edges on the border of a face (cycle)).
+  Thus,
+  \[ \frac{1}{k} > \frac{1}{2} - \frac{1}{h} \geq \frac{1}{2} - \frac{1}{3} = \frac{1}{6} \implies k \leq 5 \]
+  and
+  \[ \frac{1}{h} > \frac{1}{2} - \frac{1}{k} \geq \frac{1}{2} - \frac{1}{3} = \frac{1}{6} \implies h \leq 5 \]
+  So we have $3 \leq h,k \leq 5$.
+  Check all 9 pairs (h,k) and observe that only 5 of them correspond to the corresponding quantities in graphs.
+\end{proof}
+
+\begin{cor}
+  The graphs of the platonic solids are exactly those polyhedral graphs which are regular toghether with their corresponding geometric duals.
+\end{cor}
+
+\begin{proof}
+  Exercises.
+\end{proof}
+
+\begin{theorem}[4.15 Whitney 1934]
+  Let $G$ be a planar embedding of $G$ and $G^\ast$ its geometric dual. 
+  The set $C \subseteq E(G)$ is a cycle in $G$ if and only if the corresponding set of edges $C^\ast \subseteq E(G^\ast)$ is an inclusion-minimal separating set of edges.
+\end{theorem}
+
+\begin{proof}
+  \begin{enumerate}
+    \item[$\Rightarrow$] Let $C$ be a cycle in $G$. Consider the two areas of the plane in which $G$ is drawn, the area inside $C$ and the area outside $C$.
+    $G^\ast$ has at least one vertex inside $C$ and at least one vertex outside $C$.
+    \todo{add pic}
+    Every path connecting square vertex inside $C$ to some vertex outside $C$ in $G^\ast$ has to intersect $C$ and contains hence an edge $e^\ast$ which the counter part of some edge $e \in E(C)$.
+    Thus, $C^\ast$ is a separating set of edges in $G^\ast$.
+    Is it inclusion-minimal? Yes, because the subgraph of $G^\ast$ inside $C$ and the subgraph of $G^\ast$ outside are both connected.
+    \item[$\Leftarrow$] Let $C^\ast$ be an inclusion-minimal separating set of edges in $G^\ast$.
+    Show that $C$ is a cycle.
+    $G^\ast - C^\ast$ is disconnected. Thus, it has at least 2 connected components, \todo{add pic} and it cannot have more than 2, because otherwise the separating set was not inclusion minimal.
+    Contract each connected component in one vertex and consider the dual of the contraction.
+    \todo{add pic}
+    The edges corresponding to $C^\ast$ underline{in this dual} build a cycle. \enquote{Remove} the contraction.
+    The cycle $C$ is also a subgraph of the dual of the non-contracted $G^\ast$, so it is a subgraph of $G^\prime$.
+  \end{enumerate}
+\end{proof}
+
+\begin{defi*}
+  Let $G = (V,E)$ be a graph. $G^\ast = (V^\ast,E^\ast)$ is called \emph{a combinatorial dual} to $G$ if and only if there exists a bijection $\varphi: E \to E^\ast$ such that $C \subseteq E(G)$ is a cycle in $G$ if and only if $\varphi(C)$ is an inclusion minimal separating set of edges in $G^\ast$.
+\end{defi*}
+
+Does every graph in $G$ have a combinatorial dual?
+Planar graphs do! (Whitney) \underline{Only} planar graphs do.
+
+\begin{theorem}[Whitney]
+  The only graphs which have a combinatorial dual are the planar graphs.
+\end{theorem}
+
+\begin{proof}[Sketch of the proof idea]
+  4 Lemmas: Then the proof follows directly from Kuratowski
+  \begin{lemma}\label{th_4_16_l_1}
+    If $G$ has a combinatorial dual, then every subgraph of $G$ has a combinatorial dual.
+  \end{lemma}
+  \begin{lemma}\label{th_4_16_l_2}
+    Let $G$ be a graph and $G^\ast$ a combinatorial dual of $G$. Let $e_0,e_1 \in E(G)$.
+    Let $e_0^\ast,e_1^\ast$ be the edges corresponding to $e_0,e_1$ in $G^\ast$, respectively.
+    $e_0^\ast,e_1^\ast$ are parallel if and only if every cycle containing one of $e_0,e_1$ contains also the other.
+  \end{lemma}
+  \begin{lemma}\label{th_4_16_l_3}
+    Let $H$ be a subdivision of $G$. If $H$ has a combinatorial dual, then also $G$ has one.
+  \end{lemma}
+  \begin{lemma}\label{th_4_16_l_4}
+    Neither $K_{3,3}$ nor $K_5$ have a combinatorial dual.
+  \end{lemma}
+\end{proof}
+
+
+\underline{Recognition Problem}\\
+Instance: A graph $G=(V,E)$\\
+Question: Is $G$ planar?
+
+Kuratowski gives a characterisation which would lead to an exponential algorithm.
+Solvale in linear time if in $\bigO(n+m)$.
+
+J.Hopcraft and R. Tarjan, Efficient planarity testing, Journal of ACM (Association of computer machinery) 21 (4), 549-568, 1974.
+
+\underline{State of the are algorithm}\\
+which goes back to J.M. Voyer and W.J. Myrvold, On the cutting edge simplified $bigO(n)$ planarity by edge addition,
+Journal of Graph Algorithm and Applications 8(3), 241-273, 2004. (volume 8, issue 3)
+
+
+\end{document}

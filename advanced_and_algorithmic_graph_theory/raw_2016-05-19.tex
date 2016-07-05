@@ -1,0 +1,151 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{19.05.2016}
+
+\begin{proof}
+  (Brooks)\\
+  Claim: $\lambda(G) \leq \Delta(G)$ ($G \not\simeq K_n$, $G \not\simeq C_{2k+1}$, $G$ connected)
+  Assume wlog $\Delta(G) \geq 3 \implies \abs{V(G)}\geq 4$. For $\abs{V(G)} = 4$ 
+  \todo{add pic}
+  Statement fulfilled for $G_1,G_2,G_3$, induction basis $\checkmark$
+  
+  Induction on $\abs{V(G)}$.
+  
+  Induction step: consider $G$ with $\Delta(G) \geq 3$ adn assume for all graphs with smaller number of vertices 
+  (fulfilling the condition of thm) the statement holds. Show that statement holds also for $G$.
+  
+  Assume by contradiction that $\chi(G) > \Delta(G) \eqqcolon \Delta$
+  Let $v \in V(G)$ arbitrarily and $H \coloneqq G - \{v\}$.
+  Check connected component of $H$ whether condtion of thm are fulfilled.
+  Let $H^\prime$ be such a connected component of $H$.
+  If $H^\prime$ is not $K_n$, $C_{2k+1}$, then $\chi(H^\prime) \leq \Delta(H^\prime) \leq \Delta(G) = \Delta$.
+  If $H^\prime$ is complete, then $\chi(H^\prime) = \abs{V(H^\prime)} = \Delta(H^\prime) + 1 \leq \Delta(G)$.
+  \todo{add pic}
+  If $H^\prime$ is $C_{2k+1}$, then $\chi(H^\prime) = 3 \leq \Delta(G)$.
+  \todo{add pic}
+  
+  Thus $\chi(H) \leq \Delta$. Let us consider a $\Delta$-colouring for $H$ (notice that $G$ cannot be colourd by $\Delta$ colours).
+  Thus
+  \begin{align}\label{0519_star1}
+    \text{Every $\Delta$ colouring of $H$ uses all colours $1,2,\dots,\Delta$ on the neighbours of $v$, in paritcular $\deg_G(v) = \Delta^\prime$}
+  \end{align}
+  \todo{add pic}
+  Let us denote by $v_ik \in N(v)$ the negihbours of $v$ coloured by $i$, $1 \leq i \leq \Delta$.
+  For all $i \neq j$ let $H_{i,j}$ be the subgraph of $H$ induced by vertices coloured $i$ or $j$.
+  
+  We show some properties of $H_{i,j}$:
+  \begin{align}\label{0519_star2}
+    \forall i \neq j: v_i \text{ and } v_j \text{ belong to the same connecected component of } H_{i,j}
+  \end{align}
+  \todo{add pic}
+  Otherwise exchange colours in the connected component containing $v_i$; a proper colouring of $H$ in which $v_i$ and $v_j$ are both coloured by $j$ arises $\lightning$ (\ref{0519_star1})
+  Let $C_{i,j}$ be the connected component of $H_{i,j}$ containing both $v_i$ and $v_j$.
+  \begin{align}\label{0519_star3}
+    \text{We show that } C_{i,j} \text{ is a $v_i$-$v_j$-path}
+  \end{align}
+  \todo{add pic}
+  Indeed, let $P$ be a $v_i$-$v_j$-path in $C_{i,j}$.
+  \todo{add pic}
+  Since $\de_H(v_i) \leq \Delta - 1$, the neighbours of $v_i$ have pairwise different colours;
+  \todo{add pic}
+  otherwise we could recolour $v_i$ in contradiction to (\ref{0519_star1})
+  
+  $\implies \deg_{C_{i,j}}(v_i) = 1$ and analogously $\deg_{C_{i,j}}(v_j) = 1$
+  Then if $C_{i,j} \neq P$, then $P$ has an innner vertex with at least 3 neighbours (in $C_{i,j}$) coloured by the same colour.
+  \todo{add pic}
+  Let $u$ be the first such vertex in the path $P$ from $v_i$ to $v_j$.
+  There are at most $\Delta - 2$ colours used by neighbours of $u$.
+  So recolour $u$ with a colour different from $i$ and $j$ such that the colouring remains feasible.
+  But then $v_i$ and $v_j$ would not belong to the same connected component of $H_{i,j}$ (wrt the new colouring) $\lightning$ (\ref{0519_star2})
+  
+  Last property:
+  \begin{align}\label{0519_star4}
+    \text{For pairwise distinct colours } i,j,k \text{ the path } C_{i,j} \text{ and } C_{i,k} \text{ meet only at } v_i \text{.}
+  \end{align}
+  \todo{add pic}
+  because otherwise there is a vertex $u$ with 2 neighbours coloured $j$ and $k$, respectively.
+  \todo{add pic}
+  $\implies \Delta-2$ colours are used for neighbours of $u$, so $u$ could be recoloured and $v_i, v_j$ would belong to different connected components of $H_{i,j}$ wrt new colouring $\lightning$ (\ref{0519_star2}).
+  
+  Distinguish 2 cases:
+  \begin{enumerate}[label=\alph*)]
+    \item $G[N(v)]$ is a clique:\\
+    \todo{add pic}
+    $N(v) \cup v$ induces a clique $K_{\Delta+1}$ in $G$.
+    Then $G = K_{\Delta+1}$, otherwise if $x \notin N(v) \cup \{v\}$, then $\exists w \in N(v) \cup \{v\}$ such that $\{x,w\} \in E(G)$ and $\deg(w) \geq \deg_{K_{\Delta+1}}(w) + 1 = \Delta + 1$ $\lightning \Delta(G) = \Delta$
+    So $G = K_{\Delta+1} \implies$ this case cannot happen!
+    \item $G[N(v)]$ is not a clique
+    $\exists v_1,v_2 \in N(v)$, $\{v_1,v_2\} \notin E(G)$.
+    Consider path $C_{1,2}$ and let $u \neq v_2$ be the neighbours of $v_1$ in this path.
+    \todo{add pic}
+    So colour of $u$, $c(u)$, is 2; $c(u) = 2$.
+    Interchange colours $1$ and $3$ in $C_{1,3}$ and obtain a new colouring $c^\prime$ of $H$.
+    \todo{add pic}
+    Let $v_i^\prime$, $H_{i,j}^\prime$, $C_{i,j}^\prime$ etc be defined as described above but wrt to $c^\prime$.
+    $v_1$ is coloured now by $3$, $c^\prime(v_1) = 3$ and $u$ is a neighbour of $v_1 \implies u \in C_{2,3}^\prime$
+    \todo{add pic}
+    $C_{1,2}^\circ$ retains its colouring (due to (\ref{0519_star4})).
+    $\implies u \in C_{1,2}^\circ \subseteq C_{1,2}^\prime$ and $u \in C_{2,3}^\prime$ $\lightning$ (\ref{0519_star4}) for colouring $c^\prime$.
+  \end{enumerate}
+  So neither a) nor b) can happen $\lightning$ coming from assumption $\chi(G) > \Delta(G)$.
+  Thus $\chi(G) \leq \Delta(G)$
+\end{proof}
+
+\begin{theorem}[5.6 Erdös 1959]
+  For every $k \in \N$ there exists a graph $G$ with girth $\girth(G) > k$ and chromatic number $\chi(G) > k$.
+\end{theorem}
+
+\begin{proof}
+  No proof.
+\end{proof}
+
+
+\subsection{5.3 Colouring edges}
+
+Trivial lower bounds:
+\begin{enumerate}[label=\alph*)]
+  \item $\chi(G) \geq \Delta(G)$ \todo{add pic}
+  \item $\chi^\prime(G) \geq \lceil \frac{m}{\nu(G)} \rceil$ where $m \coloneqq \abs{E(G)}$
+  and $\nu(G)$ is the matching number (cardinality of largest matching)
+  (Colour classes $E_1,E_2,\dots,E_{\chi^\prime(G)}$ $m = \sum_{i=1}^{\chi^\prime(G)} \abs{E_i} \leq \nu(G) \chi^\prime(G)$)
+\end{enumerate}
+
+\begin{rem}
+  In this subsection, when we talk about \enquote{colouring} we always refer to an \enquote{edge-colouring}.
+\end{rem}
+
+\begin{prop}[5.7 König 1916]
+  Every bipartite graph $G=(U,V,E)$ ($V(G) = U \biguplus V$) satisfies $\chi^\prime(G) = \Delta(G)$.
+  An $\Delta(G)$-edge-colouring can be found in $\bigO{n \cdot m}$ time.
+\end{prop}
+
+\begin{proof}
+  Wlog $G$ is connected (otherwise show it for every connected component and the result would follow for the whole graphs - convince yourself!)
+  This implies, $m = \Omega(n)$. $n \coloneqq \abs{V(G)}$.
+  Start with an empty (edge) colouring extend it by colouring one edge at each step, such a proper partial colouring arises (i.e. colouring which assigns coloours to some edges without conflicts).
+  If we show that every step (colouring of one additional edges) can be done in $\bigO{n}$ time while using $\Delta(G)$ colours, 
+  then we are done.
+  Let $e = \{x,y\} \in E(G)$ not coloured yet. Let $x \in U$, $y \in V$.
+  Consider $G - e$ and $\deg_{G-e}(x) \leq \Delta - 1$, $\deg_{G-e}(y) \leq \Delta -1$
+  \todo{add pic}
+  $\implies$ there is at least one colour in $\{1,2,\dots,\Delta\}$ which is not used for coloured edges of $G-e$. Call such a colour free colour at $x$.
+  Analogously there exists a free colour at $y$.
+  
+  If there is a colour $f_e$ free in $x$ and also in $y$, then colour $e$ by $f_e$.
+  Otherwise, for every colour $\alpha$ which is free in $x$ there exists an edge incident to $y$ coloured by $\alpha$.
+  Analogously, for every colour $\beta$ which is free in $y$ there exists an edge incident to $x$ coloured by $\beta$.
+  
+  Consider $A(\alpha,\beta)$ the subgraph of $G-e$ consisting of edges coloured by $\alpha$ or $\beta$.
+  $\deg_{H_{\alpha,\beta}}(v) \leq 2 \implies$ connected components of $H_{\alpha,\beta}$ are paths or even cycles.
+  $\deg_{H_{\alpha,\beta}}(x) = 1 = \deg_{H_{\alpha,\beta}}(y) \implies x,y$ are endpoints of paths.
+  
+  Can $x,y$ be endpoints of the same path \todo{add pic 18}
+  No because otherwise add cycle in $G$ $\lightning$
+
+  \todo{add pic}
+  Exchange colours either in the path containing $x$ as indepenten or in the path containing $y$ as indepenedent
+  $\implies$ $\beta$ or $\alpha$ will become free for both $x$ and $y$, , respectiviely.
+  Colour $e$ by $\beta$ or $\alpha$.
+\end{proof}
+
+\end{document}

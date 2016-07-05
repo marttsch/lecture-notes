@@ -1,0 +1,198 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+
+\section{Chapter3: Hamiltonian cycles and Hamiltonian graphs}
+\lecture{11.04.2016}
+
+\begin{defi*}
+  A Hamiltonian cycle in $G = (V,E)$ is a cycle $C$ which contains all vertices in $V$. (HC)
+  A graph $G = (V,E)$ is called Hamiltonian if and only if it contains an HC.
+\end{defi*}
+
+\begin{prop}
+  The decision problem Hamiltonian Cycle (HC) is NP-complete
+  \begin{align*}
+    HC \begin{cases} \text{Input Graph } G= (V,E) \\ \text{Question: Is there a HC in } G? \end{cases}
+  \end{align*}
+  Thus,
+  no hope for nice characterizations of existence of HC. Will give some non-trivial sufficient conditions and some rather simple necessary conditions.
+\end{prop}
+
+\begin{lemma}\label{l_3_1}
+  Let $G$ be Hamiltonian graph. Then for all $0 \neq S \subsetneq V$ the graph $G-S$ contains at most $\abs{S}$ connnected components.
+\end{lemma}
+
+\begin{proof}(trivial) 
+  \todo{add pic}
+  Is it sufficient?
+  NO! Counterexample $\rightarrow$ pic \todo{add pic}
+  Not Hamiltonian because every HC should contain the red edges.
+  Thus, central vertx would have degree $\geq 3$ in the cycle $\lightning$.\\
+  Check that condition of Lemma \ref{l_3_1} is fulfilled.
+\end{proof}
+
+\begin{lemma}[Bondy, Chvatal 1976]\label{l_3_2}
+  Let $G=(V,E)$ with $n \coloneqq \abs{V}$ be an undirected graph and let $u,v \in V$, $\{u,v\} \notin E$, such that
+  \[ \de(u) + \de(v) \geq n \text{.} \]
+  Then the following holds, $G$ is Hamiltonian if and only if $G + \{u,v\}$ is Hamiltonian.
+\end{lemma}
+
+\begin{proof}
+  $G$ Hamiltonian $\implies G + \{u,v\}$ is Hamiltonian (trivial)\\
+  Let $G + \{u,v\}$ be Hamiltonian $\implies \exists$ HC $C$ in $G + \{u,v\}$.
+  If $e = \{u,v\} \notin E(C)$ then $C$ is a HC in $G$. $\checkmark$\\
+  Assume w.l.o.g. $e \in E(C)$. Let $C = (u \eqqcolon v_1,v_2,\dots,v_n \coloneqq v)$.
+  \todo{add pic}
+  Claim: It is enough to find an index $i \in \{2,\dots,n-2\}$ such that $e_R \coloneqq \{u,v_{i+1}\} \in E$ and $e_L \coloneqq \{v_i,v\} \in E$.
+  Instead let $C^\prime$ such that $E(C^\prime) \coloneqq (E(C) \setminus \{\{u,v\},\{v_i,v_{i+1}\}\}) \cup \{e_R,e_L\}$
+  $C^\prime$ is then a cycle of length $n$, i.e. a HC In $G$.\\
+  Now show that such index $i$ always exists.
+  Let $R \coloneqq \{i: 2 \leq i \leq n-2, \{u,v_{i+1}\} \in E \}$, $L \coloneqq \{i: 2 \leq i \leq n-2, \{v_i,v\} \in E \}$.
+  \[ L \cup R \subseteq \{2,\dots,n-2\} \implies \abs{L \cup R} \leq n-3 \]
+  \[ \abs{R} \coloneqq \abs{N(u) \setminus \{v_2\}} = \de(u) -1 \]
+  \[ \abs{L} \coloneqq \abs{N(v) \setminus \{v_{n-2}\}} = \de(v) - 1 \]
+  Then 
+  \[ \abs{R} + \abs{L}  = \de(u) - 1 + \de(v) - 1 \geq n - 2 \]
+  Thus $\abs{R} + \abs{L} > \abs{R \cup L} \implies R \cap L \neq \emptyset$.
+  Let $i \in R \cap L$ there the edges $e_R$ and $e_l$ as above exist and the pair-exchange argument applies.
+\end{proof}
+
+\begin{defi*}
+  The $k$-th \emph{Hamiltonian hull $H_k(G)$} of a graph $G$ is recursively defined as follows:
+  \begin{itemize}
+    \item If there are non-adjecent vertices $u,v \in V$ with $\de(u) + \de(v) \geq k$,
+    then let $H_k(G) \coloneqq H_k(G \cup \{u,v\})$, otherwise $H_k(G) = G$.
+  \end{itemize}
+\end{defi*}
+
+\begin{lemma}\label{l_3_3}
+  The $k$-th Hamiltonian Hull of graph $G$ is well defined.
+\end{lemma}
+
+\begin{proof}
+  \enquote{well defined}  means the result $H_k(G)$ does not depend on the order in which the edges are throw in.
+  Assume the contrary, i.e.
+  \[ G_1 \coloneqq (V, E \uplus \{f,\dots,f_{l_1}\}) \]
+  and
+  \[ G_2 \coloneqq (V, E \uplus \{g_1,g_2,\dots,g_{l_2}\}) \]
+  be two $k$-th Hamiltonian hulls of $G$ obtained by adding edges $f_1,\dots,f_{l_1}$ and $g_1,\dots,g_{l_2}$, respectively.
+  Assume wlog $l_1 \geq l_2$. Assume $G_1 \neq G_2$.
+  Let $f_i = \{x,y\}$ be the first edge in the sequence $f_1,\dots,f_{l_1}$ such that $f_i \not in E(G_2)$ (it exists because $G_1 \neq G_2$, $l_1 \geq l_2$).\\
+  Consider $H \coloneqq (V,E \cup \{f_1,\dots,f_{i-1})$.
+  According to definition of $G_1$: $f_i \notin E(H)$, $\de(x) + \de(y) \geq k$.
+  Since $H$ is a subgraph of $G_2$ and $\de_H(x) + \de_H(y) \geq k \implies \de_{G_2}(x) + \de_{G_2}(y) \geq k$.
+  Since, moreover, $f_2 \in E(G_2)$, we would have to still add $f_i$ to $G_2$ so $G_2 \neq H_k(G)$ according to the definition. $\lightning$
+\end{proof}
+
+\begin{theorem}[Bondy, Chvatal 1976]\label{th_3_4}
+  A graph is Hamiltonian if and only if its $n$-th Hamiltonian hull is Hamiltonian.
+\end{theorem}
+
+Since a complete graph $K_n$ is Hamiltonian if $n \geq 3$ we get
+
+\begin{cor}[of Theorem \ref{th_3_4}; Ore 1960]\label{cor_1_th_3_4}
+  If in a graph $G$ with $n \coloneqq \abs{V(G)}$, $n \geq 3$, $\de(v) + \de(u) \geq n$ holds for every $u,v \in V$, $\{u,v\} \notin E(G)$, then $G$ is Hamiltonian.
+\end{cor}
+
+\begin{cor}[of Theorem \ref{th_3_4}; Dirac 1952]\label{cor_2_th_3_4}
+  A graph $G$ with $n \coloneqq \abs{V(G)}$ and $\delta(G) \geq \frac{n}{2}$ is Hamiltonian.
+\end{cor}
+
+This bound is best possible.
+\begin{exs}
+  \begin{enumerate}
+    \item E.g. there exists a graph with $\delta(G) = \frac{n}{2} - 1$ which are not Hamiltonian, which are even not connected.
+    \todo{add pic}
+    \item $K_{r,r+1}$ with $n = 2r+1$
+    \todo{add pic}
+    $\delta(K_{r,r+1}) \coloneqq r = \frac{n-1}{2}$.\\
+    Is $K_{r,r+1}$ Hamiltonian: no cycle of odd length, in particular no cycle of length $2r+1$ exists in $G$ implies $H$ not Hamiltonian.
+  \end{enumerate}
+\end{exs}
+
+\begin{theorem}[Chvatas, Erdös 1972]\label{th_3_5}
+  For a graph $G$ with $n = \abs{V(G)} \geq 3$ the implication \enquote{$k(G) \geq \alpha(G) \implies G$ is Hamiltonian} holds,
+  where $\alpha(G)$ is in the stability number of $G$, i.e. 
+  \[ \alpha(G) \coloneqq \max\{\abs{S}: S \subseteq V(G), G[S] \text{ has no edges}\} \text{.} \]
+\end{theorem}
+
+\begin{proof}
+  $\alpha(G) = 1 \implies G = K_{\abs{G}}$ is Hamiltonian $\checkmark$ \\
+  wlog $\alpha(G) \geq 2$ and let $C$ be a cycle in $G$.
+  If $\abs{V(C)} < n$, consider $G[ V \setminus V(C)] = G - C$ and let $S$ be a connected component of $G - C$.
+  Let
+  \[ T \coloneqq C \cap \left( \bigcup_{s \in S} N(s) \right) \]
+  \todo{add pic}
+  Since $k(G) \geq \alpha(G) \geq 2$, $\abs{T} \geq 2$ because $T$ is a separator.
+  Since $G[S]$ is connected we have: for all $v_1,v_2 \in T$ there exists a $v_1$-$v_2$-path which only uses inner vertices from $S$.
+  Let $C = (v_1,v_2,\dots,v_l,v_1)$ and denote by $v_i^\ast$ the direct successor of $v_i$ in $C$.
+  If for some $v_i \in T$ also $v_i^\ast \in T$, then extend the cycle $C$ (as in the picture,
+  \todo{add pic}
+  add at least two green edges and remove one edge $\{v_i,v_i^\ast\}$.)
+  The cycle can also be extended if $\{v_i^\ast,v_j^\ast\} \in E$ for some $v_i,v_j \in T$.
+  \todo{add pic}
+  Indeed consider $C^\prime \coloneqq ( C \setminus \{\{v_i,v_i^\ast\},\{v_j,v_j^\ast\}\}) \cup \{v_i^\ast,v_j^\ast\} \cup v_i$-$v_j$-path.
+  $C^\prime$ is longer because we add at least 3 green edges and remove exactly two.
+  
+  We show: $k(G) \geq \alpha(G)$ implies the existence of two vertices $v_i^\ast, v_j^\ast$ as above as long as $\abs{V(G)} < n$.
+  Indeed, let $T^\ast \coloneqq \{ t^\ast: t \in T\}$ and let $\abs{V(C)} < n$.
+  Assume by contradiction that $C$ cannot be extended further as above.
+  Then, 
+  \begin{align}\label{0411_1}
+    \{s,t^\ast\} \notin E \text{ for all } s \in S \text{ and for all } t \in T \text{.}
+  \end{align}
+  \todo{add pic}
+  $t^\ast$ is not connected to $S$ otherwise we it can be extended.
+  Thus, 
+  \begin{align}\label{0411_2}
+    \abs{T^\ast} = \abs{T} \text{ and } T^\ast \text{ is a stable set }
+  \end{align}
+  because if $\{v_i^\ast,v_j^\ast\} \in E$, $v_i^\ast,v_j^\ast \in T$ can extend above.
+  And \ref{0411_1} and \ref{0411_2} implies $T^\ast \cup \{s\}$ stable set
+  
+  But $T$ is a separator in $G \implies k(G) \leq \abs{T} = \abs{T^\ast} < \abs{T^\ast} + 1 = \abs{T^\ast \cup \{s\}} < \alpha(G)$.
+\end{proof}
+
+\begin{rem}
+  Thus result is best possible.
+\end{rem}
+
+There are graphs with $k(G) = \alpha(G) -1$ which are not Ham. e.g. the Petersen graph (details in exercises)
+$K_{r,r+1}$ is a \enquote{best possible} example.
+
+If $\lambda(G) \geq \alpha(G)$ holds, $G$ does not have to be Hamiltonian.
+
+\begin{ex}
+  \todo{add pic}
+  $\lambda(G) = \alpha(G) = 2$ and $G$ not Hamiltonian.
+\end{ex}
+
+\begin{cor}
+  There exists an $\bigO(n m)$ algorithm which either want a Hamiltonian cycle in $G$ for findes a stabel set $S$ and a separator $T$ in $G$ with $\abs{T} \leq \abs{S}$.
+  ($k(G) \leq \abs{T} \leq \abs{S} \leq \alpha(G)$)
+  (exercises)
+\end{cor}
+
+\begin{prop}[Bondy 1978]\label{prop_3_6}
+  Let $G$ be a graph, $\abs{V(G)} \geq 3$, and $\de(u) + \de(v) \geq n$ for all $u,v \in V(G)$ with $\{u,v\} \notin E$.
+  Then $k(G) \geq \alpha(G)$ holds.
+\end{prop}
+
+\begin{proof}
+  Show $\abs{S} \leq \abs{A}$ for all stable sets $S$ and every separator $A$.
+  Let $S,A$ be an arbitrary stable set and an arbitrary separator, respectively.
+  If $S \subseteq A$ $\checkmark$
+  Assume wlog $S \nsubseteq A$. Let $X$ be a connected component of $G-A$ with $X \cap S \neq \emptyset$
+  \todo{add pic}
+  Let $x \in S \cup X$ and let $Y \coloneqq V \setminus (A \cup X)$.
+  $Y \neq \emptyset$ because $A$ separator, so there exists at least one connected component different from $X$.
+  2 Cases:
+  \begin{enumerate}
+    \item $S \cup Y = \emptyset$. Let $y \in Y$ arbitrary.
+    $\{x,y\} \notin E(G) \implies \de(x) + \de(y) \geq n$
+    \[ n \leq \de(x) + \de(y) = \abs{N_G(x)} + \abs{N_G(y)} \leq \underbrace{\abs{(X \cup A) \setminus S}}_{\geq \de_G(x)} + \underbrace{\abs{Y} + \abs{A} - 1}_{\geq \de_G(y)} = n - \abs{S} + \abs{A} - 1 \]
+    Thus, $\abs{S} \leq \abs{A} - 1$.
+  \end{enumerate}
+\end{proof}
+
+\end{document}

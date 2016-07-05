@@ -1,0 +1,164 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{02.05.2016}
+
+\begin{enumerate}
+  \item[2.] $G$ is 3-connected\\
+  By Lemma \ref{l_2_6}, there exists an $e \in E(G)$ such that $G|e$ is 3-connected. Let $z$ be the vertex representing $e = \{x,y\}$ in $G|e$.
+  \\
+  By Lemma \ref{l_4_9}, $G|e$ has no subdivision of $K_{3,3}$ and no subdivision of $K_5$ (otherwise also $G$ would have such a subdivision).
+  \\
+  By induction assumption, $G|e$ is planar. Consider a planar embedding of $G»e$ with $z$ not in the interior of the outer face.
+  Let $C$ be a cycle which is the border of smallest union of faces containing $z$.
+  \todo{add pic}
+  Let $x_1,\dots,x_k$ be the neighbours of $x$ in $C$. (all neighbours of $x$ which are also neighbours of $z$ in $G|e$ have to lie in $C$) in cyclical order.
+  Let $P_i$ be the unique subpath joining $x_i$ and $x_{i+1}$ in $C$, where $x_{k+1} \coloneqq x_1$.
+  \todo{add pic}
+  \[ \deg_{G|e}(z) \geq 3 \text{.} \]
+  and $\deg_G(y) \geq 3$.
+  Assume all neighbours of $y$ different from $x$ lie in one of theses paths $P_i$.
+  \todo{add pic 2 -red}
+  Then we can extedn planar embedding of $G|e$ to a planar embedding of $G$ $\checkmark$
+  
+  Now we show that the assumptions of the theorem exclude all other possibilities for neighbours of $y$.
+  What are other theoretical possibilities?
+  The negation of what we have:
+  For all $i$ there exists a neighbour of $y$ different from $x$ in $V(P_i)$ and there exists a neighbour of $y$ (different form $x$) which is not in $V(P_i)$.
+  \begin{enumerate}
+    \item $\deg_G(y) = 3$ 
+    \todo{add pic}
+    Let end vertices of $P_i$ be $u$ and $v$.
+    The blue-green vertices lead to a subdivision of $K_{3,3}$ in $G$ $\lightning$
+    \item $\deg_G(y) \geq 4$ \todo{add pic}
+    Let $u,v,w$ be three neighbours of $y$ in $C$.
+    If $u,v,w$ are also neighbours of $x$ then subdivision of $K_5$ $\lightning$. \todo{pic 4 pencil drawing}
+    If $N_G(y) \setminus \{x\} \nsubseteq \{x_1,\dots,x_k\}$,
+    there exists a $u \in N_G(y) \setminus \{x\}$ wich is an inner point of same $P_i$
+    there exists a $v \in \N_G(y) \setminus \{x\}$ with $v \notin V(P_i)$ because o.w. We would be in the same case as before (there exists an $i$ s.t. $\de_G(y) \setminus \{x\} \subseteq V(P_i)$)
+    \todo{add pic}
+    blue-green vertices yield a subdivision of $K_{3,3}$ in $G$.
+  \end{enumerate}
+\end{enumerate}
+Proof end $\blacksquare$
+
+\begin{defi*}
+  A graph $G$ contains a graph $H$ as a minor, $G \succ H$ if $G$ contains a sub-graph $H^\prime$ which can be contracted to $H$, i.e. it is possible to obtains $H$ starting with $H^\prime$ and applying a consecutive contraction of edges.
+  \todo{add pic}
+\end{defi*}
+
+\begin{rem}
+  \begin{enumerate}
+    \item Relation \enquote{$\succ$} in the set of graphs is transitive. $H_1 \prec H_2$ and $H_2 \prec H_3$ imply $H_1 \prec H_3$ (convince yourself, homework!)
+    \item If $G$ contains a subdivision of $H$, then $G$ contains $H$ as a minor.
+    \todo{add pic}
+    The converse is not true (in general).
+    \todo{add pic} $G \succ K_5$ (minor) but not as a subdivision
+    Why no subdivision?
+    Every subdivision of $K_5$ has at least 6 vertices and 5 vertices are of degree 4.
+    But there are only 4 vertices of $G$ of degree 4 $\lightning$
+  \end{enumerate}
+\end{rem}
+
+\begin{theorem}[4.10?]
+  \begin{enumerate}[label=(\alph*)]
+    \item Let $G$ and $H$ be connected graphs.
+    Then $G \succ H$ if and only if there exists a mapping $\phi: V(G) \to V(H)$ such that for the pre-images $\inv{\phi}(v)$ for $v \in V(H)$ the following hold
+    \begin{enumerate}%[label=*.] number
+      \item[1.] $G[\inv{\phi}(v)]$ is connected for all $v \in V(H)$
+      \item[2.] For all $\{x,y\} \in E(H)$ there the cut $\delta(\inv{\phi}(u),\inv{\phi}(v))$ is non empty.
+    \end{enumerate}
+    \item If $\Delta(H) \leq 3$ then $G \succ H$ if and only if $G$ contains $H$ as a subdivision.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  As an exercise.
+\end{proof}
+
+\begin{cor}
+  A graph $G$ is planar if and only if $G$ contains neither $K_5$ nor $K_{3,3}$ as a minor.
+\end{cor}
+
+\begin{proof}
+  Since every minor of a planar graph is planar, direction $\Rightarrow$ is trivial.
+  \\
+  $\Leftarrow$ $G$ has neither $K_5$ or $K_{3,3}$ as a minor. Then $G$ has neither a subdivision of $K_5$ nor a subdivision of $K_{3,3}$ (Remark 2).
+  Thus by Kuratowski, $G$ is planar.
+\end{proof}
+
+\subsection{4.3 Duality in planar graphs}
+
+\begin{defi*}
+  Let $G = (V,E)$ be a planar graph and $G = (V,E,\mathcal{R})$ be a planar embedding of $G$ with set of regions (faces) $\mathcal{R}$.
+  The \emph{geometric dual} $G^\ast$ of $G$ is a triple $G^\ast = (V^\ast = \mathcal{R},E^\ast,\mathcal{R}^\ast)$ obtained as follows.
+  Choose one vertex in the interior of every region of $G$.
+  For every $e \in E$ connect by a Jordan curve $e^\ast$ the vertices chosen in the regions having $e$ in their borders such that 
+  \begin{enumerate}[label=\alph*)]
+    \item $e^\ast$ intersects $e$ in an inner point and
+    \item $e^\ast$ is contained in the union of the two regions mentioned above.
+  \end{enumerate}
+  If $e$ is a bride, then $e^\ast$ is a loop.
+\end{defi*}
+
+\begin{ex}
+  \todo{add pic}
+\end{ex}
+
+\begin{rem}
+  \begin{enumerate}
+    \item There exists a bijection between $E$ and $E^\ast$.
+    \item $G^\ast$ is (in general) a multi-graph with loops and multiple edges.
+    \item $e \in E$ is a bridge if and only if $e^\ast$ is a loop \\
+    there are multiple edges between two vertices $R_1$ and $R_2$ in $G^\ast$ if and only if $R_1$ and $R_2$ as regions in $G$ have more than 1 common edge in their borders.
+    \item $G^\ast$ depends on the embedding of $G$. \\
+    But the geometric duals correspond to equivalent embeddings are isomorphic  (exercises)
+    \item geometric dual is a connected multi-graph
+  \end{enumerate}
+\end{rem}
+
+\begin{defi*}
+  A planar graph $G$ is called \emph{self dual} if it is isomorphic to any of its geometric duals.
+\end{defi*}
+
+\begin{ex}
+  \todo{add pic}
+\end{ex}
+
+\subsubsection{4.3.1 connectivity and polyhedral graphs}
+
+Observation: A 2-edge connected planar graph has a geometric dual without loops.
+The geometric dual of a graph is not necessarily 2-connected, just connected for sure.
+
+\begin{ex}
+  \todo{add pic}
+  $G^\ast$ is not 2-connected (because empty graph is by def not connected)
+\end{ex}
+
+\begin{prop}[4.11]\label{p_4_11}
+  A 2-connected planar graph $G=(V,E,R)$ with at least 3 faces has a 2-connected geometric dual $G^\ast$.
+\end{prop}
+
+\begin{proof}
+  If $G$ has exactly 3 regions, then $G^\ast$ is isomorphic to $K_3$ with some multiple edge possible, so it is 3-connected.\\
+  Assume $\abs{\mathcal{R}} \geq 4$. \\
+  We show every 2 edges $e^\ast$ and $f^\ast$ which are not parallel (parallel edges have the same end points)
+  lie in a common cycle. (enough because there exist equivalence relation... see exercise 9).
+  \begin{enumerate}[label=\alph*)]
+    \item Let $e^\ast \cap f^\ast = \{x\}$, $x \in \mathcal{R}$.
+    \todo{add pic}
+    Consider the border $C$ of $x$ and run over it in clockwise order starting at $e$.
+    Since $G$ is 2-connected $C$ is a cycle.
+    Let $C = (e_1 = e,e_2,\dots,e_k=f,...)$.
+    Let $R_1,R_2,\dots,R_k$ be the regions of $G$ having the edges $e_1,\dots,e_k$ in their common border with $x$.
+    Any two consecutive regions in this sequence share a border edge; let $e_1^\ast,e_2^\ast,\dots,e_k^\ast$ be the sequence of the corresponding edges in $G^\ast$.
+    $e_1^\ast,e_2^\ast,\dots,e_k^\ast$ is a cycle.
+    \item $e^\ast \cap f^\ast = \emptyset$
+    \todo{add pic}
+    $e,f$ lie in a common cycle in $G$ (because $G$ is 2-connected)
+    This cycle divides the plane in which $G$ is drawn in an inner area and an outer area.
+    Both in the inner area and in the outer area there is a chain of regions of $G$ which \enquote{connect} $e^\ast$ and $f^\ast$.
+    These two chains form the required cycle in $G$.
+  \end{enumerate}
+\end{proof}
+
+\end{document}

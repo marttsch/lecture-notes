@@ -1,0 +1,194 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{30.05.2016}
+
+\begin{itemize}
+   \item $G$ bipartite $\implies$ $\chi^\prime(G) = \Delta(G)$ $\checkmark$
+   \item a $\Delta(G)$-edge coloring can be constucted in $\bigO(nm)$ time ($n \coloneqq \abs{V(G)}, m \coloneqq \abs{E(G)}$)
+\end{itemize}
+
+\todo{add pic}
+missing colour at a vertex $v$ is a color which is not used for edges incident to $v$ and already coloured.
+Let $a$ missing in $x$, let $b$ missing in $y$; $H_{a,b}$ consists of edges with colour $a$ or $b$, is a disjoint union of paths and cycles.
+Both $x,y$ are endpoints of path in $H_{a,b}$, not of the same path, consider \todo{add pic}
+
+The colours $f$ (the one missing in both $x$ and $y$, if any), $a$, $b$ can be determined in $\bigO(\deg(x)+\deg(y))$
+$P_{a,b}$ can be computed in $\bigO(n)$ if we use array 
+\[ Neighbour(v,f) = \begin{cases}  w \in V(G) \text{ s.t. } c(\{v,w\}) = f & v \in V(G) \\ 0 & \forall v \in V(G) \end{cases} \]
+
+Also the minalisation by $Neigbour(v,f) \coloneqq 0$ for all $v_i \simeq f$ is done in $\bigO(nm)$ time
+Update of $Neigbour(v,f)$ can also be done in $\bigO(n)$ time per edge newly colourd.
+Need to update just for $f = a$ and $f = b$: so compare effort per edge is $\bigO(n)$ with $m$ edges results in $\bigO(nm)$
+
+\begin{theorem}[5.8 Vizing 1964]
+  For every graph $G$, $\Delta(G) \leq \chi^\prime(G) \leq \Delta(G) + 1$ holds.
+\end{theorem}
+
+\begin{proof}
+  (constuctive)
+  
+  Need to prove upper bound: Induction on $\abs{E(G)}$. Induction basis $\abs{E(G)} = 0$: $\chi^\prime(G) = 0 \leq \underbrace{\Delta(G)}_{=0} + 1$.
+  Induction step: Consider $G$ with $\abs{E(G)} \geq 1$ and assume statement holds for graph with $\leq \abs{E(G)} - 1$ edges.
+  Colouring $\equiv (\Delta(G) + 1)$-edge-colouring; $\alpha$-edge $\equiv$ edge coloured by colour $\alpha$
+  
+  Let $e \in E(G)$. $G-e$ is edge colourable by $\Delta(G-e) + 1 \leq \Delta(G) +1$ colours.
+  Consider such a colouring $c$ of $G-e$.
+  \todo{add pic}
+  For all $v \in V(G)$ we have $\deg(v) \leq \Delta(G) < \Delta(G) + 1 \implies $ there esists a colouring missing in $v$.
+  Denote $F_v$ set of missing colours in $v$ for all $v \in V(G)$
+  \todo{add pic}
+  If $F_x \cap F_y \neq \emptyset$, then take $f \in F_x \cap F_y$ and colour $e$ by $f$.
+  It results a colouring of $G$.
+  Assume $F_x \cap F_y = \emptyset$. Let $b \in F_y$.
+  since $b \notin F_x$, there exists $y^\prime \in V(G)$ such that $\{x,y	\prime\} \in E(G)$, $c(x,y^\prime) = b$.
+  Let $b^\prime \in F_{y^\prime}$. If $b^\prime \in F_x$, change colour of $\{x,y^\prime\}$ to $b^\prime$ and use $b$ to colour $\{x,y\}$ $\checkmark$
+  If not, repeat everything at $y^{\prime\prime}$.
+  
+  In general, construct a sequence $\{y_j, 1 \leq j \leq k\} \subseteq T(x)$ of neighbours of $x$ and a sequence $\{b_j, 1 \leq j \leq k\} \subseteq \{1,2,\dots,\Delta(G)+1\}$ of colour, such that 
+  \begin{enumerate}
+    \item $y_1 = y$, $b_1 = b$
+    \item For every $1 \leq j \leq k-1$ $c(\{x,y_{j+1}\}) = b_j$
+    \item $y_1,y_2,\dots,y_k$ are pairwise different.
+  \end{enumerate}
+  
+  When will the construction of such a sequence stop?
+  If in step $k$ we see that $\{x,y_k\}$ can be recoloured by $f$ ($F_x \cap F_y \neq \emptyset$, $f \in F_x \cap F_y$)
+  Then we recolour als the other edges $\{x,y_j\}$, $1 \leq j \leq k-1$, as follows
+  
+  \todo{algorithm start}
+  ColourShift(k,f)
+  begin
+    \[ c(\{x,y_k\}) = f \]
+    For $j = k-1$ downto $1$ do
+      \[ c(\{x,y_j\}) = b_j \]
+  end
+  \todo{algorithm end}
+  
+  Afterwards colour $b$ because $a$ missing colour in $x$ and we can colour $\{x,y\}$ by $b$ $\checkmark$
+  
+  The construction also stops if 
+  \[ y_k \in \{y_2,\dots,y_{k-2}\} \]
+  \\
+  
+  Construct the sequences as follows
+  \todo{algorithm start}
+  $k=0$, $y_1 = y$
+  Repeat
+    \[ k \coloneqq k+1 \]
+    choose $b_k \in F_{y_k}$
+    If $b_k \in F_x$ then begin
+      ColourShift($k,b_k$)
+      exit
+    end
+    else begin
+        \[ y_{k+1} \coloneqq \text{ the neighbour of } x \text{ such that } c(\{x,y_{k+1}\}) = b_k \]
+    end
+  until $y_{k+1} \in \{y_1,\dots,y_k\}$
+  \todo{algorithm end}
+  
+  Note that \enquote{repeat} will perform at most $\deg(x)$ times.
+  
+  Assume $\enquote{repeate}$ is not terminated with exit.
+  How to colour $\{x,y\}$ in this case?
+  There exists an $i \in \{2,\dots,k-1\}$ such that 
+  \[ y_{k+1} = y_i \iff b_k = b_{i-1} \]
+  where $b_k$ is colour of $\{x,y_{k+1}\}$ and $b_{i-1}$ colour of $\{x,y_i\}$.
+  
+  Let $a \in F_x$. Denote by $H_{a,b_k}$ the subgraph of $G$ consitsing of 4dges coloured by $a$ or $b_k$.
+  $H_{a,b_k}$ is disjiont union of paths and cycles.
+  Since $b_k \in F_{y_k}$, degree of $y_k$ in subgraph is $\leq 1$.
+  Thus, $y_k$ is an endpoint of a path. (Could be empty)
+  
+  Let $z$ be the other endpoint of $P$.
+  Distinguish 3 cases.
+  \begin{enumerate}
+    \item $z= y_{i-1}$. $b_k = b_{i-1} \in F_{y-1}$ \todo{add pic}
+    Complete colouring by applying ColorShift($i-1,a$).
+    \item $z = x$. \todo{add pic}
+    Switch colour in $P$ and ColorShift($k,a$)
+    \item $z \notin \{x,y_{i-1}\}$. \todo{add pic}
+    Switch colours in $P$, ColorShift($k,a$)
+  \end{enumerate}
+  If $P = \{y_k\}$, then $a \in F_{y_k}$ and do Color Shift($k,a$).
+\end{proof}
+
+\begin{cor}
+  Every graph $G$ can be edge-coloured by $\Delta(G) + 1$ colours in $\bigO(nm)$ time.
+\end{cor}
+
+\begin{proof}
+  Need to show that after starting with empty colouring the edges can be coloured one edge at a time in $\bigO(n)$ time per edge.
+  
+  Colour an edge by applying ColorShift after having constructed the sequence. 
+  Show that both can be done in $\bigO(n)$ time.
+  
+  The arrays:
+  \begin{enumerate}
+    \item MissingColour($v$) $\in F_v$ for all $v \in V(G)$
+    \item Neighbour($v,f$) = $\begin{cases} 0 & f \in F_v \\ u & \text{ if } \{v,u\} \in E(G), c(\{v,u\}) = f \end{cases}$
+    for all $v \in V(G)$, for all $f \in \{1,\dots,\Delta(G)+1\}$
+    \item SequenceEntry($v$) = $\begin{cases} 0 & v \notin \{y_1,\dots,y_k\} \\ i & v = y_i \end{cases}$ for all $v \in V(G)$
+  \end{enumerate}
+  
+  Initialisation: MissingColor($v$) = 1 for all $v \in V(G)$, Neighbour $\equiv 0$, SequenceEntry $\equiv 0$\\
+  For every edge $e$ (to be coloured): All operations in Repeat, excluding ColorShift need at most $\bigO(\Delta(G)) = \bigO(n)$ times.
+  ColorShift: $\bigO(\Delta(G)) = \bigO(n)$ because sequence has length $\leq \deg(x) \leq \Delta(G)$.
+  
+  It remains to show that the arrays can be updated in $\bigO(n)$ after the colouring of each edge.
+  \todo{add pic}
+  Neighbour($x,f$) has to be updated, $\bigO(\Delta(G)) = \bigO(n)$ time.
+  Neighbour($y,b$), Neighbour($y_2,b_2$), Neighbour($y_2,b_1$),...,Neighbour($y_k,b_k$),Neighbour($y_k,b_{k-1}$)
+  $\bigO(2 \cdot \deg(x)) = \bigO(\Delta(G)) = \bigO(n)$
+  
+  MissingColour($y_k$) = $b_{k-1}$,...,MissingColour($y_2$) = $b_1$; $\bigO(\deg(x))$ vertices constant time each thus $\bigO(n)$
+  MissingColour($x$), MissingColour($y$); just 2 vertices, check every colour, $\bigO(\Delta(G) + 1) = \bigO(n)$
+  
+  SequenceEntry($y_{k+1}$) = $k+1$ in repeat $\bigO(\Delta(G))$ time = $\bigO(n)$
+  
+  (to be reinitialized by $0$ after the colouring of every edge, else $\bigO(n)$ time).
+\end{proof}
+
+\begin{defi*}
+  A graph $G$ belongs to class 1 (\enquote{is a class-1-graph}) if $\chi^\prime(G) = \Delta(G)$.
+  A graph $G$ belongs to class 2 (\enquote{is a class-2-graph}) if $\chi^\prime(G) = \Delta(G) + 1$.
+\end{defi*}
+
+\begin{ex}
+  bipartiete graphs are class 1, $C_{2n}$ is class 1, $C_{2n+1}$ is class 2, $K_n$ can be also classified depending on parity of $n$ (Exercise)
+\end{ex}
+
+\begin{lemma}
+  A regular graph $G$ belongs to class 1 if and only if it is \emph{one-factisable}, i.e. $E(G) = \biguplus_{i \in I} M_i$ where $M_i$ is a p. Matching of $G$, for all $i \in I$.
+\end{lemma}
+
+\begin{proof}
+  Exercise
+\end{proof}
+
+\begin{lemma}
+  A graph $G$ with $m = \abs{E(G)} > \Delta(G) \nu(G)$ is a class 2 graph.
+\end{lemma}
+
+\begin{proof}
+  \begin{align*}
+    \chi^\prime(G) \geq \lceil \frac{m}{\nu(G)} \rceil \geq \frac{m}{\nu(G)} > \frac{\Delta(G) \nu(G)}{\nu(G)} = \Delta(G) \\
+    \overset{\text{Vizing}}{\implies} \chi^\prime(G) = \Delta(G) + 1 \text{ (class 2)}
+  \end{align*}
+\end{proof}
+
+\begin{theorem}[5.9 Frieze, Jackson, McDiarmid, Reed 1988]
+  Let $p_n$ be the percentage of class 2 graphs on $n$ nodes where the nodes are numbered and the numbering is fixed.
+  Then for every $\varepsilon > 0$ and $n$ large enough the inequalities
+  \[ n^{-(\frac{1}{2} + \varepsilon) n} < p_n < n^{-(\frac{1}{8} - \varepsilon) n} \]
+  holds.
+\end{theorem}
+
+\begin{proof}
+  No proof.
+\end{proof}
+
+Means class 2 graphs are a rare phenomenon. It is based on a result of Erdös and Wilson (1977) who have shown:
+
+The percentage of graphs with $n$ nodes (fixed numbering) which have more than one node of degree $\Delta(G)$ tends to $0$ as $n \to \infty$.
+
+\end{document}

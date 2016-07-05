@@ -1,0 +1,200 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{03.04.2016}
+
+\begin{defi*}
+  A vertex $v$ of $G$ is called central if and only if the greatest distance of $v$ from any other vertex in $G$ is as small as possible
+  \begin{align*}
+    \min_{x \in V(G)} \max_{y \in V(G)} \dist(x,y) = \max_{y \in V(G)} \dist(v,y) \text{.}
+  \end{align*}
+  Radius of $G$ 
+  \begin{align*}
+    \rad(G) \coloneqq \min_{x \in V(G)} \max_{y \in V(G)} \dist_G(x,y)
+  \end{align*}
+\end{defi*}
+
+Observe: 
+\[ \rad(G) \leq \diam(G) \leq 2 \cdot \rad(G) \]
+(Exercise or homework)
+
+\begin{prop}
+  If $\rad(G) \leq k$ and $\Delta(G) \leq d$ with $d \geq 3$, then
+  \[ \abs{V(G)} \leq \frac{d}{d-2} (d-1)^k \text{.} \]
+\end{prop}
+
+\begin{proof}
+  Let $z$ be a central vertex in $G$ and let $D_i$ be the set of vertices of distance $i$ from $z$.
+  \begin{align}
+    V(G) &= \bigcap_{i=0}^k D_i \;\;\; \abs{V(G)} = \sum_{i=0}^k \abs{D_i} \label{doublestar1}\\
+    \abs{D_0} &= 1 \;\;\; D_0 = \{z\} \\
+    \abs{D_1} &\leq d
+  \end{align}
+  \begin{align}
+    \abs{D_{i+1}} \leq (d-1) \abs{D_i} \: \forall 1 \leq i \leq k-1 \label{star1} \\
+    [ \abs{D_i} \leq (d-1)^{i-1} d ]
+  \end{align}
+  \todo{add pic}
+  (\ref{star1}) because every $x \in D_{i+1}$ is a neighbour of some $y \in D_i$ and $\deg(y) \leq d$ and there exists a neighbour of $y$ in $D_{i+1}$, therefore
+  \[ \deg_{D_{i+1}}(y) \leq d-1 \]
+  Plug (\ref{star1}) in (\ref{doublestar1}):
+  \begin{align*}
+    \abs{V(G)} &= 1 + \sum_{i=1}^k \abs{D_i} \\
+    &\leq 1 + \sum_{i=1}^k d (d-1)^i = 1 + d \sum_{i=0}^{k-1} (d-1)^i \\
+    &= 1 + d \frac{(d-1)^k - 1}{d - 2} = 1 + \frac{d(d-1)^k}{d-2} - \frac{d}{d-2} \\
+    &\leq \frac{d(d-1)^k}{d-2}
+  \end{align*}
+  Analogously, one gets lower bounds for $\abs{V(G)}$ if $\delta(G)$ and $\rad(G)$ or $\girth(G)$ are large.
+  Similar results also if $\delta(G)$ is replaced by $\de(G)$
+\end{proof}
+
+\begin{theorem}[Alon, Hoory and Linial 2002]
+  Let $G$ be a graph with $\de(G) \geq d \geq 2$ and $\girth(G) \geq g$, $g \in \N$, then
+  \[ \abs{G} = \abs{V(G)} \geq n(d,g) \text{,} \]
+  where $n(d,g) \coloneqq 1 + d \sum_{i=0}^{r-1} (d-1)^i$ if $g = 2 r + 1$ (odd) and 
+  $n(d,g) \coloneqq 2 \sum_{i=0}^{r-1} (d-1)^i$ if $g = 2r$ (even).
+\end{theorem}
+
+\begin{proof}
+  No proof.
+\end{proof}
+
+A \emph{walk of length $k$} in a graph $G$ is a non-empty alternating sequence of vertices and edges $v_0,e_0,v_1,e_1,\dots,e_{k-1},v_k$ where $e_i = \{v_i,v_{i+1}\} \in E(G)$ for all $0 \leq i \leq k-1$
+if $v_0 = v_k$ the \emph{walk is closed}.
+A walk with parwise distinct vertices is a path.
+
+\subsection{Connectivity}
+
+A non-empty graph is \emph{connected} if any two vertices $x$ and $y$ are joined by a $x$-$y$-path in $G$.
+If $U \subseteq V(G)$ and $G[U]$ is connected, we say \emph{\enquote{$U$ is connected in $G$}}.
+
+\begin{prop}
+  The vertices of a connected graph $G$ can always be enumerated, say as $v_1,v_2,\dots,v_n$ where $n \coloneqq \abs{G}$ such that 
+  \[ G_i = G[v_1,v_2,\dots,v_i] \]
+  is connected for all $1 \leq i \leq n$.
+\end{prop}
+
+\begin{proof}
+  No proof.
+\end{proof}
+\todo{add pic}
+
+\begin{defi*}
+  A maximal connected subgraph is called a (\emph{connected}) \emph{component} of $G$.
+\end{defi*}
+
+Notice: A component is always non-empty.
+
+\begin{defi*}
+  If $A,B \subseteq V$ and $X \subseteq V \cup E$ are such that ever $A$-$B$-path contains an element from $X$, 
+  then we say \emph{\enquote{$X$ separates $A$ and $B$ in $G$}}.
+  \todo{add pic}
+  If $X \subseteq V(G)$ and $X$ seperates $A$ and $B$, we call $X$ a \emph{separator}.
+\end{defi*}
+
+\begin{defi*}
+  A vertex $v$ which separates two other vertices of the same component is called a \emph{cut vertex}.
+  An edge separating its end vertices is called a \emph{bridge}.
+  \todo{add pic 2 with color}
+\end{defi*}
+
+\begin{defi*}
+  A graph $G$ is called \emph{$k$-connected} if $\abs{G} > k$ and $G - X$ is connected for all $X \subset V(G)$ with $\abs{X} \leq k-1$.
+  \begin{enumerate}[label=(\alph*)]
+    \item $0$-connected: singleton, actually ever graph but the $(\emptyset,\emptyset)$.
+    \item $1$-connected: a connected graph $G$ with $\abs{V(G)} > 1$.
+  \end{enumerate}
+  The \emph{connectivity} of $G$, \emph{$\kappa(G)$}, is the largest $k \in \N_\ast$ such that $G$ is $k$-connected.
+  A graph $G$ is called \emph{$1$-edge-connected} if $\abs{G} > 1$ and $G - F$ is connected, for all $F \subseteq E$ with $\abs{F} \leq l -1$.
+  The \emph{edge connectivity} of $G$, \emph{$\lambda(G)$}, is the largest $l \in \N_\ast$ such that $G$ is $l$-edge-connected.
+\end{defi*}
+
+\begin{theorem}[1.6 Whitney, 1932]
+  If $G$ is non-trivial, $\abs{G} > 1$, then $\kappa(G) \leq \lambda(G) \leq \delta(G)$.
+\end{theorem}
+
+\begin{proof}
+  The inequality $\lambda(G) \leq \delta(G)$ is trivial. \todo{add pic}\\
+  We prove $\kappa(G) \leq \lambda(G)$.\\
+  Let $w \in V(G)$ be such that $\de(w) = \delta(G)$.
+  Let $F$ be any minimal subset of $E(G)$ such that $G-F$ is disconnected.\\
+  We show $\kappa(G) \leq \abs{F}$ (this implies $\kappa(G) \leq \lambda(G)$)\\
+  \begin{enumerate}
+    \item[Case 1:] There exists a vertex $v$ in $G$ which is not incident with some edge in $F$.
+    \todo{add pic}
+    Let $C$ be the component of $G-F$ containing $v$.
+    Consider vertices of $C$ which are incident with an edge in $F$.
+    They separate $v$ from $G-C$ and are at most $\abs{F}$.
+    $ \implies \kappa(G) \leq \abs{F}$.
+    \item[Case 2:] Every vertex $v \in V(G)$ is incident to some $e \in F$.
+    \todo{add pic}
+    neighbours $w$ of $v$ with $\{v,w\} \notin F$ belong all to $C$.
+    The number of such neighbours is $\leq \abs{F}$. Thus $\de_C(v) \leq \abs{F}$.
+    $N(v)$ is a separator of $v$ from $G - \{v\}$ and therefore $\kappa(G) \leq \abs{N(v)} \leq \abs{F}$.
+  \end{enumerate}
+\end{proof}
+
+High connectivity need high minimum degree!
+The converse is in general not true, i.e. there are graphs $G$ with \enquote{large} $\delta(G)$ but \enquote{small} $\kappa(G)$, $\lambda(G)$ $\leftarrow$ exercises\\
+High $\delta(G)$ implies however the existence of a \emph{subgraph} of high connectivity.
+
+\begin{prop}[Mooler 1972]
+  Let $k \in \N$, $k \neq 0$. Ever graph $G$ with $\de(G) \geq 4 k$ has a $(k+1)$-connected subgraph $H$ such that
+  \[ \varepsilon(H) = \frac{\abs{E(H)}}{\abs{V(H)}} > \varepsilon(G) - k \text{.} \]
+  (where $\varepsilon$ is the density of $G$).
+\end{prop}
+
+\section{Connectivity}
+
+\subsection{The theorem of Menger and Consequences}
+
+Duality between \emph{connecting and dividing}.
+
+\begin{theorem}[Menger 1927]
+  \begin{enumerate}
+    \item edge version: \\
+    Let $s$ and $t$ be two vertices in graph $G$. Then the maximum number of $s$-$t$-paths in $G$ which share no (pairwise) edges equal the minimal cardinality of a set of edges which separates $s$ and $t$.
+    \item vertex version: \\
+    Let $s$ and $t$ be two vertices in $G$ such that $\{s,t\} \notin E(G)$.
+    Then the maximal number of independent $s$-$t$-paths in $G$ equals the minimal cardinality of a set of vertices which separates $s$ and $t$ in $G$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  The proof is based on the proof of the max-flow-min-cut-duality.\\
+  (edge version)\\
+  $\max$ ... = $\min$... is trivial \\
+  $\max$ ... $\geq$ $\min$ ... will be proven
+  trivial case: \todo{add pic} $\implies \abs{F} \geq $ number of paths, for al $F$ which separates $s$ and $t$. Therefore, $\min(\abs{F}) \geq \max(\text{number of paths})$.\\
+  We show $\geq$:
+  Transform $G$ in network $N = (V,A,s,t,c)$ with $V \coloneqq V(G)$ and $A$ set of arcs, $c$ capacity.
+  \begin{align*}
+    \{x,y\} \in E(G) \begin{cases}
+      \leftarrow \{x,y\} \cap \{s,t\} = \emptyset & \text{pic} \\
+      \leftarrow \{s,y\} & \text{pic} \\
+      \leftarrow \{x,t\} & \text{pic}
+    \end{cases}
+  \end{align*}
+  \todo{add pic for each case}
+  In particular \todo{add pic}\\
+  Every $s$-$t$-cut in $N$ defines a set of edges separating $s$ and $t$ such that the capacity of the $s$-$t$-cut equals the cardinality of the separator set of edges.
+  \todo{add pic}
+  capacity cut = number of arcs from $s$ part to $t$ part = number of edges in  separator set $F$.
+  min cap $s$-$t$-cut = max value of $s$-$t$-flow which is integral (wlog) \todo{add pic} \\
+  Recall: 1)$c \in \N_\ast \implies \exists$ integral max flow\\
+  2) flow decomposition theorem:
+  Every $s$-$t$-flow can be represented as follows
+  \begin{align*}
+ %   f(e) = \sum_{P \in \mathcal{P}, e \in E(P)} w(P) + \sum_{C \in \mathcal{C}\\e \in E(C)} w(C) \: \forall e \in A
+  \end{align*}
+  where $\mathcal{P}$ is a set of $s$-$t$-paths, $\mathcal{C}$ is a set of cycles in $(V,A)$.
+  $w: \mathcal{P} \cup \mathcal{C} \to \R_{+}$ and $\abs{\mathcal{P}} + \abs{\mathcal{C}} \leq \abs{A}$
+  \\
+  \\
+  \[ f(e) = \]
+  consider set of s-t-paths P from $\mathcal{P}$ for which $w(P) = 1$.
+  \todo{add pic}
+  Number of this paths equals value of $f$.
+  
+\end{proof}
+
+\end{document}

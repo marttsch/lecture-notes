@@ -1,0 +1,203 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{13.06.2016}
+
+\begin{lemma}
+  $G$ perfect, $G^\prime$ extension of $G$ on $x$ implies $G^\prime$ is perfect.
+\end{lemma}
+
+\begin{proof}[Proof of Lovasz]
+  Induction on $\abs{V(G)}$\\
+  Notation $\alpha \coloneqq \alpha(G)$, $\mathcal{K}$ the set of vertex sets of complete subgraphs of $G$, $\mathcal{A}$ set of stable set with cardinality $\alpha$ in $G$.
+  
+  Claim: If there exists $k \in \mathcal{K}$, such that $k \cap A \neq \emptyset$ for all $A \in \mathcal{A}$, then $\chi(\overbar{G}) = \omega(\overbar{G})$. $\checkmark$
+  
+  Prove that there exists a $K \in \mathcal{K}$ such that $K \cap A \neq \emptyset$ for all $A \in \mathcal{A}$.
+  
+  Assume this does not hold: For all $K \in \mathcal{K}$ exists an $A \in \mathcal{A}$ $K \cap A = \emptyset$.
+  Denote by $A_K$ such a set $A$ in $\mathcal{A}$, so $K \cap A_K = \emptyset$.
+  Let $k(x) \coloneqq \abs{\{K \in \mathcal{K}: x \in A_K\}}$, for all $x \in V(G)$.
+  
+  Construct $G^\prime$. \todo{add pic}{pic}
+  
+  Observe: $G^\prime$ can be obtained from $G[\{x \in V(G): k(x) > 0\}]$ by repeated extension on some vertex.
+  $G$ perfect $\implies$ $G[...]$ perfect $\overset{\text{Lemma}}{\implies} G^\prime$ perfect $\implies$ 
+  \begin{align} \label{0613_1}
+    \chi(G^\prime) \underset{\leq}{=} \omega(G^\prime)
+  \end{align}
+  
+  Compute $\chi(G^\prime)$, $\omega(G^\prime)$
+  Consider max complete subgraph of $G^\prime$ (max wrt inclusion). It has the form $G^\prime[\bigcup_{x \in X} G_x]$ where $x \in \mathcal{K}$.
+  So there exists an $X \in \mathcal{K}$
+  \begin{align*}
+    \omega(G^\prime) &= \abs{G^\prime[\bigcup_{x \in X} G_x]} = \sum_{x \in X} k(x) \\
+    &= \underbrace{\abs{\{(x,k): x \in X, K \in \mathcal{K}, x \in A_K\}}}_{= K(x) \text{ for every fixed } x}
+    = \sum_{K \in \mathcal{K}} \underbrace{\abs{X \cap A_K}}_{\leq 1} \\
+    &\leq \abs{\mathcal{K}} - 1
+  \end{align*}
+  Then
+  \begin{align} \label{0613_2}
+    \omega(G^\prime) \leq \abs{\mathcal{K}} - 1
+  \end{align}
+  
+  \begin{align*}
+    \abs{V(G^\prime)} &= \sum_{x \in V} k(x) = \abs{\{(x,K): x \in V(G), K \in \mathcal{K}, x \in A_K \}}
+    = \sum_{K \in \mathcal{K}} \abs{V \cap A_K} = \sum_{K \in \mathcal{K}} \abs{A_K} = \abs{K} \alpha
+  \end{align*}
+  since $\abs{A_K} = \alpha$.
+  
+  \begin{align*}
+    \chi(G^\prime) \geq \frac{\abs{V(G^\prime)}}{\alpha(G^\prime)} = \frac{\abs{\mathcal{K}} \alpha}{\alpha} = \abs{\mathcal{K}}
+  \end{align*}
+  
+  So
+  \begin{align}\label{0613_3}
+    \chi(G^\prime) \geq \abs{\mathcal{K}}
+  \end{align}
+  
+  \ref{0613_2} and \ref{0613_3} imply $\chi(G^\prime \geq \abs{\mathcal{K}} > \abs{\mathcal{K}} - 1 \geq \omega(G^\prime)$ which gives a contradiction $\lightning$ to \ref{0613_1}
+  
+  Thus,
+  $\alpha(G^\prime) \geq \alpha$ and $\alpha(G^\prime) \leq \alpha$ is trivial.
+\end{proof}
+
+\begin{theorem}[6.6 Lovasz 1972] \label{6.6-th}
+  A graph $G$ is perfect if and only if $\abs{V(H)} \leq \alpha(H) \omega(H)$ for all induced subgraphs $H$.
+\end{theorem}
+
+Notice that Theorem \ref{6.6-th} implies Theorem \ref{th_6-5};
+need $V(\overbar{H}) \leq \alpha(\overbar{H}) \omega(\overbar{H})$ for all induced subgraph $\overbar{H}$ of $\overbar{G}$.
+$\overbar{H}$ induced subgraph of $\overbar{G} \iff H$ induces subgraph of $G$.
+For $H$ Theorem \ref{6.6-th} implies $\abs{V(\overbar{H})} = \abs{V(H)} \leq \alpha(H) \omega(H) = \omega(\overbar{H}) \alpha(\overbar{H})$.
+Note that $\alpha(H) = \omega(\overbar{H})$ and $\omega(H) = \alpha(\overbar{H})$.
+
+\begin{proof}
+  Let $V(G) = \{v_1,\dots,v_n\}$. Set $\alpha \coloneqq \alpha(G), \omega \coloneqq \omega(G)$
+  \begin{enumerate}
+    \item[$\Rightarrow$] (trivial) Assume $G$ is perfect. Let $H$ be an induced subgraph.
+    $\chi(H) = \omega(H)$. Consider optimal colouring of $H$.
+    $V(H) = \biguplus$ colour classes $\implies \abs{V(G)} = \sum_{\text{colour classes}} \abs{\text{colour class}} \leq \chi(H) \alpha(H)$
+    Where $\chi(H)$ is the nr of summants, $\alpha(H)$ is bound cardinality of every summand
+    \item[$\Leftarrow$] Inequ holds for all induced subgarph $H$. Show $G$ is perfect.
+    
+    Induction on $n = \abs{V(G)}$. Induction basis $n=1$: trivial.
+    Assume the statement holds for graphs with less than $n$ vertices. Show if for $G$ with $\abs{V(G)} = n$.
+    
+    Assume by contradiction that $G$ is not perfect.
+    By induction hypothesis, every prober induced subgraph of $G$ is perfect.
+    Thus, $\chi(G) > \omega(G)$.
+    
+    Let $U \subseteq V$ be a non-empty independent set in $G$.
+    \begin{align} \label{0613_6.6_1}
+      \chi(G-U) = \omega(G-U) = \omega
+    \end{align}
+    (induction hyp)
+    
+    Indeed $\omega(G-U) \leq \omega(G)$. If $\omega(G-U) < \omega$, then $\chi(G-U) < \omega \implies \chi(G) \leq \omega$ (colour the whole $U$ by one optimal colour) $\lightning$
+    
+    Apply \ref{0613_6.6_1} to $U = \{u\}$ (singleton) and consider an $\omega$-colouring of $G-U$.
+    Let $K$ be the vertex set of a clique $K_\omega$ in $G$.
+    \begin{enumerate}
+      \item \label{0613_6.6_2} If $u \notin K$ then $K$ meets every colour class of $G-U$.
+      \item \label{0613_6.6_3} If $u \in K$ then $K$ meets all but exactly one colour class of $G-U$ because $K-U$ is $K_{\omega-1}$ in $G_U$.
+    \end{enumerate}
+    Let $A_0 = \{u_1,u_2,\dots,u_\alpha\}$ be a stable set of cardinality $\alpha$ in $G$.
+    Let $A_1,\dots,A_\omega$ be the colour classes of an $\omega$-colouring in $G-U_1$.
+    Let $A_{\omega+1},\dots,A_{2 \omega}$ be the colour classes of an $\omega$-colouring in $G - U_2$.
+    and so on
+    $A_{(\alpha-1) \omega +1},\dots,A_{\alpha \omega}$ be the colour classes of an $\omega$-colouring in $G-U_\alpha$.
+    
+    Altogether consider $A_0,A_1,\dots,A_{\alpha \omega}$ independent sets.
+    For all $0 \leq i \leq \alpha \omega$ there exists a $K_\omega \subseteq G-A_i$ by \ref{0613_6.6_1}.
+    Denote by $k_i$ the vertex of such a clique.
+    
+    Notice that if $K$ is the vertex set of a $K_\omega$ in $G$ then $K \cap A_i = \emptyset$ for exactly one $i \in \{0,1,\dots,\alpha \omega\}$ \todo{add ref}{(4)}
+    
+    Indeed if $K \cap A_0 = \emptyset$ then $K \cap A_i \neq \emptyset$ for all $i \neq 0$ by definition of $A_i$ and \ref{0613_6.6_2}. (for all $i$ $u_i \notin K$???)
+    If $K \cap A_0 \neq \emptyset$, then $\abs{K \cap A_0} = 1$.
+    Let $\{U_{i_0}\} = K \cap A_0$.
+    Then $U_{i_0} \in K$, apply \ref{0613_6.6_3} and get only one empty intersection with colour classes of $G-U_{i_0}$.
+    For $i \neq i_0$ $u_i \notin K$, apply \ref{0613_6.6_2}, and obtain non-empty intersection with all corresponding colour classes.
+    
+    Let $J$ be a real $(\alpha \omega + 1) \times (\alpha \omega + 1)$-matrix with $0$ on diagonal and ones everywhere else. \todo{add pic}{matrix}
+    Let $A = (a_{ij})$ be an $(\alpha \omega + 1) \times n$-matrix such that each row $i$ the incidence vector of $A_i$: $a_{ij} = \begin{cases} 1 & V_j \in A_i \\ 0 & \text{otherwise} \end{cases}$
+    Let $B = (b_{ij})$ be an $n \times (\alpha \omega +1$-matrix such that each column $j$ is the incidence vector of $K_j$; $b_{ij} = \begin{cases} 1 & v_i \in K_j \\ 0 & \text{otherwise} \end{cases}$
+    
+    By property \todo{add ref}{4},
+    \begin{align*}
+      \abs{K_J \cap A_i} = 1 
+    \end{align*}
+    for all $i,j$ with $i \neq j$ and of course by definition of $K_i$
+    \[ \abs{A_i \cap K_i} = 0 \]
+    Thus, $A \cdot B = J$ 
+    \begin{align*}
+      \det(J) \neq 0 \implies \rank(A) = \alpha \omega + 1 \leq n \;\; \lightning n \leq \alpha \omega
+    \end{align*}
+  \end{enumerate}
+\end{proof}
+
+\subsection{6.2 Recognition of chordal graphs and computation of $\omega$, $\chi$, $\alpha$ and $\theta$ in chordal graphs}
+
+Recognition problem:
+\\
+Input: $G= (V,E)$, $n = \abs{V(G)}$, $m = \abs{E(G)}$\\
+Question: Is $G$ chordal?
+\\
+
+Solvable in linear time $\bigO(n+m)$.
+
+\begin{lemma} \label{6.7-lemma}
+  A graph $G$ is chordal if and only if every minimum separating set of vertices induces a clique.
+\end{lemma}
+
+\begin{proof}
+  \begin{enumerate}
+    \item[$\Rightarrow$] Let $S$ be a minimum set of vertices. If $\abs{S} = 1$, nothing to show.
+    Assume $\abs{S} \geq 2$. Let $H_1$, $H_2$ be two connected components of $G-S$, for all $s \in S$ has neighbours in $H_1$ and $H_2$ (otherwise $S \setminus \{s\}$ is also separating).
+    \todo{add pic}{pic}
+    Let $u,v$ be two arbitrary vertices in $S$.
+    Let $P_i$ be a shortest $u$-$v$-path using only inner vertices of $H_i$, $i = 1,2$.
+    $P_1$ and $P_2$ build a cycle of length $\geq 4$. It has to have a chord.
+    Since $P_i$ are shortest paths the only possible chord is $\{u,v\}$, so $\{u,v\} \in E$
+    \item[$\Leftarrow$] (homework)
+  \end{enumerate}
+\end{proof}
+
+\begin{defi*}
+  A vertex $v$ is called \emph{simplicial vertex} in $G$ if its neighbourhood is a clique in $G$.
+\end{defi*}
+
+\begin{ex}
+  \todo{add pic}{graph}
+\end{ex}
+
+\begin{lemma}[6.8 Dirac 1961]
+  Every chordal has at least one simplicial vertex and if $G$ is not complete, then it has at least 2 simplicial vertices which are not connected by an edge.
+\end{lemma}
+
+\begin{proof}
+  Induction on $n = \abs{V(G)}$.
+  Homework: check it for $i=1,2,3$ or for $G= K_n$.
+  
+  Assume there exist $u,v \in V(G)$ such that $\{u,v\} \notin E(G)$. consider an inclusion minimal set in $V(G)$ which separates $u$ and $v$.
+  Then $G-S$ has connected components $H_i$, $i \in I$, $\abs{I} \geq 2$.
+  $S$ induces a clique in $G$ (Lemma \ref{6.7-lemma}). 
+  Moreover, $G[H_i \cup S]$ is chordal, for every $i \in I$ and by induction hypothesis $G[H_i \cup S]$ has at least on simplicial vertex.
+  
+  If $v \in H_i$ is a simplicial vertex
+  \todo{add pic}{[Pic: component graph]}
+  $\Gamma_{G[H_i \cup S]} (v) = \Gamma_G(v)$ and thus $\Gamma_G(v)$ is a complete graph so $v$ is simplicial vertex in $G$.
+  
+  If $G[H_i \cup S]$ is not complete, there are at least 2 simplicial vertices not connected by an edge in $G[H_i \cup S]$ (induction hypothesis).
+  So one of them has to lie in $H_i$.
+  If $G[H_i \cup S]$ complete, every vertex is simplicial vertex, so choose $v \in H_i$.
+  A simplicial vertex in $G[H_i \cup S]$ and also in $G$.
+  
+  Since $\abs{I} \geq 2$, we can find at least 2 simplicial vertices, at least one in each connected component $H_i$ in $G$.
+\end{proof}
+
+\begin{defi*}
+  Let $G=(V,E)$ a graph on $n$ vertices. A total ordering $\sigma: V(G) \to \{1,2,\dots,n\}$ is called \emph{perfect (vertex) elimination scheme} (PES), if $v \in V$ is simplicial vertex in $G[\{u\in V: \sigma(u) \geq \sigma(v)\}]$, i.e. $U \Gamma(v) = \{u \in V: \{v,u\} \in E(G); \sigma(u) > \sigma(v)\}$ (upper neighbourhood) is a clique.
+\end{defi*}
+
+\end{document}

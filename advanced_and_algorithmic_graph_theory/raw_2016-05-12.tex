@@ -1,0 +1,123 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+
+
+\subsection{Colouring vertices}
+\lecture{12.05.2016}
+
+\begin{prop}[5.3 An upper bound]
+  Every graph $G$ with $m$ edges satisfies
+  \[ \chi(G) \leq \frac{1}{2} + \sqrt{2m + \frac{1}{4}} \text{.} \]
+\end{prop}
+
+\begin{proof}
+  Let $c$ be a colouring with $k \coloneqq \chi(G)$ colours. \todo{add pic}
+  Then there exists one edge between any two colour classes with respect to $c$. (Otherwise, merge 2 colour classes and obtain a $(k-1)$-colouring \lightning).
+  Thus,
+  \[ \abs{E(G)} \geq \frac{1}{2} k (k-1) \text{.} \]
+  Solve this inequality with respect to $k$ and obtain the wanted bound.
+  (Bound quality will be given in exercises!)
+\end{proof}
+
+
+\begin{algorithm}
+  \begin{algorithmic}
+    \State Fix an arbitrary ordering of vertices $v_1,v_2,\dots, v_n$ ($n \coloneqq \abs{V(G)}$)
+    \State $i = 1$
+    \State Colour $v_i$ with the smallest colour $k \in \N$ which has not been used to colour $v_j \in N(v_i)$, $1 \leq j < i$.
+    \State $i \coloneqq i + 1$
+  \end{algorithmic}
+  \caption{A greedy colouring algorithm for an input graph $G=(V,E)$}
+\end{algorithm}
+
+%\underline{A greedy colouring algorithm for an input graph $G=(V,E)$}
+
+%\begin{enumerate}
+%  \item Fix an arbitrary ordering of vertices $v_1,v_2,\dots, v_n$ ($n \coloneqq \abs{V(G)}$)
+%  \item $i = 1$
+%  \item Colour $v_i$ with the smallest colour $k \in \N$ which has not been used to colour $v_j \in N(v_i)$, $1 \leq j < i$.
+%  \item $i \coloneqq i + 1$
+%\end{enumerate}
+
+\begin{rem}
+  \begin{enumerate}
+    \item \label{0512_rem-1} Greedy uses $\leq \Delta(G) + 1$ colours. \todo{add pic}
+    
+    \[ \# \{\text{coloured neighbours of }v_i \} = \deg_{G[v_1,\dots,v_{i-1}]}(v_i) \leq \deg(v_i) \leq \Delta(G) \]
+    $\implies$ colour $\Delta(G) + 1$ is free and can be used for $v_i$.
+    \item If $G = K_n$ or $G = C_{2n+1}$, then greedy is optimal.
+    
+    For \todo{add pic}{pic}:
+    \[ \chi(C_{2n+1}) = 3 = \Delta(C_{2n+1}) + 1 \]
+    Hence, greedy has to use at least $\Delta(C_{2n+1}) + 1$ colours and by \ref{0512_rem-1}, it uses exactly $\Delta(C_{2n+1})+1$ colours.
+    \item $\Delta(G) +1$ is in general a loose bound. 
+    (We can colour $v_i$ by one of the colours $1,2,\dots,\deg_{G[\{v_1,\dots,v_{i-1}\}]}(v_i) + 1$ and still are bounded by $\Delta(G) +1$!)
+  \end{enumerate}
+\end{rem}
+
+Question: Can the bound $\Delta(G) +1$ be improved? YES
+
+\begin{defi*}[colouring number]
+  The smallest number $k \in \N$ such that there exists a vertex ordering in $V(G)$ where every vertex is preceded by fewer than $k$ of its neighbours is called \emph{colouring number $\col(G)$} of $G$.
+  \[ \col(G) = \min \{ k \in \N: \exists \pi \in S_n, \deg_{G[\{v_{\pi(1)},\dots,v_{\pi(i-1)}\}]} (v_{\pi(i)}) < k, \forall 1 \leq i \leq n \} \]
+\end{defi*}
+
+Then 
+\begin{align}\label{0512_star1}
+  \col(G) \leq \max_{H \subseteq G} \delta(H) + 1 \text{.}
+\end{align}
+Argument: Use a particular ordering, namely:
+Build the ordering from the end, choose $v_n$ such that $\delta(G) = \deg(v_n)$.
+Consider $G - v_n$. Choose as $v_{n-1}$ a vertex with smallest degree in $G - v_n$
+\[ \deg_{G-v_n}(v_{n-1}) = \delta(G-v_n) \]
+Consider $G - \{v_{n-1},v_n\}$ and repeat the procedure until a complete ordering of vertices arises.
+\todo{add pic}
+Let $k = max_{H \subseteq G} \delta(H)+1$. Check whether $k$ has the property in Definition of $\col(G)$.
+Yes it does, so $\col(G) \leq \min \{ \dots, \max_{H \subseteq G} \delta(H)+1,\dots \} \leq \max_{H \subseteq G} \delta(H)+1$
+
+On the other hand 
+\begin{align}\label{0512_star2}
+  \col(G) \geq \col(H) \text{ for all }H \subseteq G \text{(trivial)} 
+\end{align}
+and also 
+\begin{align}\label{0512_star3}
+  \col(H) \geq \delta(H)+1 
+\end{align}
+(\enquote{back} degree of the last vertex $v_i \leq \deg(v_i)$ and $\deg(v_i) \geq \delta(H)$).
+
+Putting things together:
+
+\begin{prop}[5.4]
+  For every graph $\chi(G) \leq \col(G) = \max\{\delta(H): H \subseteq G\}+1$ holds.
+\end{prop}
+
+\begin{proof}
+  By \ref{0512_star2} and \ref{0512_star3}, $\col(G) \geq \col(H) \geq \delta(H) +1 \forall H \subseteq G$
+  $\implies \col(G) \geq \max_{H \subseteq G} \delta(H)+1$.
+  Thus, together with \ref{0512_star1} implies $\col(G) = \max_{H \subseteq G} \delta(H)+1$.
+  
+  Show that $\chi(G) \leq \col(G)$.
+  Let $k = \col(G)$. Then there exists an ordering $\pi$ as in defintion of $\col(G)$.
+  Let $v_1,\dots,v_n$ be the orderin of vertices acording to $\pi$ ($v_i \coloneqq v_{\pi(i)}$)
+  Apply greed with this ordering. In every step $i$ greedy will colour $v_i$ with a colour among $1,2,\dots,\underbrace{\deg_{G[\{v_1,\dots,v_{i-1}\}]}(v_i)}_{< k} + 1 \leq k = \col(G)$
+  
+  So $G$ is $\col(G)$-colourable. Thus, $\chi(G) \leq \col(G)$.
+\end{proof}
+
+\begin{cor*}
+  Every graph $G$ has a subgraph $H$ with $\delta(H) \geq \chi(G) - 1$.
+\end{cor*}
+
+\begin{theorem}[5.5 Brooks 1941]
+  Let $G$ be a connected graph. If $G$ is neither complete nor an odd cycle, then $\chi(G) \leq \Delta(G)$.
+\end{theorem}
+
+\begin{proof}
+  By induction on $\abs{G}$. If $\Delta(G) \leq 2$, then $G$ is a disjoint union of paths and cycles if it is not connected (general case). Since $G$ is connected, then $G$ is a cycle or a path.
+  If cycle, then it is an even cycle $C_{2k} \implies \chi(C_{2k}) = \Delta(C_{2k}) = 2$.
+  If path, then $P_n \implies \chi(P_n) = 2 = \Delta(P_n)$ for $n > 2$ and $n=2 \implies K_2$ excluded from the theorem.
+  
+  Assume wlog $\Delta(G) \geq 3$ in the rest of the proof.
+\end{proof}
+
+\end{document}

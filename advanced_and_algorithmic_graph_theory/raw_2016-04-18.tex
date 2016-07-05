@@ -1,0 +1,152 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{18.04.2016}
+
+\begin{prop}[3.6 Bondy 1978]
+  $G$, $\abs{V(G)} \geq 3$, for all $u,v \in V$, $\{u,v\} \notin E$, $\de(v) + \de(u) \geq n$.
+  Then $\kappa(G) \geq \alpha(G)$.
+\end{prop}
+
+\begin{proof}
+  Show: for all separator $A$, for all stable set $S$ 
+  \[ \abs{S} \leq \abs{A} \text{.} \]
+  Choose $S,A$ arbitrarily.
+  \todo{add pic}
+  
+  Case 1: $S \cap Y = \emptyset \checkmark$
+  
+  Case 2: $S \cap Y \neq \emptyset$.
+  Let $y \in S \cap Y$, $\{x,y\} \notin E \implies n \leq \de(x) + \de(y) \leq \abs{X \setminus S} + \abs{A \setminus S} + \abs{Y \setminus S} + \abs{A \setminus S}$
+  \begin{align*}
+    n \leq \abs{ V \setminus S} + \abs{A} = n - \abs{S} + \abs{A} \\
+    \implies \abs{S} \leq \abs{A}
+  \end{align*}
+\end{proof}
+
+Interesting operation: What is the length of the longest cycle in a graph? (This problem is NP-hard)
+There exist sufficient conditions as follows.
+
+\begin{theorem}[ORE 1960, Bermond 1976, Linial 1976]\label{th_3_7}
+  Let $G$ be $2$-connected such that for all $u,v \in V(G)$, $\{u,v\} \notin E(G)$, $\de(u) + \de(v) \geq d$,
+  then there exists a cycle of length at least $\min\{n,d\}$ in $G$.
+\end{theorem}
+
+\begin{rem}
+  \begin{enumerate}
+    \item $2$-connectedness is not really restrictive because the longest cycle can be searched for in each block of a graph and then max. over all blocks.
+    
+    This assumption is crucial:
+    \todo{add pic}
+    \item Theorem \ref{th_3_7} implies the corolaries 1 and 2 of Theorem \ref{th_3_4} because the conditions of those corollaries would imply $2$-connectivity. (exercise)
+  \end{enumerate}
+\end{rem}
+
+\begin{proof}
+  (following Lawler 1979)
+  
+  Step1: constructin of a \enquote{long} path.
+  Start with an arbitrary path $P = (v_0,\dots,v_l)$
+  \todo{add pic}
+  There are 2 ways in which a path could be extended.
+  \begin{enumerate}
+    \item If $N(v_0) \nsubseteq V(P)$ or $N(v_l) \nsubseteq V(P)$ then extend in end vertices.
+    Extend $P$ like this until $N(v_0) \subseteq P \supseteq N(v_l)$.
+    \item \todo{add pic}
+    If $\{v_0,v_{i+1}\}, \{v_l,v_i\} \in E$ for some $1 \leq i \leq l-2$, then construct cycle C (see pic).
+    If $C$ is hamiltonian we are done. Otherwise there exists an $x \in V(G) \setminus V(C)$.
+    Since $G$ is connected, there exisits $V(C)$-$x$-path.
+    Construct path $P_1$ by breaking $C$ and adding the $V(C)$-$x$-path
+    Length of $P_1 \geq \text{ length of C } \geq \text{ length of } P$.
+  \end{enumerate}
+  Repeat this extending step (2) as long as we can (we find $v_i,v_{i+1}$ with $\{v_0,v_{i+1} \in E(G)$, $\{v_i,v_l\} \in E$)
+  
+  Let us denote by $P$ a path which cannot be further extended by one of the two operations above.
+  
+  Step 2: Try to construct a cycle from path $P$.
+  If $\{v_0,v_l\} \in E$ then $C = (v_0,\dots,v_l,v_0)$ is hamiltonian becuase otherwise we could extend $P$ analogously as in (2) with $i = 0$.
+  \todo{add pic}
+  If $C$ is hamiltonian we are done. $\checkmark$.
+  Assume without loss of generality that $\{v_0,v_l\} \notin E(G)$.
+  Since operation (1) cannot be performed, then $N(v_0) \subseteq V(P) \supseteq N(v_l)$ holds.
+  Distinguish 2 cases
+  \begin{enumerate}[label=(\Alph*)]
+    \item There exist $i,j$ such that $1 \leq i \leq j \leq l-1$ and $\{v_0,v_j\}\in E$ and $\{v_i,v_l\} \in E$.
+    Choose one pair $(i,j)$ with the smallest $j$-$i$-distance $dist \geq 2$ holds (otherwise op (2) can be performed $\lightning$)
+    \todo{add pic}
+    The selection of $i,j$ also implies that $v_k \notin N(v_0), v_k \notin N(v_l)$ for all $i < k < j$.
+    Consider $C = (v_0,\dots,v_i,\dots,v_l,\dots,v_j,\dots,v_0)$ contains all node of $P$ which are neighbours of $v_l$ or predecessors of neighbours of $v_i$ except for $v_{j-1}$ (because $v_j$ is a neighbour).
+    Since dist $> 1$ then predecessors of $n$ of $v_0$ and neighbours of $v_l$ are pairwise disjoint.
+    \todo{add pic}
+    Thus, the length of $C \geq \de(v_l) + \de(v_0) - 1 \underbrace{+ 1}_{\text{stands for } v_l, v_l \notin N(v_l), v_l \text{ not a predecessor of neighbours of } v_0}$
+    \item There exist no $i,j$ like in case (A).
+    \[ i \coloneqq \max\{k: v_k \in N(v_0) \} \leq \min\{k: v_k \in N(v_l)\} \eqqcolon j \]
+    \todo{add pic}
+    This inequality happens because (A) is excluded.
+    
+    Consider $C_i \coloneqq (v_0,\dots,v_i, v_0)$, $C_j \coloneqq (v_l,v_j,\dots,v_l)$.
+    $G$ is $2$-connected, thus there exist 2 independent $C_i$-$C_j$-paths in $G$.
+    Denote them $P_1$ and $P_2$.
+    wlog one of the paths starts in $v_i$. If not, move from $v_i$ to $v_j$ along $P$ until one reaches $v_j$ or one of the paths $P_1$, $P_2$, if reach a path $P_1$ or $P_2$, then replace  its starting piece, otherwise replace one of the paths completely by $P[i,j]$.
+    \todo{add pic}
+    wlog one of the paths $P_1$ and $P_2$ ends at $v_j$ (show analogously).
+    
+    So we know one of the paths has $v_i$ as an end point and one of the paths has $v_j$ as an end point (could be the same path).
+    \todo{add pic 10}
+    Let $x^\prime$ be the leftmost neighbour of $v_0$ to the right of $x$ and to the left of $v_i$.
+    If there is no such a neighbour set $x^\prime = v_i$.
+    Analogously, let $y^\prime$ be the rightmost neighbour of $v_l$ to the left of $y$ and to the right of $v_j$. If it does not exist, set $y^\prime = v_j$.
+    (pic 10.a, pencil trace)
+    Construct $C$ (violet pencil) length of $C \geq \de(v_l) + \de(v_0) +1 -1 \geq d$.
+    The \enquote{$+1$} is because $\{v_0,v_l\} \notin E$ and $v_l$ is not a neighbour of $v_l$, and the \enquote{$-1$} is because $v_i \cong v_j$ is possible.
+    
+    In case b:
+    $x^\prime$ has the same meaning as in case a (leftmost neighbour strictly between $x$ and $v_i$, otherwise $x^\prime=v_i$.
+    $y^\prime$ has the same meaning as in case b (rightmost neighbour strictly between $v_j$ and $y$, otherwise $y^\prime = v_j$.
+  \end{enumerate}
+\end{proof}
+
+\begin{theorem}[Bauer, Broersma, Rao, Veldman 1989]\label{th_3_8}
+  $G= (V,E)$ with $\kappa(G) \geq 2$ such that 
+  \[ \de(v) + \de(u) + \de(w) \geq n + \kappa(G) \]
+  for all triple $(u,v,w)$ which build a stable set in $G$.
+  Then $G$ is hamilonian.
+\end{theorem}
+
+\begin{proof}
+  No proof.
+\end{proof}
+
+\begin{defi*}
+  If $G$ is a graph with $n \coloneqq \abs{V(G)}$ its \emph{degree sequence} is the sequence $0 \leq d_1 \leq d_2 \leq \dots \leq d_n \leq n-1$ such that there exists an ordering $v_1,v_2,\dots,v_n$ of vertices in $V(G)$ for which $\deg(v_i) = d_i$ for all $1 \leq i \leq n$.
+  
+  A sequence $a_1,a_2,\dots,a_n$ of integers is called a \emph{hamiltonian sequence} if and only if every graph $G$ with degree sequence $d_1,\dots,d_n$ such that $d_i \geq a_i$ for all $1 \leq i \leq n$ is hamiltonian.
+\end{defi*}
+
+\begin{theorem}[Chvátal 1972]\label{th_3_9}
+  An integer sequence $(a_1,a_2,\dots,a_n)$ such that $0 \leq a_1 \leq \dots \leq a_n < n$ and $n \geq 3$ is hamiltonian if and only if the following holds for all $i < \frac{n}{2}$
+  \begin{align}\label{star_0418}
+    d_i \leq i \iff a_{n-i} \geq n-i
+  \end{align}
+\end{theorem}
+
+\begin{proof}
+  (if) sequence fulfills \ref{star_0418} implies sequence is hamiltonian.
+  Assume it is not. Then there exists a graph $G$ with degree sequence $d_1,\dots,d_n$
+  \begin{align}\label{0418_1}
+    d_i \geq a_i \;\; \forall 1 \leq i \leq n
+  \end{align}
+  and $G$ is not hamiltonian.
+  Choose $G$ to have the largest possible number of edges.
+  By \ref{0418_1} and \ref{star_0418}, we get
+  \begin{align}\label{0418_2}
+    d_i \leq i &\overset{\ref{0418_1}}{\implies} a_i \leq d_i \\
+    &\overset{\ref{star_0418}}{\implies} d_{n-i} \geq n-i \\
+    &\overset{\ref{0418_1}}{\implies} d_{n-i} \geq a_{n-i} \geq n-i
+  \end{align}
+  Let $x,y \in V(G)$, $x \neq y$, $\{x,y\} \notin E(G)$ with the largest possible $\de(x) + \de(y)$.
+  consider $G + \{x,y\}$ and its degree sequence $d^\prime$. $d^\prime \geq d \geq a$.
+  Due to the choice of $G$ (max number of edges...)
+  $G^\prime \coloneqq G + \{x,y\}$ should be result and every ham cycle in $G^\prime$ should contain $\{x,y\}$ (otherwise, $G$ ham $\lightning$).
+\end{proof}
+
+\end{document}

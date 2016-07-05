@@ -1,0 +1,156 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{16.06.2016}
+
+\begin{defi*}
+  \emph{Upper neighbourhood} 
+  \[ U\Gamma(v) \coloneqq \{ w \in \Gamma(v): \sigma(w) > \sigma(v) \} \]
+  where $\sigma: V(G) \to \{1,2,\dots,n\}$ (bijective or ordering), $n \coloneqq \abs{V(G)}$.
+\end{defi*}
+
+\begin{prop}[6.9 Fulkerson, Gross 1965]
+  $G=(V,E)$ is chordal if and only if there exists a $\sigma: V(G) \to \{1,2,\dots,n\}$ bijective, which is PES.
+\end{prop}
+
+\begin{proof}
+  \begin{enumerate}
+    \item[$\Rightarrow$] trivial by respected application of Lemma \ref{6.8-lemma}.
+    There exists $v_1$ simplical; $G^\prime = G \setminus \{v_1\} \subseteq G$ is chordal, There exists a simplicial vertex $v_2$, $G^\prime = G \setminus \{v_1,v_2\} \subseteq G$ chordal, There exists a s. v. $v_2$ and so on.
+    Claim: $v_1,v_2,\dots,v_n$ is PES.
+    Indeed because $v_i$ is s. v. in $G \setminus \{v_1,\dots,v_{i-1} \}$, $1 \leq i \leq n$ and therefore $\Gamma_{G \setminus \{v_1,\dots,v_{i-1} \}} (v_i) = U\Gamma_G(v_i)$ is a clique.
+    \item[$\Leftarrow$] Assume $G$ has a PES. Show $G$ is chordal.
+    Let $C$ be a cycle with $\geq 4$ vertices.
+    Let $u = arg\min \{ \inv{\sigma}(v): v \in V(C) \}$
+    \todo{pic}{add pic}
+    $\implies u^-, u^+ \in U\Gamma(u) \implies \{u^-,u^+\} \in E(G)$ which is a clique
+  \end{enumerate}
+\end{proof}
+
+Algorithmic idea for recognition of chordal graphs
+
+Set $i=0$ check whether  $G$ a simplical vertex. If not, stop \enquote{$G$ is not chordal}.
+If yes, let $v_i$ be a s.v. Set $G = G \setminus \{v_i\}$, $i = i+1$.
+Repeat until $i = n$.
+
+Possible implementation in $\bigO(n^2 m)$ because for-loop is repeated $\leq n$ times.
+
+Each repetition in $\bigO(nm)$: $G \coloneqq G \setminus \{v_i\}$ in $\bigO(\deg(v_i))$,
+check for s.v. in $G$; there are at most $n$ candidates for a s.v.
+The simplicity could be checked in $\bigO(m)$ times (need to check whether $\Gamma_G(v)$ contains all edges in $\bigO(m)$ time.
+
+Speed up: 
+
+R.E. Tarjan and M. Vannekakis, Simple linear time algorithms to test chordalty of graphs, but acyclicity of hypergraphs and selectivly reduce ancyclic hypergraphs, SIAM J. on Computing 13, 1984, 566-579;
+Addendum 14, 1985, 254-255
+
+\subsubsection*{2 step procedure}
+
+\begin{enumerate}
+  \item Construction of total ordering $\sigma$ in $V(G)$ such that $G$ is PES $\iff G$ chordal
+  \item check whether $\sigma$ is PES.
+\end{enumerate}
+
+Ad 1) This \enquote{special} $\sigma$ is the reverse \emph{maximum adjecency order}
+
+\begin{defi*}
+  MA Order: $\sigma: V(G) \to \{1,2,\dots,n\}$ bijective such that for all $1 \leq i \leq n$:
+  \[ \abs{ \{ v \in \{v_1,\dots,v_{i-1}\}: \{v_i,v\} \in E(G) \}} = \max_{u \notin \{v_1,\dots,v_{i-1}\}} \abs{ \{v \in \{v_1,\dots,v_{i-1}\} : \{u,v\} \in E(G)\}} \] \todo{text missing}
+\end{defi*}
+
+\begin{ex}
+  \todo{pic}{add pic}
+\end{ex}
+
+Result from CombOpt 1 (or Korte and Vygens, Conbinatonal Optimisation Theory and Applications, 2010, Springer)
+
+MA can be cmputed $\bigO(m+ n \log n)$ time by Fibonacci heaps.
+
+\enquote{Special} $\sigma$ is the reversed MA order.
+
+\begin{prop}[6.10] \label{6.10-prop}
+  A total ordering $\sigma$ in $V(G)$ is a PES $\iff$ 
+  If $v_i,v_j \in V(G)$ are connected by a path $P$ with inner vertices $n$ with $\sigma(n) < \min \{\sigma(v_i),\sigma(v_j)\}$, then $\{v_i,v_j\} \in E(G)$.
+\end{prop}
+
+\begin{proof}
+  \begin{enumerate}
+    \item[$\Leftarrow$] trivial: Consider $U\Gamma(v)$
+    \todo{pic}{add pic}
+    Path $P$ fulfills the property mentioned in the implication $\implies \{u_1,u_2\} \in E(G)$
+    \item[$\Rightarrow$] Assume $\sigma$ is PES. Show the implication.
+    Let $v_i,v_j \in V(G)$ be connected by path $P$ as in the implication. Want to show $\{v_i,v_j\} \in E(G)$.
+    Assume wlog $P$ is the shortest such path.
+    If $\{v_i,v_j\} \in E(G)$ $\checkmark$
+    If not, there exists an inner vertex in $P$. Choose the inner vertex $u$ of $P$ with smallest $\sigma$-label.
+    \todo{pic}{add pic}
+    $u^-,u^+ \in U\Gamma(v) \overset{\sigma \text{ is PES}}{implies} \{u^-,u^+\} \in E(G) \implies P$ could be shortened $\lightning$ 
+  \end{enumerate}
+\end{proof}
+
+\begin{prop}[6.11]
+  Let $G$ be a chordal graph. Let MA order yield $v_1,\dots,v_n$.
+  Then the vertices of $G$ in reversed order,
+  $v_n,v_{n-1},\dots,v_1$ build a PES.
+\end{prop}
+
+\begin{proof}
+  $\sigma: V(G)  \to \{1,2,\dots,n\}$ bijective. $\sigma(v_i) = n-i+1$
+  
+  We claim that property \ref{0616_star} holds:
+  \begin{align}\label{0616_star}
+    \text{If } \sigma(u) < \sigma(r) < \sigma(w) \text{ and } \{u,w \} \in E(G), \{v,w\} \notin E(G) \text{, then } \exists z \in V(G), \\
+    \text{such that } \sigma(v) < \sigma(z), \{v,z\} \in E(G), \{u,u\} \notin E(G)
+  \end{align}
+  Indeed: When MA labels $v$ (which is not connected to $w$ while $u$ is), there must be a labelled vertex which is a neighbour of $v$ but not a neighbour of $u$; call it $z$ and check the properties in \ref{0616_star}.
+  
+  Assume $\sigma$ is not a PES. By Propositon \ref{6.10-prop}, there exist $v_i,v_j \notin E(G)$ such that there exists a $v_i$-$v_j$-path $P$ with 
+  \begin{align} \label{0616_property}
+    \text{inner vertices } u \text{ with } \sigma(u) < \min \{\sigma(v_i),\sigma(v_j)\} \text{.}
+  \end{align}
+  Select such a pair $v_i,v_j$ where $v_j$ has the largest label $\sigma(v_j)$.
+  If there are many possible vertices $v_i$ select the one with largest $\sigma$.
+  Let $P$ be a shortest $v_i$-$v_j$-path with property \ref{0616_property}.
+  \todo{pic}{add pic}
+  Since $\{v_i,v_j\} \in E(G) \implies \exists$ inner vertex of $P$, let $u$ be inner vertex adjacent to $v_j$.
+  Apply property \ref{0616_star} to $u,v_i,v_j$ with $\sigma(u) < \sigma(v_i) < \sigma(v_j)$.
+  $\implies \exists z: \sigma(z) > \sigma(v_i)$, $\{z,v_i\} \in E(G), \{u,z\}\notin E(G)$.
+  $\{z,v_i\} \in E(G)$; otherwise path $z$-$v_j$ would fulfill condition of \ref{0616_star} and contradict the selection of $v_i$.
+  
+  $P \cup \{z,v_j\}$ is a cycle $C$ with $\geq 4$ vertices $\overset{G \text{ chordal}}{\implies} \exists$ chordal in $C$, chord has to pass through $z$ otherwise $P$ was not shortest.
+  
+  Let $x$ be the first vertex in $P$ (starting at $v_j$) which is connected $z$, $x$ has to the left of $n$ ($\{z,u\} \notin E(G)$)
+  But then there is new cycle $C^\prime$ (length $\geq 4$) without a chord $\lightning$.
+\end{proof}
+
+\begin{theorem}
+  It can be checkd in $\bigO(n + m)$ time if the reversed MA order is a PES.
+\end{theorem}
+
+\begin{proof}
+  No proof.
+\end{proof}
+
+\begin{cor}
+  This leads to an $\bigO(m + n \log n)$ algorithm for recognition of chordal graphs.
+\end{cor}
+
+\begin{rem}
+  The number $\alpha(G)$, $\omega(G)$, $\chi(G)$, $\theta(G)$ can be computed in $\bigO(m + n \log n)$ time in chordal graphs (and in efficient time n perfect graphs).
+\end{rem}
+
+Consider a PES $\sigma$ (reversed MA order)
+Colouring: Greedy with order $\sigma$ leads to an optimal colouring (exercises).
+Clique: All max cliques (wrt inclusion) are among $\{v\} \cup U\Gamma(v)$ (exercises).
+Stability: Set $s_1 = \inv{\sigma}(1)$; inductively set $s_k$ to be the first vertex after $s_{k-1}$ which has no neighbours among $s_1,\dots,s_{k-1}$.
+Consider $S \coloneqq \{s_1,\dots,s_\ell\}$, it is a stable set and also a max stable set because $(\{s_k\} \cup U\Gamma(s_k))_{1 \leq k \leq \ell}$ is a family of cliques such that
+\[ V(G) = \bigcup_{k=1}^\ell  \{\{s_k\} \cup \Gamma(s_k)\} \text{.} \]
+
+So we found a stable set $S$ with $\abs{S} = \ell$ and a covering by cliques  with $\ell$ cliques.
+$\max \abs{S} \leq \min$ number of cliques in clique covering
+
+$\max_{S \text{ stable}} \abs{S} \leq $ min cardinality of a clique covering, i.e. 
+\[ \alpha(G) \leq \theta(G) \]
+Implies $S=\{s_1,\dots,s_\ell\}$ and $(\{s_k\} \cup U \Gamma(s_k))_{1 \leq k \leq \ell}$ is a certificate of optimality.
+
+
+\end{document}

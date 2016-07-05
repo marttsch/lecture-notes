@@ -1,0 +1,182 @@
+\documentclass[aagt.tex]{subfiles}
+\begin{document}
+\lecture{25.04.2016}
+
+\begin{defi*}
+  Let $\varphi$ and $\varphi^\prime$ be two \emph{embeddings} of a planar graph $G$ in the plane, i.e. there exist two plane graphs $H$ and $H^\prime$ such that $\varphi(\varphi^\prime)$ is an isomorphism of $G$ and $H(H^\prime)$.
+  $\varphi$ and $\varphi^\prime$ are called \emph{equivalent} (we also say $H$ and $H^\prime$ are equivalent) if $\varphi^\prime\circ \inv{\varphi}$ is an isomorphism of $H$ to $H^\prime$, such that for all sequences $R$ of edges in $E(G)$ the following holds:
+  $\varphi(R)$ is a border of a region in $H$ if and only if $\varphi^\prime(R)$ is a border of a region in $H^\prime$ in the same order or in the reversed order or composed to the order in $\varphi(R)$.
+\end{defi*}
+
+\begin{rem}
+  \begin{align*}
+    \varphi: G \to H \\
+    \inv{\varphi}: H \to G \\
+    \varphi^\prime: G \to H^\prime
+  \end{align*}
+\end{rem}
+
+\begin{ex}
+  \todo{add pic}
+\end{ex}
+
+\begin{rem}
+  $\varphi \sim \varphi^\prime \overset{\text{Def}}{\iff} \varphi, \varphi^\prime$ are equivalent plane embedding of a planar graph $G$.
+  Equivalence relation (check it as a homework!)
+\end{rem}
+
+\begin{prop}[Wagner 1936, Färy 1948]
+  For every plane embedding of a planar graph, there exists an equivalent planar embedding in which edges are drawn as segments of straight lines, i.e. the Jordan curves in the definition of the embedding are piecewise linear functions.
+\end{prop}
+
+\begin{proof}
+  No proof.
+\end{proof}
+
+\begin{defi*}
+  A planar graph $G$ is called  \emph{uniquely embeddable} if all its plane embeddings are equivalent
+\end{defi*}
+
+\begin{ex}
+  \todo{add pic}
+\end{ex}
+
+\begin{theorem}[4.4 Whitney year?]
+  A 3-connected planar grap his uniquely embeddable.
+\end{theorem}
+
+\begin{proof}
+  No proof.
+\end{proof}
+
+\begin{theorem}[Euler formula]
+  Let $G$ be a planar and connected graph. Then
+  \[ \abs{V} - \abs{E} + \abs{F} = 2 \text{.} \]
+\end{theorem}
+
+\begin{cor}\label{th_4_5_cor_1}
+  If $G$ is planar and $\abs{V} \geq 3$, then
+  \[ \abs{E(G)} \leq 3 \abs{V(G)} - 6 \]
+\end{cor}
+
+\begin{cor}
+  If $G$ is planar, bipartite and $\abs{V} \geq 3$, then
+  \[ \abs{E(G)} \leq 2 \abs{V(G)} - 4 \]
+\end{cor}
+
+\begin{defi*}
+  A planar graph $G$ is called \emph{maximal planar} if $G \cup \{x,y\}$ is not planar, for all $x,y \in V(G)$ such that $\{x,y\} \notin E(G)$.
+  A \emph{triangulation of the plane} (or a \emph{triangle graph}) is a plane graph such that all of its faces have exactly 3 edges on the border (including the outer face)
+  \todo{add pic}
+\end{defi*}
+
+\begin{prop}[4.6]
+  For a planar graph $G$ the following statements are equivalent:
+  \begin{enumerate}
+    \item $G$ is maximal planar
+    \item Every plane embedding of $G$ is a triangulation of the plane.
+    \item $\abs{E} = 3 \abs{V} - 6$
+  \end{enumerate}
+\end{prop}
+
+\begin{proof}
+  $(1) \Rightarrow (2)$\\
+  \todo{add pic}
+  face $F$ with $\abs{\delta(F)} > 3$ \enquote{divide it} by edges and obtain again a planar graph $\lightning$ ($G$ was max planar)\\
+  $(2) \Rightarrow (1)$\\
+  trivial because adding an edge would violate the upper bound for $\abs{E(G)}$ in a planar graph $G$.\\
+  $(2) \Rightarrow (3)$\\
+  Count edge-region incident in two ways
+  \begin{align*}
+    \#(R,e) \text{ such that } e \in \delta(R) = \sum_{e \in E(G), R \text{ region}: e \in \delta(R)} 1 \overset{(\leq)}{=} 2 \abs{E} \\
+    \delta(R) = \sum_{R \text{ region}} \sum_{e \in E(G): e \in \delta(R)} 1 = 3 \abs{\underbrace{\{R: R \text{ is a region}\}}_{\mathcal{R}}} = 3 \abs{\mathcal{R}}
+  \end{align*}
+  Put $2 \abs{E} = 3 \abs{\mathcal{R}}$ into Euler formula.
+  $F= \mathcal{R}$.
+  \begin{align*}
+    \abs{V} - \abs{E} + \abs{\mathcal{R}} = 2 \\
+    \abs{V} -\abs{E} + \frac{2}{3} \abs{E} = 2 \\
+    \abs{V} - \frac{\abs{E}}{3} = 2 \implies \abs{E} = 3(\abs{V} - 2)
+  \end{align*}
+\end{proof}
+
+\subsection{The theorems of Kuratowski and Wagner}
+
+\begin{defi*}
+  Let $G$ be a graph obtained from another graph $H$ through iterative edge divisions, i.e. insertions of a neq vertex of degree two in some edge of the graph.
+  Then $G$ is called a \emph{subdivision of $H$}.
+  \todo{add pic}
+  Equivalently we get $G$ from $H$ through substituting every edge of $H$ by a path such that paths corespond to different edges can only touch each other at their end points.
+  We say \emph{$G$ contains $H$ as a subdivision} if and only if $G$ contains a subgraph $H^\prime$ such that $H^\prime$ is a subdivision of $H$.
+  \todo{add pic} EGE contains $H$ as a subdivision bcause $H^\prime = G$ is obtained by subdividing $H$ and $H<G$.
+\end{defi*}
+
+Observation:
+If $G$ is planar, then every subdivision of $G$ is planar.
+
+\begin{theorem}[4.7 Kuratowski 1930]
+  A graph $G$ is planar if and only if it does not contain $K_5$ and it does not contain $K_{3,3}$ as a subdivision.
+\end{theorem}
+
+\begin{proof}
+  based on Thomassen 198?
+  
+  Use 2 Lemmas.
+  \begin{lemma}[4.8]
+    Every 3-connected graph $F$ with $\abs{V(G)} \geq 5$ contains an $e \in E(G)$ such that $G|e$ is 3-connected.
+  \end{lemma}
+  \begin{proof}
+    already proved)
+  \end{proof}
+  
+  \begin{lemma}
+    Let $e \in E(G)$ be an edge of some arbitrary graph $G$. If $G|e$ contains a subdivision of $K_5$ or $K_{3,3}$, then also $G$ contains a subdivision of $K_5$ or $K_{3,3}$, respectively.
+  \end{lemma}
+  \begin{proof}
+    Let $e = \{x,y\}$ and let $z \in V(G|e)$ representing $e$.
+    Let $S$ be the subdivision of $K_5$ or $K_{3,3}$ in $G|e$.
+    For every edge $\{z,v\}$ in $G|e$ there exists a vertex $v \in V(G) \setminus \{x,y\}$ such that $\{x,v\} \in E(G)$ or $\{y,v\} \in E(G)$.
+    \todo{add pic}
+    Collect in $T$ all edges of $S$ which do not have $z$ as an endpoint, as well as one of $\{x,v\}$ or $\{y,v\}$ (arbitrarily chosen) for all $v \in V(G) \setminus \{x,y\}$ such that $\{z,v\} \in E(G|e)$,
+    and finally the edge $\{x,y\}$.
+    We show $T$ is the required subdivision of $K_5$ or $K_{3,3}$. Two cases:
+    Notice that $\det_T(x) = 1$ and $\deg_T(y) = 1$ cannot happen because then $z$ is an isolated vertex in $S$ $\lightning$ \todo{add pic}
+    \begin{enumerate}
+      \item[1a] $\deg_S(z) = 2$:
+      \todo{add pic}
+      \item[1b] $\deg_T(x) = 2$ or $\deg_T(y) = 2$ (symmetric):
+      \todo{add pic}
+      \item[2] $\deg_T(x) \geq 3$ and $\deg_T(y) \geq 3$:
+      \todo{add pic} $T$ contains a subdivision of $K_{3,3}$ with the blue vertices on one side and the green vertices on the other.
+      \todo{add pic} This case cannot happen because for $\{z,v_1\} \in S$ we choose just one \enquote{red} representative, either $\{x,v_1\}$ or $\{y,v_1\}$ in $T$.
+    \end{enumerate}
+  \end{proof}
+  
+  Induction on $\abs{V}$.
+  
+  All graphs with $\abs{V} \leq 4$ are planar.
+  If $\abs{V(G)} = 5$, then $G|e$ is planar. \todo{add pic}
+  Hence if such a $G$ does not contain a subdivision of $K_5$ (which is $K_5$ itself in this case) is planar $\Rightarrow$ statement holds.
+  Assume wlog $\abs{V(G)} \geq 6$. We show if $G$ has no subdivision of $K_5$ or $K_{3,3}$ then $G$ planar.
+  Cases:
+  \begin{enumerate}
+    \item $G$ is not 3-connected. $G$ is planar if and only if all its blocks are planar Proposition \ref{prop_4_1}).
+    Show that every block is planar. Consider a block, it is 2-connected.
+    Let $\{x,y\}$ be a separator.
+    \todo{add pic}
+    Let $H$ be a connected component of $G \setminus \{x,y\}$.
+    \todo{add pic}
+    Denote $G_1 \coloneqq G[V(H) \cup \{x,y\}]$ and $G_2 \coloneqq G[V\setminus H]$.
+    If $\{x,y\} \notin E(G)$ we add to $G_1$ and $G_2$.
+    Since $G$ is 2-connected, each of the vertices $x$ and $y$ is connected to all connected components in $G \setminus \{x,y\}$.
+    (otherwise, if e.g. $y$ was not connected to some component, then $\{x\}$ would be a separator $\lightning$).
+    So the introduction of $\{x,y\}$ does not create a subdivision of $K-5$ or $K_{3,3}$ in $G_1$ or $G_2$
+    because otherwise the subdivision say in $G_1$ would yield a subdivision in $G$ by subdivision $\{x,y\}$ through the $x$-$y$-path in $G_2$ (with inner vertices in $V \setminus (H \cup \{x,y\})$.
+    So $G_1$, $G_2$ do not contains subdivisions of $K_5$ or $K_{3,3}$ and $\abs{V(G)_1} < \abs{V(G)}$, $\abs{V(G_2)} < \abs{V(G)}$ hold.
+    Thus by Induction assumption, $G_1,G_2$ are planar.
+    Then, Embedding their on the plane s.t. $\{x,y\}$ lies on the outer face, respectively merge this embedding so that they touch only on $\{x,y\}$ this yields a planear embedding of $G$.
+    \item So  
+  \end{enumerate}
+\end{proof}
+
+\end{document}
